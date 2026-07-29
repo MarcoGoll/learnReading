@@ -33,6 +33,18 @@ Diese Vorgaben gelten für jede Implementierung, unabhängig vom Tech-Stack des 
 
 Jede Code-Änderung wird in `docs/change-log.md` protokolliert: fortlaufende ID (`CHG-XXXX`), ISO-Zeitstempel, Kurzbeschreibung, betroffene Dateien. Vor einem neuen Eintrag die Datei lesen, um die nächste freie ID zu ermitteln. Darüber kann der Nutzer später auf einzelne Änderungen verweisen, z. B. "mach CHG-0012 rückgängig" oder "passe CHG-0012 nochmal an".
 
+## Git-Konventionen
+
+Commit-Messages werden immer auf Englisch verfasst, unabhängig von der Sprache der Konversation mit dem Nutzer, und folgen der Konvention von https://ec.europa.eu/component-library/v1.15.0/eu/docs/conventions/git/:
+
+- Format: `<type>(<scope>): <subject>`, danach Leerzeile, Body, Leerzeile, Footer. Header ist verpflichtend, `(<scope>)` optional.
+- Erlaubte Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`.
+- Subject im Imperativ Präsens (`add`, nicht `added`/`adds`), kein großgeschriebener erster Buchstabe, kein Punkt am Ende.
+- Keine Zeile länger als 100 Zeichen.
+- Body (falls vorhanden) ebenfalls im Imperativ Präsens; erklärt die Motivation der Änderung im Kontrast zum vorherigen Verhalten.
+- Breaking Changes im Footer mit `BREAKING CHANGE:` kennzeichnen.
+- Revert-Commits beginnen mit `revert:` gefolgt vom Header des rückgängig gemachten Commits; im Body: `This reverts commit <hash>`.
+
 ## Konventionen für die Commands
 
 - Rückfragen zu offenen Punkten in `/spec` immer über das AskUserQuestion-Tool stellen: empfohlene Variante zuerst und als "(Recommended)" markiert, 2-4 Alternativen, freie Beschreibung bleibt über "Other" immer möglich.
