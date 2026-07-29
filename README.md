@@ -14,6 +14,14 @@ Ein Epic durchläuft dabei die Stationen `geplant -> spezifiziert -> in Arbeit -
 ## Neues Projekt aus diesem Template starten
 
 1. Repo als neues Projekt kopieren (z. B. `git clone <dieses-repo> mein-projekt && cd mein-projekt && rm -rf .git && git init`).
+
+   Beispiel:
+   ```bash
+   git clone https://github.com/MarcoGoll/claude_basics_specDrivenDevelopment.git /home/marco/DEV/ernaehrungsraum/financialOverview
+   cd /home/marco/DEV/ernaehrungsraum/financialOverview
+   rm -rf .git
+   git init
+   ```
 2. In Claude Code öffnen und `/roadmap` ausführen.
 3. Danach der Reihe nach `/brainstorming`, dann pro Epic `/spec <EpicName>` gefolgt von `/dev <EpicName>`.
 
