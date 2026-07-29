@@ -1,20 +1,20 @@
 ---
-description: Erarbeitet im Dialog grobe Epics für das Projekt
+description: Works out rough epics for the project through dialog
 ---
 
-Du führst den `/brainstorming`-Schritt des Spec-Driven-Development-Workflows aus. Ziel ist die Datei `docs/epics.md` mit einer Liste grober Epics.
+You are executing the `/brainstorming` step of the spec-driven-development workflow. The target is the file `docs/epics.md` with a list of rough epics.
 
-## Voraussetzung
+## Prerequisite
 
-Prüfe, ob `docs/roadmap.md` existiert. Falls nicht, weise darauf hin, dass `/roadmap` sinnvollerweise zuerst laufen sollte, und frage, ob trotzdem ohne Roadmap fortgefahren werden soll.
+Check whether `docs/roadmap.md` exists. If not, point out that `/roadmap` should reasonably run first, and ask whether to proceed without a roadmap anyway.
 
-## Ablauf
+## Process
 
-1. Lies `docs/roadmap.md` (Vision, Tech-Stack, Meilensteine) und leite daraus mögliche Kernbereiche/Epics ab.
-2. Gehe diese aus der Roadmap ableitbaren Bereiche im Dialog mit dem Nutzer durch und frage gezielt nach, um daraus grobe Epics zu formen. Ein Epic besteht aus: kurzem Titel und 2-3 Sätzen Beschreibung. Kein Detailgrad wie in `/spec` - keine Implementierungsentscheidungen, nur "worum geht es".
-3. Sind die aus der Roadmap ableitbaren Epics geklärt, frage aktiv nach, ob der Nutzer weitere Funktionen/Epics ergänzen möchte, die nicht direkt aus der Roadmap hervorgehen.
-4. Wiederhole Schritt 3, bis der Nutzer explizit verneint (z. B. "nein", "das reicht", "keine weiteren mehr").
-5. Erstelle/aktualisiere `docs/epics.md` als nummerierte Liste aller Epics (Epic1, Epic2, ...) mit Titel, Kurzbeschreibung und Status. Neue Epics erhalten den Status `geplant`.
-6. Bestätige dem Nutzer die finale Liste und weise auf den nächsten Schritt hin: `/spec <EpicName>` für das jeweilige Epic.
+1. Read `docs/roadmap.md` (vision, tech stack, milestones) and derive possible core areas/epics from it.
+2. Go through these roadmap-derived areas in dialog with the user and ask targeted questions to shape them into rough epics. An epic consists of: a short title and a 2-3 sentence description. No level of detail like in `/spec` - no implementation decisions, just "what is it about".
+3. Once the roadmap-derived epics are clarified, actively ask whether the user wants to add further features/epics that do not directly follow from the roadmap.
+4. Repeat step 3 until the user explicitly declines (e.g. "no", "that's enough", "no more").
+5. Create/update `docs/epics.md` as a numbered list of all epics (Epic1, Epic2, ...) with title, short description, and status. New epics get the status `planned`.
+6. Confirm the final list to the user and point to the next step: `/spec <EpicName>` for the respective epic.
 
-Halte die Epics bewusst grob - Details, Varianten und technische Entscheidungen werden erst in `/spec` erarbeitet.
+Keep epics deliberately rough - details, variants, and technical decisions are only worked out in `/spec`.

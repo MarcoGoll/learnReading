@@ -1,13 +1,17 @@
-# Change-Log
+# Change Log
 
-Protokoll aller Code-Änderungen. Vor jedem neuen Eintrag diese Datei lesen, um die nächste freie ID zu ermitteln. Format je Eintrag:
+Log of all code changes. Read this file before adding a new entry to determine the next free ID. Format per entry:
 
 ```
-## CHG-XXXX - <Kurzbeschreibung>
-- Zeitstempel: <ISO 8601>
-- Dateien: <betroffene Dateien>
+## CHG-XXXX - <short description>
+- Timestamp: <ISO 8601>
+- Files: <affected files>
 ```
 
-Referenzierbar durch den Nutzer, z. B. "mach CHG-0012 rückgängig" oder "passe CHG-0012 nochmal an".
+Referenceable by the user, e.g. "revert CHG-0012" or "adjust CHG-0012 again".
 
 ---
+
+## CHG-0001 - Translate all template files to English
+- Timestamp: 2026-07-29T14:36:26+02:00
+- Files: CLAUDE.md, README.md, .claude/commands/roadmap.md, .claude/commands/brainstorming.md, .claude/commands/spec.md, .claude/commands/dev.md, docs/change-log.md

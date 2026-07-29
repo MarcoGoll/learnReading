@@ -1,52 +1,57 @@
 # Spec-Driven Development Workflow
 
-Dieses Projekt folgt einem festen Spec-Driven-Development-Workflow über vier Slash-Commands, die in dieser Reihenfolge ausgeführt werden:
+This project follows a fixed spec-driven-development workflow across four slash commands, executed in this order:
 
-1. `/roadmap` - erarbeitet Vision, Zielgruppe und Tech-Stack im Dialog -> `docs/roadmap.md`
-2. `/brainstorming` - erarbeitet grobe Epics passend zur Roadmap plus optionale weitere Funktionen -> `docs/epics.md`
-3. `/spec <EpicName>` - klärt Umsetzungsdetails für ein einzelnes Epic per Multiple-Choice-Rückfragen (empfohlene Option vorausgewählt) -> `docs/specs/<EpicName>.md`
-4. `/dev <EpicName>` - implementiert das Epic anhand seiner Spezifikation
+1. `/roadmap` - elaborates vision, target audience, and tech stack in a dialog -> `docs/roadmap.md`
+2. `/brainstorming` - elaborates rough epics matching the roadmap plus optional further features -> `docs/epics.md`
+3. `/spec <EpicName>` - clarifies implementation details for a single epic via multiple-choice follow-up questions (recommended option pre-selected) -> `docs/specs/<EpicName>.md`
+4. `/dev <EpicName>` - implements the epic based on its specification
 
-Ein Epic wird erst spezifiziert (`/spec`), nachdem es in `docs/epics.md` auftaucht, und erst implementiert (`/dev`), nachdem eine Spezifikation unter `docs/specs/` existiert. Der Status eines Epics in `docs/epics.md` durchläuft `geplant -> spezifiziert -> in Arbeit -> fertig`.
+An epic is only specified (`/spec`) once it appears in `docs/epics.md`, and only implemented (`/dev`) once a specification exists under `docs/specs/`. An epic's status in `docs/epics.md` progresses through `planned -> specified -> in progress -> done`.
 
-## Verzeichnisstruktur
+## Directory Structure
 
-- `docs/roadmap.md` - Projekt-Roadmap (Vision, Tech-Stack, Meilensteine)
-- `docs/epics.md` - Liste aller Epics mit Status
-- `docs/specs/<EpicName>.md` - Detailspezifikation je Epic
-- `docs/change-log.md` - Protokoll aller Code-Änderungen (siehe Abschnitt "Change-Log")
-- `.claude/commands/` - Definition der Workflow-Commands (`roadmap`, `brainstorming`, `spec`, `dev`)
+- `docs/roadmap.md` - project roadmap (vision, tech stack, milestones)
+- `docs/epics.md` - list of all epics with status
+- `docs/specs/<EpicName>.md` - detailed specification per epic
+- `docs/change-log.md` - log of all code changes (see "Change Log" section)
+- `.claude/commands/` - definition of the workflow commands (`roadmap`, `brainstorming`, `spec`, `dev`)
+
+## Language
+
+- Conversation with the user can happen in any language (e.g. German).
+- All files - code, comments, documentation, commit messages - are always written in English, regardless of the conversation language.
 
 ## Coding Conventions
 
-Diese Vorgaben gelten für jede Implementierung, unabhängig vom Tech-Stack des jeweiligen Projekts (siehe `docs/roadmap.md`):
+These rules apply to every implementation, regardless of the tech stack of the respective project (see `docs/roadmap.md`):
 
-- Jede Funktion/Methode erhält einen Doc-Comment im für die Sprache idiomatischen Format (z. B. JSDoc in JS/TS, Docstrings in Python, Doc-Comments in Rust/Go/Java). Der Text des Kommentars ist auf Englisch, unabhängig von der Sprache der Konversation mit dem Nutzer.
-- Keine Emojis/Smileys - weder in Code, Kommentaren, Commit-Messages noch in Konsolen-/UI-Ausgaben. Werden Icons benötigt (z. B. für Buttons), von https://fonts.google.com/icons herunterladen und unter `assets/icons/` ablegen.
-- Funktionslänge nach Möglichkeit max. 14 Zeilen Code, Dateilänge nach Möglichkeit max. 400 Zeilen Code. Ausnahmen sind erlaubt, wenn sachlich begründet - aber die Richtwerte gelten als Regel, nicht als Ausnahme.
-- Variablennamen sind immer sprechend (z. B. `paramName`, `book`, `testName`), keine einzelnen Buchstaben - Ausnahme: Schleifenzähler (`for (let i = 0; ...)`).
-- Funktions- und Variablennamen immer auf Englisch und in camelCase.
-- CSS/SCSS immer im BEM-Namensschema.
-- Bei fachlichen oder technischen Entscheidungen ohne eindeutig richtige Lösung nie einfach annehmen: über das AskUserQuestion-Tool nachfragen, mit einer empfohlenen Option plus kurzer Begründung, warum sie empfohlen wird.
+- Every function/method gets a doc comment in the format idiomatic to the language (e.g. JSDoc in JS/TS, docstrings in Python, doc comments in Rust/Go/Java). The comment text is always in English.
+- No emojis/smileys - neither in code, comments, commit messages, nor console/UI output. If icons are needed (e.g. for buttons), download them from https://fonts.google.com/icons and place them under `assets/icons/`.
+- Function length should not exceed 14 lines of code where possible; file length should not exceed 400 lines of code where possible. Exceptions are allowed when justified - but the guideline is the rule, not the exception.
+- Variable names are always descriptive (e.g. `paramName`, `book`, `testName`), never single letters - exception: loop counters (`for (let i = 0; ...)`).
+- Function and variable names are always in English and in camelCase.
+- CSS/SCSS always uses the BEM naming scheme.
+- Never just assume when there is no clearly correct solution for a functional or technical decision: ask via the AskUserQuestion tool, with one recommended option plus a short justification for why it is recommended.
 
-## Change-Log
+## Change Log
 
-Jede Code-Änderung wird in `docs/change-log.md` protokolliert: fortlaufende ID (`CHG-XXXX`), ISO-Zeitstempel, Kurzbeschreibung, betroffene Dateien. Vor einem neuen Eintrag die Datei lesen, um die nächste freie ID zu ermitteln. Darüber kann der Nutzer später auf einzelne Änderungen verweisen, z. B. "mach CHG-0012 rückgängig" oder "passe CHG-0012 nochmal an".
+Every code change is logged in `docs/change-log.md`: a running ID (`CHG-XXXX`), ISO timestamp, short description, affected files. Read the file before adding a new entry to determine the next free ID. This lets the user later refer to individual changes, e.g. "revert CHG-0012" or "adjust CHG-0012 again".
 
-## Git-Konventionen
+## Git Conventions
 
-Commit-Messages werden immer auf Englisch verfasst, unabhängig von der Sprache der Konversation mit dem Nutzer, und folgen der Konvention von https://ec.europa.eu/component-library/v1.15.0/eu/docs/conventions/git/:
+Commit messages are always written in English, regardless of the conversation language, and follow the convention at https://ec.europa.eu/component-library/v1.15.0/eu/docs/conventions/git/:
 
-- Format: `<type>(<scope>): <subject>`, danach Leerzeile, Body, Leerzeile, Footer. Header ist verpflichtend, `(<scope>)` optional.
-- Erlaubte Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`.
-- Subject im Imperativ Präsens (`add`, nicht `added`/`adds`), kein großgeschriebener erster Buchstabe, kein Punkt am Ende.
-- Keine Zeile länger als 100 Zeichen.
-- Body (falls vorhanden) ebenfalls im Imperativ Präsens; erklärt die Motivation der Änderung im Kontrast zum vorherigen Verhalten.
-- Breaking Changes im Footer mit `BREAKING CHANGE:` kennzeichnen.
-- Revert-Commits beginnen mit `revert:` gefolgt vom Header des rückgängig gemachten Commits; im Body: `This reverts commit <hash>`.
+- Format: `<type>(<scope>): <subject>`, followed by a blank line, body, blank line, footer. The header is mandatory, `(<scope>)` is optional.
+- Allowed types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`.
+- Subject in imperative present tense (`add`, not `added`/`adds`), no capitalized first letter, no period at the end.
+- No line longer than 100 characters.
+- Body (if present) also in imperative present tense; explains the motivation for the change in contrast to the previous behavior.
+- Mark breaking changes in the footer with `BREAKING CHANGE:`.
+- Revert commits start with `revert:` followed by the header of the reverted commit; body: `This reverts commit <hash>`.
 
-## Konventionen für die Commands
+## Command Conventions
 
-- Rückfragen zu offenen Punkten in `/spec` immer über das AskUserQuestion-Tool stellen: empfohlene Variante zuerst und als "(Recommended)" markiert, 2-4 Alternativen, freie Beschreibung bleibt über "Other" immer möglich.
-- Technische Rahmenbedingungen (Sprache, Framework, Datenbank, Plattform) in `/roadmap` aktiv erfragen, wenn sie weder im Repo noch in der Nutzerbeschreibung erkennbar sind - nicht raten.
-- Epics in `/brainstorming` bewusst grob halten; Implementierungsentscheidungen gehören in `/spec`, nicht in `/brainstorming`.
+- Ask follow-up questions for open points in `/spec` always via the AskUserQuestion tool: recommended option first and labeled "(Recommended)", 2-4 alternatives, free-form description always available via "Other".
+- Actively ask about technical constraints (language, framework, database, platform) in `/roadmap` when they are not recognizable from the repo or the user's description - never guess.
+- Keep epics in `/brainstorming` deliberately rough; implementation decisions belong in `/spec`, not in `/brainstorming`.
