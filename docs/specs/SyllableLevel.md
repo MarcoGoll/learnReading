@@ -10,7 +10,7 @@ Level 2. Open syllables made from the letters mastered in level 1 are read aloud
 |-------|----------|---------------|
 | Syllable form | Open syllables only: consonant + vowel (ma, lo, schu, mei) and single vowels (o, a, au) | Easiest form; basis of most beginner words (Ma-ma, O-ma, Sa-la-mi) |
 | Source | Built-in list of sensible German open syllables, filtered to syllables whose letters are all in `pools.letters` | Avoids odd combinations such as "qö" or "yü" |
-| Round size | Max. 10 syllables per round; syllables not yet in the pool first, then random mastered ones | Short enough for a beginning reader's attention span |
+| Round size | Max. 10 syllables per round; first unmastered syllables that complete words of the journey (words with the fewest missing syllables first), then other unmastered ones, then random mastered ones | Short enough for a beginning reader's attention span; a round without mistakes reaches the word goal instead of collecting syllables that belong to no word |
 | Completion | Level 2 is completed once at least 5 words of the level 3 word list can be built from `pools.syllables` | Guarantees that level 3 is playable |
 
 ## Technical Details

@@ -3,12 +3,13 @@ import { showRoundSummary } from '../components/roundSummary.js';
 import { confetti } from '../components/effects.js';
 import { letterById } from '../data/letters.js';
 import { syllableById } from '../data/syllables.js';
-import { wordById } from '../data/words.js';
+import { wordById } from '../data/allWords.js';
 import { REWARDS } from '../data/rewards.js';
 import { buildPracticeRound, practiceBasePoints, practiceItemCount } from '../logic/practice.js';
 import { isDifficult } from '../logic/statistics.js';
-import { unlockReached } from '../logic/rewards.js';
+import { buyableRewards } from '../logic/rewards.js';
 import { store } from '../state/store.js';
+import { practiceKeyFilter } from '../content/customContent.js';
 import { navigate } from '../router.js';
 import { runReadingRound } from '../game/readingRoundRunner.js';
 
@@ -37,17 +38,15 @@ function toPracticeItem(key) {
  * @param {object} session - Round session.
  */
 function showPracticeSummary(container, items, session) {
-  let unlockedRewards = [];
-  store.updateState((state) => { unlockedRewards = unlockReached(state, REWARDS); });
   const state = store.getState();
   const resolved = items.filter((item) => state.history[item.key] && !isDifficult(state.history[item.key]));
-  const remaining = practiceItemCount(state.history);
+  const remaining = practiceItemCount(state.history, practiceKeyFilter(state));
   if (remaining === 0) confetti();
   showRoundSummary(container, {
     title: remaining === 0 ? 'Die Übungsinsel ist geschafft!' : 'Gut geübt!',
     roundScore: session.roundScore(), record: null, total: state.score.total, isNewRecord: false,
     message: resolved.length > 0 ? `Geschafft: ${resolved.map((item) => ITEM_TYPES[item.type].label(item.data)).join(', ')}!` : 'Weiter so!',
-    unlockedRewards,
+    canShop: buyableRewards(state, REWARDS).length > 0,
     actions: [
       remaining > 0 ? { label: 'Nochmal', iconName: 'replay', onClick: () => startPractice(container) } : null,
       { label: 'Weiter', iconName: 'arrow_forward', primary: true, onClick: () => navigate('/') }
@@ -61,7 +60,8 @@ function showPracticeSummary(container, items, session) {
  * @returns {Function|undefined} Cleanup function.
  */
 function startPractice(container) {
-  const items = buildPracticeRound(store.getState().history).map(toPracticeItem).filter(Boolean);
+  const state = store.getState();
+  const items = buildPracticeRound(state.history, 8, practiceKeyFilter(state)).map(toPracticeItem).filter(Boolean);
   if (items.length === 0) {
     navigate('/');
     return undefined;

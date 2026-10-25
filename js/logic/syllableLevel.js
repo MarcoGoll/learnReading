@@ -1,4 +1,4 @@
-import { preferThenFill } from './random.js';
+import { preferThenFill, shuffle } from './random.js';
 import { buildableWords } from './wordLevel.js';
 
 /** Number of buildable level 3 words needed to complete level 2. */
@@ -16,17 +16,47 @@ export function availableSyllables(letterPool, syllableList) {
 }
 
 /**
- * Builds a level 2 round: unmastered syllables first, filled up with mastered ones.
+ * Returns the unmastered syllable ids that complete words, words with the fewest missing syllables first.
+ * A word is only taken when all its missing syllables still fit into the round.
+ * @param {Set<string>} availableIds - Ids of the available syllables.
+ * @param {Set<string>} masteredIds - Ids of the mastered syllables.
+ * @param {Array<object>} wordList - Words of the journey.
+ * @param {number} maxSize - Maximum number of syllables.
+ * @param {Function} randomFn - Random number source.
+ * @returns {Array<string>} Syllable ids that complete words.
+ */
+export function wordCompletingSyllables(availableIds, masteredIds, wordList, maxSize, randomFn) {
+  const missingOf = (word) => [...new Set(word.syllables.filter((syllable) => !masteredIds.has(syllable)))];
+  const candidates = shuffle(wordList, randomFn)
+    .filter((word) => word.syllables.every((syllable) => availableIds.has(syllable)))
+    .map(missingOf).filter((missing) => missing.length > 0)
+    .sort((first, second) => first.length - second.length);
+  const chosen = new Set();
+  candidates.forEach((missing) => {
+    const added = missing.filter((syllable) => !chosen.has(syllable));
+    if (chosen.size + added.length <= maxSize) added.forEach((syllable) => chosen.add(syllable));
+  });
+  return [...chosen];
+}
+
+/**
+ * Builds a level 2 round: syllables that complete words first, then other unmastered syllables,
+ * filled up with mastered ones. So a round read without mistakes makes as many words possible as it can.
  * @param {Array<object>} available - Available syllables.
  * @param {Array<string>} syllablePool - Mastered syllable ids.
  * @param {number} [maxSize=10] - Maximum round size.
  * @param {Function} [randomFn] - Random number source.
+ * @param {Array<object>} [wordList=[]] - Words of the journey whose syllables are preferred.
  * @returns {Array<object>} Round syllables.
  */
-export function buildRound(available, syllablePool, maxSize = 10, randomFn = Math.random) {
-  const unmastered = available.filter((syllable) => !syllablePool.includes(syllable.id));
-  const mastered = available.filter((syllable) => syllablePool.includes(syllable.id));
-  return preferThenFill(unmastered, mastered, maxSize, randomFn);
+export function buildRound(available, syllablePool, maxSize = 10, randomFn = Math.random, wordList = []) {
+  const masteredIds = new Set(syllablePool);
+  const focusIds = new Set(wordCompletingSyllables(new Set(available.map((syllable) => syllable.id)), masteredIds, wordList, maxSize, randomFn));
+  const focus = available.filter((syllable) => focusIds.has(syllable.id));
+  const unmastered = available.filter((syllable) => !masteredIds.has(syllable.id) && !focusIds.has(syllable.id));
+  const mastered = available.filter((syllable) => masteredIds.has(syllable.id));
+  const fresh = [...focus, ...preferThenFill(unmastered, [], maxSize - focus.length, randomFn)];
+  return [...shuffle(fresh, randomFn), ...preferThenFill([], mastered, maxSize - fresh.length, randomFn)];
 }
 
 /**

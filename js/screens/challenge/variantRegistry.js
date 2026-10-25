@@ -4,9 +4,11 @@ import { findTheWordVariant } from './findTheWord.js';
 import { gapSentenceVariant } from './gapSentence.js';
 import { wordMemoryVariant } from './wordMemory.js';
 import { sentenceBuilderVariant } from './sentenceBuilder.js';
+import { storyVariant } from './story.js';
 
 /** All level 5 variants in menu order. */
 export const VARIANTS = [
+  storyVariant,
   sentenceReadingVariant,
   wordPictureVariant,
   findTheWordVariant,
@@ -22,4 +24,13 @@ export const VARIANTS = [
  */
 export function variantById(id) {
   return VARIANTS.find((variant) => variant.id === id);
+}
+
+/**
+ * Returns the variants of a content profile in menu order.
+ * @param {object} profile - Content profile.
+ * @returns {Array<object>} Variants.
+ */
+export function variantsOf(profile) {
+  return VARIANTS.filter((variant) => profile.variants.includes(variant.id));
 }

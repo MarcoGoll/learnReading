@@ -34,12 +34,14 @@ export function saveState(storage, state) {
 
 /**
  * Creates a store that keeps the game state in memory and persists every change.
+ * The loaded state is saved right away, so a migrated old save is stored in the new format.
  * The methods are bound so they can be passed around as plain functions.
  * @param {Storage|null} storage - Storage implementation (localStorage or a test double).
  * @returns {object} Store API: getState, updateState, resetState, subscribe.
  */
 export function createStore(storage) {
   const store = { storage, state: loadState(storage), listeners: new Set() };
+  saveState(storage, store.state);
   const notify = () => store.listeners.forEach((listener) => listener(store.state));
   return {
     getState: () => store.state,

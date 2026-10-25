@@ -28,7 +28,7 @@ export function buildDeck(targets, pairCount = PAIR_COUNT, randomFn = Math.rando
  * @returns {object} Memory game state.
  */
 export function createMemoryGame(deck) {
-  return { deck, revealedOnce: [], matchedWordIds: [], pairMistakes: {}, openCardId: null };
+  return { deck, matchedWordIds: [], openCardId: null };
 }
 
 /**
@@ -49,7 +49,6 @@ function partnerId(cardId) {
 export function flip(game, cardId) {
   if (game.openCardId === null) {
     game.openCardId = cardId;
-    markRevealed(game, cardId);
     return { event: 'firstCard' };
   }
   const firstCardId = game.openCardId;
@@ -57,37 +56,8 @@ export function flip(game, cardId) {
   const isMatch = partnerId(firstCardId) === cardId;
   if (isMatch) {
     game.matchedWordIds.push(cardById(game, cardId).wordId);
-  } else {
-    countMistakes(game, [firstCardId, cardId]);
   }
-  markRevealed(game, cardId);
   return { event: isMatch ? 'match' : 'mismatch', firstCardId };
-}
-
-/**
- * Counts a mismatch against each card's pair if the card was seen before and its partner too.
- * @param {object} game - Memory game state (mutated).
- * @param {Array<string>} cardIds - The two mismatched cards.
- */
-function countMistakes(game, cardIds) {
-  cardIds.forEach((cardId) => {
-    const knewBoth = game.revealedOnce.includes(cardId) && game.revealedOnce.includes(partnerId(cardId));
-    if (knewBoth) {
-      const wordId = cardById(game, cardId).wordId;
-      game.pairMistakes[wordId] = (game.pairMistakes[wordId] || 0) + 1;
-    }
-  });
-}
-
-/**
- * Marks a card as revealed at least once.
- * @param {object} game - Memory game state (mutated).
- * @param {string} cardId - Card id.
- */
-function markRevealed(game, cardId) {
-  if (!game.revealedOnce.includes(cardId)) {
-    game.revealedOnce.push(cardId);
-  }
 }
 
 /**
@@ -98,16 +68,6 @@ function markRevealed(game, cardId) {
  */
 function cardById(game, cardId) {
   return game.deck.find((card) => card.cardId === cardId);
-}
-
-/**
- * Checks whether a pair counts as correct (no mistake after both cards were known).
- * @param {object} game - Memory game state.
- * @param {string} wordId - Word id of the pair.
- * @returns {boolean} True if correct.
- */
-export function isPairCorrect(game, wordId) {
-  return !game.pairMistakes[wordId];
 }
 
 /**

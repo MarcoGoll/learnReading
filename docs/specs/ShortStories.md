@@ -56,3 +56,8 @@ Content of the pterosaur journey: short stories of 3-4 sentences that the child 
 
 - Stories need some words with clusters that are not covered by the earlier lists (e.g. "Hunger"); these words are added to a story word list and marked as readable through their syllables.
 - Writing 20 stories and drawing their pictures is a large part of the effort.
+
+## Implementation Notes
+
+- Story illustrations are composed of 1-2 existing word pictures shown side by side (e.g. Oma + Kuchen) instead of 20 separately drawn story pictures; the question options use word pictures as specified.
+- Stories are written in the first person or with sight words, so the verbs of the word lists (first person, e.g. "koche") can be used; 21 additional sight words were added for the stories.

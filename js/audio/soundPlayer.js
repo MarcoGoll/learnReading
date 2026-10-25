@@ -10,6 +10,7 @@ const SOUND_FILES = {
   evolution3: ['evolution-3'],
   evolution4: ['evolution-4'],
   evolution5: ['evolution-5'],
+  whoosh: ['whoosh'],
   dragPickup: ['drag-pickup'],
   dragDrop: ['drag-drop'],
   dragSnap: ['drag-snap'],

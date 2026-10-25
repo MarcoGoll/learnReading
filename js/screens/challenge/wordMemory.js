@@ -1,8 +1,8 @@
 import { el, wait } from '../../components/dom.js';
 import { wordCard } from '../../components/itemCards.js';
 import { burstStars, flyPoints } from '../../components/effects.js';
-import { wordById } from '../../data/words.js';
-import { buildDeck, createMemoryGame, flip, isPairCorrect, isFinished, PAIR_COUNT, MIN_PAIRS } from '../../logic/wordMemory.js';
+import { wordById } from '../../data/allWords.js';
+import { buildDeck, createMemoryGame, flip, isFinished, PAIR_COUNT, MIN_PAIRS } from '../../logic/wordMemory.js';
 import { createRoundSession } from '../../logic/roundSession.js';
 import { LEVEL_FIVE_BASE } from '../../logic/challengeLevel.js';
 import { itemKey } from '../../logic/history.js';
@@ -35,7 +35,7 @@ function cardFace(card) {
  */
 function cardButton(card, onFlip) {
   const element = el('button', { className: 'memory-board__card', attrs: { type: 'button', 'aria-label': 'Karte' } }, [
-    el('span', { className: 'memory-board__back' }, [el('img', { attrs: { src: 'assets/svg/dino/stage-1.svg', alt: '' } })]),
+    el('span', { className: 'memory-board__back' }, [el('img', { attrs: { src: 'assets/svg/dino/trex/stage-1.svg', alt: '' } })]),
     cardFace(card)
   ]);
   element.addEventListener('click', () => onFlip(card.cardId));
@@ -50,8 +50,7 @@ function cardButton(card, onFlip) {
 function onMatch(context, cardId) {
   const { game, session, layout, elements } = context;
   const wordId = game.deck.find((card) => card.cardId === cardId).wordId;
-  const isCorrect = isPairCorrect(game, wordId);
-  const result = session.record(itemKey('word', wordId), isCorrect ? 'correct' : 'wrong', { base: LEVEL_FIVE_BASE, consolationPoints: LEVEL_FIVE_BASE });
+  const result = session.record(itemKey('word', wordId), 'correct', { base: LEVEL_FIVE_BASE });
   [`${wordId}-word`, `${wordId}-picture`].forEach((id) => elements.get(id).classList.add('memory-board__card--matched'));
   layout.scoreBoard.update(session.roundScore(), session.streak());
   layout.companion.react('correct');

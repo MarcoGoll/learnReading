@@ -33,7 +33,7 @@ care: { hunger: 80, fun: 60, clean: 100, updatedAt: 1735000000000 }
 
 ### UI
 
-- After the round summary ("Weiter"), before the evolution scene: a care screen with the active dino and three big buttons (food icon, ball icon, broom icon); the suggested one pulses. Tap -> animation (2-3 s) -> continue.
+- After the round summary ("Weiter") and after the evolution scene (if the dino grows): a care screen with the three need bars, the active dino (with the poop pile while cleanliness is below 50 %; it only disappears through cleaning) and three big buttons (food icon, ball icon, broom icon); the suggested one pulses. Tap -> animation (2-3 s) -> continue.
   - Feed: a leaf/berry flies to the dino, chewing animation, sound.
   - Play: a ball bounces, the dino jumps after it.
   - Clean: the poop pile next to the dino is swept away with sparkles.

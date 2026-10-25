@@ -11,7 +11,7 @@ Level 5 variant: a memory game with word cards and picture cards. The child find
 | Size | 6 pairs / 12 cards (fewer pairs only if the material does not allow 6, minimum 4) | Classic memory size, as chosen by the user |
 | Pair type | One word card + one picture card per learned noun | Matching requires reading |
 | Points | 50 base points per found pair (plus streak bonus for consecutive "correct" pairs) | Consistent with level 5 scoring |
-| "Correct" pair | A pair counts as correct if it is matched without a mismatch involving one of its cards **after both of its cards had already been revealed once** | The first flips are pure luck; a mistake only counts when the child already had the information |
+| "Correct" pair | Every found pair counts as correct; mismatches are not counted as mistakes | In memory it is normal to find nothing for 3-4 turns; mistakes must not cost points, stars, or the round |
 | Round passed | At least half of the pairs are correct (rule from ChallengeLevel) | Same rule as all variants |
 
 ## Technical Details
@@ -19,10 +19,8 @@ Level 5 variant: a memory game with word cards and picture cards. The child find
 ### Pure logic (`js/logic/wordMemory.js`, unit tested)
 
 - `buildDeck(pictureTargets, pairCount = 6)` -> shuffled array of 12 cards `{ cardId, wordId, kind: 'word' | 'picture' }`
-- Game state object: `revealedOnce` (set of cardIds), `matchedWordIds`, `pairMistakes` (wordId -> count)
+- Game state object: `matchedWordIds`, `openCardId`
 - `flip(gameState, cardId)` -> returns the next state and an event (`firstCard`, `match`, `mismatch`)
-- On mismatch: for each of the two cards, if its partner card is in `revealedOnce` and the card itself was revealed before, increase `pairMistakes[wordId]`
-- `isPairCorrect(gameState, wordId)` -> `pairMistakes[wordId] === 0`
 - `pictureTargets` from WordPictureVariant (learned nouns with picture)
 
 ### Variant registration

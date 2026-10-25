@@ -1,9 +1,11 @@
 import { el, button, icon } from '../components/dom.js';
 import { letterCard } from '../components/itemCards.js';
-import { LETTERS, letterById } from '../data/letters.js';
+import { letterById } from '../data/letters.js';
 import { shuffle } from '../logic/random.js';
 import { correctItems } from '../logic/readingRound.js';
-import { isLevelOneComplete, missingLetters, countVowels, RECOMMENDED_VOWELS } from '../logic/letterLevel.js';
+import { countVowels, RECOMMENDED_VOWELS } from '../logic/letterLevel.js';
+import { activeProfile } from '../content/profiles.js';
+import { level1Items } from '../content/levelRules.js';
 import { itemKey } from '../logic/history.js';
 import { store } from '../state/store.js';
 import { runReadingRound } from '../game/readingRoundRunner.js';
@@ -11,22 +13,18 @@ import { endLevelRound } from '../game/levelFlow.js';
 import { playSound } from '../audio/soundPlayer.js';
 import { createGoalBanner } from '../components/goalBanner.js';
 import { levelGoal } from '../logic/levelGoals.js';
-import { WORDS } from '../data/words.js';
 
-/** Hint for the adult during the round. */
-const ADULT_HINT = 'Es zählt der Laut (mmm), nicht der Buchstabenname (em).';
+/** Screen titles per level 1 mode. */
+const TITLES = { letters: 'Level 1: Buchstaben', combinations: 'Level 1: Buchstabenverbindungen', review: 'Level 1: Laute wiederholen' };
 
 /**
- * Builds the friendly message about missing letters.
- * @param {object} state - Game state.
- * @returns {string} Message or empty string.
+ * Returns the title key of level 1 in the active journey.
+ * @param {object} profile - Content profile.
+ * @returns {string} Key of TITLES.
  */
-function missingMessage(state) {
-  const missing = missingLetters(state.pools.letters);
-  if (missing === 0) {
-    return '';
-  }
-  return missing === 1 ? 'Noch 1 Buchstabe bis Level 2!' : `Noch ${missing} Buchstaben bis Level 2!`;
+function titleKey(profile) {
+  if (profile.level1.mode === 'review') return 'review';
+  return profile.level1.items[0].type === 'combination' ? 'combinations' : 'letters';
 }
 
 /**
@@ -69,76 +67,109 @@ function letterTile(letter, selected, pool, onChange) {
  * @param {Function} onStart - Called with the selected letter ids.
  */
 function renderSelection(container, onStart) {
-  const pool = store.getState().pools.letters;
-  const selected = new Set();
-  const tiles = [];
-  const vowelHintElement = el('p', { className: 'letter-select__vowel-hint', attrs: { 'aria-live': 'polite' } });
-  const startButton = button({ className: 'big-button', iconName: 'play_arrow', label: "Los geht's", onClick: () => onStart([...selected]) });
-  const refresh = () => {
-    tiles.forEach(({ tile, letter }) => {
-      tile.classList.toggle('letter-select__tile--selected', selected.has(letter.id));
-      tile.setAttribute('aria-pressed', String(selected.has(letter.id)));
-    });
-    startButton.disabled = selected.size === 0;
-    const hint = vowelHint(selected);
-    vowelHintElement.textContent = hint.text;
-    vowelHintElement.classList.toggle('letter-select__vowel-hint--warning', hint.isWarning);
+  const profile = activeProfile(store.getState());
+  const view = { profile, selected: new Set(), tiles: [] };
+  view.vowelHint = el('p', { className: 'letter-select__vowel-hint', attrs: { 'aria-live': 'polite' } });
+  view.startButton = button({ className: 'big-button', iconName: 'play_arrow', label: "Los geht's", onClick: () => onStart([...view.selected]) });
+  const refresh = () => refreshSelection(view);
+  profile.level1.items.forEach((letter) => view.tiles.push({ letter, tile: letterTile(letter, view.selected, store.getState().pools.letters, refresh) }));
+  const setAll = (isSelected) => {
+    profile.level1.items.forEach((letter) => (isSelected ? view.selected.add(letter.id) : view.selected.delete(letter.id)));
+    refresh();
   };
-  LETTERS.forEach((letter) => tiles.push({ letter, tile: letterTile(letter, selected, pool, refresh) }));
-  const setAll = (isSelected) => { LETTERS.forEach((letter) => (isSelected ? selected.add(letter.id) : selected.delete(letter.id))); refresh(); };
-  const goalBanner = createGoalBanner(1);
-  goalBanner.update(levelGoal(1, store.getState(), WORDS));
-  container.replaceChildren(el('section', { className: 'letter-select' }, [
-    el('h1', { className: 'screen-title', text: 'Level 1: Welche Buchstaben kennst du?' }),
-    goalBanner.element,
-    el('p', { className: 'letter-select__hint', text: 'Erwachsene tippen die Buchstaben an, die das Kind schon kennt. Ein Stern zeigt bereits gelernte.' }),
-    vowelHintElement,
-    el('div', { className: 'letter-select__grid' }, tiles.map(({ tile }) => tile)),
-    el('div', { className: 'letter-select__actions' }, [
-      button({ className: 'small-button', label: 'Alle auswählen', onClick: () => setAll(true) }),
-      button({ className: 'small-button', label: 'Auswahl leeren', onClick: () => setAll(false) }),
-      startButton
-    ])
-  ]));
+  container.replaceChildren(selectionSection(view, setAll));
   refresh();
 }
 
 /**
- * Starts the reading round with the selected letters.
+ * Updates tiles, start button, and vowel hint of the selection screen.
+ * @param {object} view - Selection view (profile, selected, tiles, vowelHint, startButton).
+ */
+function refreshSelection(view) {
+  view.tiles.forEach(({ tile, letter }) => {
+    tile.classList.toggle('letter-select__tile--selected', view.selected.has(letter.id));
+    tile.setAttribute('aria-pressed', String(view.selected.has(letter.id)));
+  });
+  view.startButton.disabled = view.selected.size === 0;
+  const hint = vowelHint(view.selected);
+  view.vowelHint.hidden = !view.profile.level1.vowelHint;
+  view.vowelHint.textContent = hint.text;
+  view.vowelHint.classList.toggle('letter-select__vowel-hint--warning', hint.isWarning);
+}
+
+/**
+ * Builds the selection screen section.
+ * @param {object} view - Selection view.
+ * @param {Function} setAll - Selects or clears all tiles.
+ * @returns {HTMLElement} Section.
+ */
+function selectionSection(view, setAll) {
+  const goalBanner = createGoalBanner(1);
+  goalBanner.update(levelGoal(1, store.getState()));
+  const title = titleKey(view.profile) === 'combinations' ? 'Level 1: Welche Verbindungen kennst du?' : 'Level 1: Welche Buchstaben kennst du?';
+  return el('section', { className: 'letter-select' }, [
+    el('h1', { className: 'screen-title', text: title }),
+    goalBanner.element,
+    el('p', { className: 'letter-select__hint', text: 'Erwachsene tippen an, was das Kind schon kennt. Ein Stern zeigt bereits gelernte.' }),
+    view.vowelHint,
+    el('div', { className: 'letter-select__grid' }, view.tiles.map(({ tile }) => tile)),
+    el('div', { className: 'letter-select__actions' }, [
+      button({ className: 'small-button', label: 'Alle auswählen', onClick: () => setAll(true) }),
+      button({ className: 'small-button', label: 'Auswahl leeren', onClick: () => setAll(false) }),
+      view.startButton
+    ])
+  ]);
+}
+
+/**
+ * Starts the reading round with the given letter items.
  * @param {HTMLElement} container - Screen container.
- * @param {Array<string>} letterIds - Selected letter ids.
+ * @param {Array<object>} letters - Letter items of the round.
  * @param {object} screen - Screen context holding the current cleanup.
  */
-function startRound(container, letterIds, screen) {
+function startRound(container, letters, screen) {
+  const profile = activeProfile(store.getState());
   screen.cleanup = runReadingRound(container, {
-    title: 'Level 1: Buchstaben',
+    title: TITLES[titleKey(profile)],
     recordLevel: 1,
     level: 1,
     goalLevel: 1,
     goalIdOf: (letter) => letter.id,
-    hint: ADULT_HINT,
-    items: shuffle(letterIds.map(letterById)),
+    hint: profile.level1.hint,
+    items: shuffle(letters),
     renderItem: letterCard,
     historyKey: (letter) => itemKey('letter', letter.id),
     speakText: () => null,
     onFinished: (results, session) => endLevelRound(container, {
       level: 1,
       correctIds: correctItems(results).map((letter) => letter.id),
-      roundScore: session.roundScore(),
-      isComplete: (state) => isLevelOneComplete(state.pools.letters),
-      messageFor: missingMessage,
-      onReplay: () => renderSelection(container, (ids) => startRound(container, ids, screen))
+      session,
+      onReplay: () => showStart(container, screen)
     })
   });
 }
 
 /**
- * Renders level 1 (letters).
+ * Shows the start of level 1: the selection screen, or directly a review round.
+ * @param {HTMLElement} container - Screen container.
+ * @param {object} screen - Screen context holding the current cleanup.
+ */
+function showStart(container, screen) {
+  const { mode, items } = level1Items(store.getState());
+  if (mode === 'review') {
+    startRound(container, items, screen);
+    return;
+  }
+  renderSelection(container, (ids) => startRound(container, ids.map(letterById), screen));
+}
+
+/**
+ * Renders level 1 (letters, combinations, or review).
  * @param {HTMLElement} container - Screen container.
  * @returns {Function} Cleanup function.
  */
 export function renderLevel1(container) {
   const screen = { cleanup: null };
-  renderSelection(container, (ids) => startRound(container, ids, screen));
+  showStart(container, screen);
   return () => { if (screen.cleanup) screen.cleanup(); };
 }

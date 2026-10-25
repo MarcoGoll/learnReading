@@ -44,3 +44,17 @@
 .sentence-card__mark {
   margin-left: -0.3em;
 }
+
+.item-card__combination {
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.12em;
+}
+
+.item-card--long {
+  font-size: clamp(2.4rem, 8vw, 5.5rem);
+}
+
+.item-card__part-gap {
+  margin-left: 0.25em;
+}

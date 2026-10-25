@@ -1,7 +1,9 @@
 import { el } from './dom.js';
 import { splitIntoLetters, letterById } from '../data/letters.js';
-import { wordById, displaySyllables } from '../data/words.js';
-import { SIGHT_WORDS, endMark } from '../data/sentences.js';
+import { wordById } from '../data/allWords.js';
+import { displaySyllables } from '../data/wordParser.js';
+import { endMark } from '../data/sentences.js';
+import { ALL_SIGHT_WORDS } from '../data/sightWords.js';
 
 /**
  * Creates the card content for a letter pair such as "M m".
@@ -19,10 +21,37 @@ export function letterCard(letter) {
  */
 export function syllableCard(syllable) {
   const parts = splitIntoLetters(syllable.id).map((letterId) => {
-    const isVowel = letterById(letterId).type === 'vowel';
-    return el('span', { className: `item-card__part item-card__part--${isVowel ? 'vowel' : 'consonant'}`, text: letterId });
+    const type = letterById(letterId).type;
+    const combination = type === 'combination' ? ' item-card__combination' : '';
+    return el('span', { className: `item-card__part item-card__part--${type === 'vowel' ? 'vowel' : 'consonant'}${combination}`, text: letterId });
   });
   return el('div', { className: 'item-card item-card--syllable' }, parts);
+}
+
+/**
+ * Splits the display text of a syllable into nodes, underlining letter combinations.
+ * @param {string} part - Display text of one syllable (original case).
+ * @returns {Array<Node>} Text nodes and combination spans.
+ */
+function syllableContent(part) {
+  let offset = 0;
+  return splitIntoLetters(part.toLowerCase()).map((letterId) => {
+    const text = part.slice(offset, offset + letterId.length);
+    offset += letterId.length;
+    return letterById(letterId).type === 'combination'
+      ? el('span', { className: 'item-card__combination', text })
+      : document.createTextNode(text);
+  });
+}
+
+/**
+ * Returns the index of the first syllable of the second part of a compound word (or -1).
+ * @param {object} word - Word entry.
+ * @returns {number} Syllable index.
+ */
+function compoundBoundary(word) {
+  const firstPart = word.parts ? wordById(word.parts[0]) : null;
+  return firstPart ? firstPart.syllables.length : -1;
 }
 
 /**
@@ -33,10 +62,10 @@ export function syllableCard(syllable) {
  */
 export function syllableSpans(word, displayText) {
   const source = displayText ? { ...word, display: displayText } : word;
+  const boundary = compoundBoundary(word);
   return displaySyllables(source).map((part, index) => el('span', {
-    className: `item-card__syllable item-card__syllable--${index % 2 === 0 ? 'odd' : 'even'}`,
-    text: part
-  }));
+    className: `item-card__syllable item-card__syllable--${index % 2 === 0 ? 'odd' : 'even'}${index === boundary ? ' item-card__part-gap' : ''}`
+  }, syllableContent(part)));
 }
 
 /**
@@ -45,7 +74,8 @@ export function syllableSpans(word, displayText) {
  * @returns {HTMLElement} Card content.
  */
 export function wordCard(word) {
-  return el('div', { className: 'item-card item-card--word' }, syllableSpans(word));
+  const isLong = word.syllables.length >= 4 || word.display.length > 9;
+  return el('div', { className: `item-card item-card--word${isLong ? ' item-card--long' : ''}` }, syllableSpans(word));
 }
 
 /**
@@ -56,7 +86,7 @@ export function wordCard(word) {
  */
 export function sentenceToken(token, displayText) {
   const word = wordById(token);
-  if (word && !SIGHT_WORDS.includes(token)) {
+  if (word && !ALL_SIGHT_WORDS.includes(token)) {
     return el('span', { className: 'sentence-card__token' }, syllableSpans(word, displayText));
   }
   return el('span', { className: 'sentence-card__token sentence-card__token--sight', text: displayText });

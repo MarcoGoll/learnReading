@@ -109,3 +109,8 @@
 .spoken-target__reveal[hidden] {
   display: none;
 }
+
+.spoken-target__pictures {
+  display: flex;
+  gap: 10px;
+}

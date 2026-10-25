@@ -2,14 +2,17 @@
 
 ## Overview / Goal
 
-About 12 dino accessories (hat, sunglasses, scarf, crown, ...) are unlocked automatically at total-point thresholds. In the "Dino-Schrank" the child chooses what the dino wears. This adds a motivation besides highscore and dino evolution.
+24 dino accessories (hat, sunglasses, scarf, crown, ...) are bought by the child in the "Dino-Schrank" with collected points; the child chooses which one to get and what the dino wears. This adds a motivation besides highscore and dino evolution.
 
 ## Decisions
 
 | Topic | Decision | Justification |
 |-------|----------|---------------|
-| Unlocking | Automatically at total-point thresholds; points are not spent | Highscore and total points stay untouched; no loss feeling |
-| Reward type | About 12 dino accessories the dino can wear | Strengthens the bond with the dino |
+| Unlocking | The child buys accessories in the wardrobe with spendable points (total points minus spent points, `rewards.spent`); total score and highscore stay untouched | The child decides what to unlock; saving for an item is a motivation |
+| Reward type | 24 dino accessories the dino can wear (head, eyes, neck in rotation) | Strengthens the bond with the dino |
+| Prices | The three cheapest cost 100, 150, 250 points; the others 1000-5000 (golden crown 5000); all together 50000 | Quick first success, then items that need many rounds of saving |
+| Notices | Round summary and home screen show "Du hast genug Punkte!" and a badge on the wardrobe button while something is affordable; affordable items glow in the wardrobe; buying asks for confirmation and puts the item on | The child knows when to visit the wardrobe |
+| Older saves | Accessories that were unlocked for free count as spent (capped at the total score) | No double benefit after the switch |
 | Wearing | One accessory per slot (head, eyes, neck), combinable | Allows funny combinations without clutter |
 | Visibility | Worn accessories appear on the home screen dino, the companion dino, and in evolution scenes | The child sees its choice everywhere |
 

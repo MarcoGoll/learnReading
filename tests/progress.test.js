@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import { recordResult, dateString, itemKey } from '../js/logic/history.js';
 import { successRate, isDifficult, difficultItems, activityLastDays, entriesByType } from '../js/logic/statistics.js';
 import { buildPracticeRound, pointsForPracticeItem, practiceItemCount } from '../js/logic/practice.js';
-import { newlyUnlocked, nextReward, unlockReached, toggleWorn } from '../js/logic/rewards.js';
+import { canBuy, buyReward, spendablePoints, cheapestLocked, buyableRewards, toggleWorn } from '../js/logic/rewards.js';
 import { REWARDS, rewardById } from '../js/data/rewards.js';
-import { createDefaultState } from '../js/state/defaultState.js';
+import { createDefaultState, normalizeState } from '../js/state/defaultState.js';
 
 /**
  * Records several results for one item.
@@ -79,15 +79,24 @@ test('practice points use the base of the item type with streak bonus', () => {
   assert.equal(pointsForPracticeItem('word:oma', 3), 60);
 });
 
-test('rewards unlock at thresholds without spending points', () => {
-  assert.deepEqual(newlyUnlocked(90, 260, REWARDS).map((reward) => reward.id), ['redCap', 'sunglasses']);
-  assert.deepEqual(nextReward(120, REWARDS), { reward: rewardById('sunglasses'), missing: 130 });
-  assert.equal(nextReward(9000, REWARDS), null);
+test('accessories are bought with spendable points; the total score stays', () => {
   const state = createDefaultState();
   state.score.total = 300;
-  assert.equal(unlockReached(state, REWARDS).length, 2);
-  assert.equal(unlockReached(state, REWARDS).length, 0);
+  assert.deepEqual(buyableRewards(state, REWARDS).map((reward) => reward.id), ['redCap', 'sunglasses', 'stripedScarf']);
+  assert.equal(canBuy(state, rewardById('flowerCrown')), false);
+  assert.equal(buyReward(state, rewardById('stripedScarf')), true);
+  assert.equal(spendablePoints(state), 50);
   assert.equal(state.score.total, 300);
+  assert.equal(buyReward(state, rewardById('stripedScarf')), false);
+  assert.equal(buyReward(state, rewardById('redCap')), false);
+  assert.deepEqual(cheapestLocked(state, REWARDS), { reward: rewardById('redCap'), missing: 50 });
+  assert.equal(canBuy(state, rewardById('goldenCape')), false);
+});
+
+test('older states count free accessories as spent', () => {
+  const state = normalizeState({ version: 2, score: { total: 1000 }, rewards: { unlocked: ['redCap', 'sunglasses'] } });
+  assert.equal(state.rewards.spent, 250);
+  assert.equal(spendablePoints(state), 750);
 });
 
 test('one accessory per slot can be worn and removed', () => {
@@ -95,9 +104,9 @@ test('one accessory per slot can be worn and removed', () => {
   state.rewards.unlocked = ['redCap', 'flowerCrown'];
   toggleWorn(state, rewardById('redCap'));
   toggleWorn(state, rewardById('flowerCrown'));
-  assert.equal(state.rewards.worn.head, 'flowerCrown');
+  assert.equal(state.journeys.trex.worn.head, 'flowerCrown');
   toggleWorn(state, rewardById('flowerCrown'));
-  assert.equal(state.rewards.worn.head, null);
+  assert.equal(state.journeys.trex.worn.head, null);
   toggleWorn(state, rewardById('sunglasses'));
-  assert.equal(state.rewards.worn.eyes, null);
+  assert.equal(state.journeys.trex.worn.eyes, null);
 });

@@ -9,7 +9,7 @@ New sound items for level 1 of the Triceratops journey: letter combinations that
 | Topic | Decision | Justification |
 |-------|----------|---------------|
 | Items | St, Sp, Pf, Qu, ck, ng, nk and the double consonants ll, mm, nn, ss, tt, ff, pp (14 items) | Most frequent combinations in first-grade words |
-| Goal (Triceratops level 1) | 8 of the 14 items read correctly | Same goal size as the T-Rex level 1 |
+| Goal (Triceratops level 1) | 1 of the 14 items read correctly | The combinations build on known letters; one mastered combination is enough to move on |
 | Display | Pair tiles like the letters ("St st", "Pf pf", "Qu qu"); combinations that never start a word are shown in lowercase only ("ck", "ng", "nk", "ll", ...) | Matches how they appear in words |
 | Reading aid in words | Combinations are underlined inside syllables and words (in addition to the colored syllables) | The child recognizes them as one sound |
 | Adult hint | "Es zählt der gemeinsame Laut (z. B. \"scht\" bei St), nicht die einzelnen Buchstaben." | Same principle as in level 1 |
@@ -31,7 +31,7 @@ New sound items for level 1 of the Triceratops journey: letter combinations that
 
 ### Content profile
 
-The Triceratops profile uses these 14 items for level 1 (selection screen shows only them); goal: 8 mastered combinations. The T-Rex profile keeps its 35 items.
+The Triceratops profile uses these 14 items for level 1 (selection screen shows only them); goal: 1 mastered combination. The T-Rex profile keeps its 35 items.
 
 ### Underlining
 

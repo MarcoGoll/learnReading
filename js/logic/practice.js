@@ -11,10 +11,11 @@ const PRACTICE_BASE = { letter: 10, syllable: 20, word: 30 };
  * Builds a practice round of difficult items (lowest success rate first).
  * @param {object} history - History by item key.
  * @param {number} [maxSize=8] - Maximum round size.
+ * @param {Function} [isAllowed] - Returns false for keys that must not be practiced (deleted or hidden words).
  * @returns {Array<string>} Item keys.
  */
-export function buildPracticeRound(history, maxSize = 8) {
-  return difficultItems(history, PRACTICE_TYPES).slice(0, maxSize).map((item) => item.key);
+export function buildPracticeRound(history, maxSize = 8, isAllowed = () => true) {
+  return difficultItems(history, PRACTICE_TYPES).filter((item) => isAllowed(item.key)).slice(0, maxSize).map((item) => item.key);
 }
 
 /**
@@ -39,8 +40,9 @@ export function pointsForPracticeItem(key, streakLength) {
 /**
  * Counts the difficult items that can be practiced.
  * @param {object} history - History by item key.
+ * @param {Function} [isAllowed] - Returns false for keys that must not be practiced (deleted or hidden words).
  * @returns {number} Number of difficult practice items.
  */
-export function practiceItemCount(history) {
-  return difficultItems(history, PRACTICE_TYPES).length;
+export function practiceItemCount(history, isAllowed = () => true) {
+  return difficultItems(history, PRACTICE_TYPES).filter((item) => isAllowed(item.key)).length;
 }

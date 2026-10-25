@@ -217,3 +217,15 @@
     transform: rotate(3deg);
   }
 }
+
+/* Pterosaur: gentle wing flapping as idle animation */
+.dino--pterosaur .dino__wing {
+  transform-origin: 50% 20%;
+  animation: dino-wing 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes dino-wing {
+  to {
+    transform: scaleY(0.75);
+  }
+}

@@ -1,0 +1,40 @@
+.story {
+  gap: 14px;
+}
+
+.story__pictures {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.story__picture {
+  width: clamp(80px, 14vw, 130px);
+  height: auto;
+}
+
+.story__reading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.story__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.story__text .item-card--sentence {
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+}
+
+.story__question {
+  margin: 6px 0 0;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: #fff3e0;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 700;
+}

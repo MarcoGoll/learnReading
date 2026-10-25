@@ -3,15 +3,18 @@ import { showRoundSummary } from '../components/roundSummary.js';
 import { store } from '../state/store.js';
 import { navigate } from '../router.js';
 import { finishRound } from '../logic/levelProgress.js';
-import { isRoundPassed, isLevelFiveComplete, VARIANTS_TO_COMPLETE } from '../logic/challengeLevel.js';
-import { unlockReached } from '../logic/rewards.js';
+import { isRoundPassed, VARIANTS_TO_COMPLETE } from '../logic/challengeLevel.js';
+import { unlockStarRewards, buyableRewards } from '../logic/rewards.js';
 import { mergeUnique } from '../logic/random.js';
 import { REWARDS } from '../data/rewards.js';
+import { isLevelComplete } from '../content/levelRules.js';
+import { activeProfile } from '../content/profiles.js';
+import { activeJourney } from '../state/journeyState.js';
+import { MIN_TASKS_FOR_STARS } from '../logic/stars.js';
 import { playSound } from '../audio/soundPlayer.js';
 import { continueAfterRound, goalSummaryElement } from '../game/levelFlow.js';
 import { levelGoal } from '../logic/levelGoals.js';
-import { WORDS } from '../data/words.js';
-import { VARIANTS, variantById } from './challenge/variantRegistry.js';
+import { variantById, variantsOf } from './challenge/variantRegistry.js';
 import { collectMaterial } from './challenge/variantContext.js';
 
 /**
@@ -44,34 +47,36 @@ function variantCard(variant, material, passed) {
 export function renderChallengeMenu(container) {
   const state = store.getState();
   const material = collectMaterial(state);
-  const passed = state.challenge.passedVariants;
+  const passed = activeJourney(state).passedVariants;
   const progress = Math.min(passed.length, VARIANTS_TO_COMPLETE);
   container.replaceChildren(el('section', { className: 'challenge-menu' }, [
     el('h1', { className: 'screen-title', text: 'Level 5: Abenteuer' }),
     el('p', { className: 'challenge-menu__progress', text: `${progress} von ${VARIANTS_TO_COMPLETE} Abenteuern geschafft` }),
-    el('div', { className: 'challenge-menu__grid' }, VARIANTS.map((variant) => variantCard(variant, material, passed)))
+    el('div', { className: 'challenge-menu__grid' }, variantsOf(activeProfile(state)).map((variant) => variantCard(variant, material, passed)))
   ]));
 }
 
 /**
- * Applies the end of a variant round to the state.
+ * Applies the end of a variant round to the active journey.
  * @param {string} variantId - Variant id.
  * @param {boolean} isPassed - Whether the round was passed.
- * @param {number} roundScore - Round score.
- * @returns {object} Outcome with isNewRecord, levelCompletedNow, unlockedRewards.
+ * @param {object} session - Session with roundScore and stats.
+ * @returns {object} Outcome with isNewRecord, levelCompletedNow, stars, unlockedRewards, unlockedJourney.
  */
-function applyVariantEnd(variantId, isPassed, roundScore) {
+function applyVariantEnd(variantId, isPassed, session) {
   let outcome = null;
   store.updateState((state) => {
+    const journey = activeJourney(state);
     if (isPassed) {
-      state.challenge.passedVariants = mergeUnique(state.challenge.passedVariants, [variantId]);
+      journey.passedVariants = mergeUnique(journey.passedVariants, [variantId]);
     }
     outcome = finishRound(state, {
-      level: 5, correctIds: [], roundScore,
-      isComplete: (current) => isLevelFiveComplete(current.challenge.passedVariants)
+      level: 5, correctIds: [], roundScore: session.roundScore(), stats: session.stats(),
+      isComplete: (current) => isLevelComplete(5, current)
     });
-    outcome.unlockedRewards = unlockReached(state, REWARDS);
+    outcome.unlockedRewards = unlockStarRewards(state, REWARDS);
   });
+  outcome.careAllowed = session.stats().taskCount >= MIN_TASKS_FOR_STARS;
   return outcome;
 }
 
@@ -95,23 +100,26 @@ function variantMessage(correctCount, taskCount, needed, levelCompletedNow) {
  * Shows the summary of a variant round.
  * @param {HTMLElement} container - Screen container.
  * @param {object} variant - Variant.
- * @param {object} round - correctCount, taskCount, roundScore.
+ * @param {object} round - correctCount, taskCount, session.
  */
-function showVariantSummary(container, variant, { correctCount, taskCount, roundScore }) {
+function showVariantSummary(container, variant, { correctCount, taskCount, session }) {
   const isPassed = isRoundPassed(correctCount, taskCount);
-  const outcome = applyVariantEnd(variant.id, isPassed, roundScore);
+  const outcome = applyVariantEnd(variant.id, isPassed, session);
+  const roundScore = session.roundScore();
   const state = store.getState();
   const needed = Math.ceil(taskCount / 2);
   showRoundSummary(container, {
     title: outcome.levelCompletedNow ? 'Level 5 geschafft!' : isPassed ? 'Abenteuer geschafft!' : 'Noch nicht geschafft',
-    goalElement: goalSummaryElement(5, levelGoal(5, state, WORDS), outcome.levelCompletedNow),
-    roundScore, record: state.score.levelRecords[5] || 0, total: state.score.total,
+    goalElement: goalSummaryElement(5, levelGoal(5, state), outcome.levelCompletedNow),
+    roundScore, record: activeJourney(state).levelRecords[5] || 0, total: state.score.total,
+    stars: outcome.stars, previousStars: outcome.previousStars,
     isNewRecord: outcome.isNewRecord, levelCompletedNow: outcome.levelCompletedNow,
     message: variantMessage(correctCount, taskCount, needed, outcome.levelCompletedNow),
     unlockedRewards: outcome.unlockedRewards,
+    canShop: buyableRewards(state, REWARDS).length > 0,
     actions: [
       { label: 'Nochmal', iconName: 'replay', onClick: () => renderChallengeVariant(container, variant.id) },
-      { label: 'Weiter', iconName: 'arrow_forward', primary: true, onClick: () => (outcome.levelCompletedNow ? continueAfterRound(true) : navigate('/level/5')) }
+      { label: 'Weiter', iconName: 'arrow_forward', primary: true, onClick: () => (outcome.levelCompletedNow || outcome.careAllowed ? continueAfterRound(container, outcome) : navigate('/level/5')) }
     ]
   });
 }
@@ -130,6 +138,6 @@ export function renderChallengeVariant(container, variantId) {
     return undefined;
   }
   return variant.run(container, material, (correctCount, taskCount, session) => {
-    showVariantSummary(container, variant, { correctCount, taskCount, roundScore: session.roundScore() });
+    showVariantSummary(container, variant, { correctCount, taskCount, session });
   });
 }

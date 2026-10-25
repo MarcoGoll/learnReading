@@ -1,6 +1,7 @@
 import { sentenceCard, sentenceToken } from '../../components/itemCards.js';
-import { wordById } from '../../data/words.js';
-import { SIGHT_WORDS, endMark } from '../../data/sentences.js';
+import { wordById } from '../../data/allWords.js';
+import { endMark } from '../../data/sentences.js';
+import { ALL_SIGHT_WORDS } from '../../data/sightWords.js';
 import { builderSentences, buildTask, checkAnswer } from '../../logic/sentenceBuilder.js';
 import { buildRound } from '../../logic/sentences.js';
 import { itemKey } from '../../logic/history.js';
@@ -14,7 +15,7 @@ import { runBuildTasks } from '../../game/buildTaskRunner.js';
  * @returns {string} Display text.
  */
 function tokenDisplay(token, isFirst) {
-  const word = SIGHT_WORDS.includes(token) ? null : wordById(token);
+  const word = ALL_SIGHT_WORDS.includes(token) ? null : wordById(token);
   const text = word ? word.display : token;
   return isFirst ? text.charAt(0).toUpperCase() + text.slice(1) : text;
 }

@@ -1,4 +1,4 @@
-export { SIGHT_WORDS } from './sightWords.js';
+export { SIGHT_WORDS, ALL_SIGHT_WORDS } from './sightWords.js';
 
 /**
  * Sentence specs: the sentence text, optionally followed by "|" and alternative valid word orders
@@ -43,29 +43,31 @@ export function tokenize(text) {
  * Parses a sentence spec into a sentence entry.
  * @param {string} spec - Sentence spec.
  * @param {number} index - Position in the list, used for the id.
+ * @param {string} prefix - Id prefix of the list.
  * @returns {{id: string, text: string, tokens: Array<string>, alternatives: Array<Array<string>>}} Sentence.
  */
-function parseSentence(spec, index) {
+function parseSentence(spec, index, prefix) {
   const [text, ...alternativeTexts] = spec.split('|');
   return {
-    id: `s${String(index + 1).padStart(2, '0')}`,
+    id: `${prefix}${String(index + 1).padStart(2, '0')}`,
     text,
     tokens: tokenize(text),
     alternatives: alternativeTexts.map((alternative) => alternative.split(' '))
   };
 }
 
-/** All sentences of the game. */
-export const SENTENCES = SENTENCE_SPECS.map(parseSentence);
-
 /**
- * Finds a sentence by id.
- * @param {string} id - Sentence id.
- * @returns {object|undefined} Sentence entry.
+ * Parses a list of sentence specs.
+ * @param {Array<string>} specs - Sentence specs.
+ * @param {string} prefix - Id prefix (e.g. "s" for the first journey).
+ * @returns {Array<object>} Sentences.
  */
-export function sentenceById(id) {
-  return SENTENCES.find((sentence) => sentence.id === id);
+export function parseSentenceSpecs(specs, prefix) {
+  return specs.map((spec, index) => parseSentence(spec, index, prefix));
 }
+
+/** Sentences of the first journey (T-Rex). */
+export const SENTENCES = parseSentenceSpecs(SENTENCE_SPECS, 's');
 
 /**
  * Returns the punctuation mark at the end of a sentence.

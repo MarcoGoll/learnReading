@@ -54,6 +54,7 @@
 }
 
 .home__wardrobe {
+  position: relative;
   margin-top: 8px;
 }
 
@@ -171,4 +172,53 @@
 .level-map__goal-text {
   font-size: 0.9rem;
   font-weight: 700;
+}
+
+.home__journey {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-grass-dark);
+}
+
+.home__mood {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.home__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.home__valley {
+  position: relative;
+}
+
+.home__badge {
+  position: absolute;
+  top: -12px;
+  right: -8px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--color-wrong);
+  font-size: 0.85rem;
+  animation: score-board-pulse 1.2s ease-in-out infinite;
+}
+
+.level-map__stars {
+  display: flex;
+  gap: 2px;
+}
+
+.level-map__star {
+  width: 22px;
+  height: 22px;
+  color: var(--color-gold);
+}
+
+.level-map__star--empty {
+  color: rgba(0, 0, 0, 0.18);
 }

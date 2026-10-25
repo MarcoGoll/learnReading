@@ -40,3 +40,7 @@ New syllable and word content for the Triceratops journey (levels 2-5): syllable
 ## Open Risks / Assumptions
 
 - Syllable boundaries in German are sometimes ambiguous (e.g. "Mut-ter"); the list uses the school hyphenation.
+
+## Implementation Notes
+
+- 133 Triceratops words, 43 Triceratops sentences, and 44 pictures for its nouns.

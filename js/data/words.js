@@ -1,5 +1,7 @@
+import { parseWordSpecs, displaySyllables } from './wordParser.js';
+
 /**
- * Word list for levels 3-5. Each entry is "Syl-la-bles type [p]":
+ * Word list of the first journey (T-Rex) for levels 3-5. Each entry is "Syl-la-bles type [p]":
  * type n = noun, v = verb (first person singular), a = adjective; "p" marks words with a picture
  * under assets/svg/pictures/<id>.svg. Every word consists only of open syllables.
  */
@@ -41,68 +43,7 @@ const WORD_SPECS = [
   'schö-ne a', 'ro-te a', 'gu-te a', 'sau-re a'
 ];
 
-/** Word types used in the specs. */
-const TYPE_NAMES = { n: 'noun', v: 'verb', a: 'adjective' };
+/** Words of the first journey (T-Rex): open syllables only. */
+export const WORDS = parseWordSpecs(WORD_SPECS);
 
-/**
- * Replaces German umlauts so the id can be used as a file name.
- * @param {string} text - Lowercase text.
- * @returns {string} ASCII text.
- */
-function toAscii(text) {
-  return text.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue');
-}
-
-/**
- * Parses a word spec into a word entry.
- * @param {string} spec - Spec such as "Ma-ma n p".
- * @returns {{id: string, display: string, syllables: Array<string>, type: string, picture?: string}} Word.
- */
-function parseWord(spec) {
-  const [syllableText, typeCode, pictureFlag] = spec.split(' ');
-  const parts = syllableText.split('-');
-  const display = parts.join('');
-  const id = display.toLowerCase();
-  const word = { id, display, syllables: parts.map((part) => part.toLowerCase()), type: TYPE_NAMES[typeCode] };
-  if (pictureFlag === 'p') {
-    word.picture = toAscii(id);
-  }
-  return word;
-}
-
-/**
- * Removes entries whose id already appeared earlier.
- * @param {Array<object>} words - Parsed words.
- * @returns {Array<object>} Words with unique ids.
- */
-function uniqueById(words) {
-  const seen = new Set();
-  return words.filter((word) => !seen.has(word.id) && seen.add(word.id));
-}
-
-/** All words of the game. */
-export const WORDS = uniqueById(WORD_SPECS.map(parseWord));
-
-/**
- * Finds a word by id.
- * @param {string} id - Word id.
- * @returns {object|undefined} Word entry.
- */
-export function wordById(id) {
-  return WORDS.find((word) => word.id === id);
-}
-
-/**
- * Returns the display parts of a word, one per syllable, keeping the original case.
- * @param {object} word - Word entry.
- * @returns {Array<string>} Display syllables such as ["Ma", "ma"].
- */
-export function displaySyllables(word) {
-  const parts = [];
-  let offset = 0;
-  word.syllables.forEach((syllable) => {
-    parts.push(word.display.slice(offset, offset + syllable.length));
-    offset += syllable.length;
-  });
-  return parts;
-}
+export { displaySyllables };

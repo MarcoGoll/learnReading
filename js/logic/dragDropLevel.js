@@ -20,27 +20,43 @@ export function pickDistractors(word, syllablePool, randomFn = Math.random) {
 }
 
 /**
- * Builds a drag-and-drop task for a word.
+ * Builds a drag-and-drop task for a word. Compound words (with parts) are built from their
+ * part words plus one distractor word; other words from syllables plus 1-2 distractor syllables.
  * @param {object} word - Target word.
  * @param {Array<string>} syllablePool - Mastered syllable ids.
  * @param {Function} [randomFn] - Random number source.
- * @returns {{word: object, slots: number, tiles: Array<{tileId: string, syllable: string}>}} Task.
+ * @param {Array<string>} [partCandidates=[]] - Word ids usable as distractor parts.
+ * @returns {{word: object, kind: string, slots: number, tiles: Array<object>}} Task.
  */
-export function buildTask(word, syllablePool, randomFn = Math.random) {
+export function buildTask(word, syllablePool, randomFn = Math.random, partCandidates = []) {
+  if (word.parts) {
+    const distractor = shuffle(partCandidates.filter((id) => !word.parts.includes(id)), randomFn).slice(0, 1);
+    const tiles = [...word.parts, ...distractor].map((part, index) => ({ tileId: `p${index}`, part }));
+    return { word, kind: 'parts', slots: word.parts.length, tiles: shuffle(tiles, randomFn) };
+  }
   const syllables = [...word.syllables, ...pickDistractors(word, syllablePool, randomFn)];
   const tiles = syllables.map((syllable, index) => ({ tileId: `t${index}`, syllable }));
-  return { word, slots: word.syllables.length, tiles: shuffle(tiles, randomFn) };
+  return { word, kind: 'syllables', slots: word.syllables.length, tiles: shuffle(tiles, randomFn) };
 }
 
 /**
- * Checks whether the placed syllables form the word in the right order.
+ * Checks whether the placed pieces (syllable ids or part word ids) form the word in the right order.
  * @param {object} task - Task from buildTask.
- * @param {Array<string>} placedSyllables - Syllable ids in slot order.
+ * @param {Array<string>} placedPieces - Piece ids in slot order.
  * @returns {boolean} True if correct.
  */
-export function checkAnswer(task, placedSyllables) {
-  return placedSyllables.length === task.word.syllables.length
-    && task.word.syllables.every((syllable, index) => placedSyllables[index] === syllable);
+export function checkAnswer(task, placedPieces) {
+  const expected = task.kind === 'parts' ? task.word.parts : task.word.syllables;
+  return placedPieces.length === expected.length && expected.every((piece, index) => placedPieces[index] === piece);
+}
+
+/**
+ * Returns the piece id (syllable or part word) of a tile.
+ * @param {object} tile - Tile.
+ * @returns {string} Piece id.
+ */
+export function pieceOf(tile) {
+  return tile.part || tile.syllable;
 }
 
 /**

@@ -14,6 +14,7 @@ All sounds are CC0 (public domain) or generated for this project. Files were con
 | evolution-3.mp3 | Kenney Impact Sounds - `impactPunch_medium_001.ogg` | CC0 |
 | evolution-4.mp3 | Generated with ffmpeg (filtered brown noise "roar") | CC0 (own work) |
 | evolution-5.mp3 | Kenney Impact Sounds - `impactPunch_heavy_000.ogg`, pitched down, mixed with generated roar | CC0 |
+| whoosh.mp3 | Kenney Digital Audio - `phaseJump2.ogg` | CC0 |
 | drag-pickup.mp3 | Kenney Interface Sounds - `select_001.ogg` | CC0 |
 | drag-drop.mp3 | Kenney Interface Sounds - `drop_001.ogg` | CC0 |
 | drag-snap.mp3 | Kenney Interface Sounds - `click_003.ogg` | CC0 |

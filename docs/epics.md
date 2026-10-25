@@ -100,37 +100,41 @@ Status values: `planned -> specified -> in progress -> done`
 ## Long-term Motivation (after the first journey)
 
 ### Epic22: DinoJourneys
-- **Status:** specified
+- **Status:** done
 - **Description:** When the T-Rex is fully grown, it lays an egg with the next dino species, and a new journey starts. Each species is one difficulty stage with its own pass through the levels and harder content. The child can switch back to any unlocked, easier dino at any time.
 
 ### Epic23: NewDinoSpecies
-- **Status:** specified
+- **Status:** done
 - **Description:** Three more species - Triceratops, long-neck (Brachiosaurus), and pterosaur - each with its own growth stages, idle animations, and evolution scenes, in the same style as the T-Rex.
 
 ### Epic24: DinoValley
-- **Status:** specified
+- **Status:** done
 - **Description:** A valley on the home screen where all hatched dinos of the collection live. The child sees its collection there and chooses which dino (and therefore which difficulty) to play with.
 
 ### Epic25: ClosedSyllables
-- **Status:** specified
+- **Status:** done
 - **Description:** New learning content for harder journeys: syllables ending in a consonant (mal, Hund, Ball), which allow many more words.
 
 ### Epic26: LetterCombinations
-- **Status:** specified
+- **Status:** done
 - **Description:** New learning content: letter combinations such as St, Sp, Pf, Qu, ck, ng, nk, and double consonants.
 
 ### Epic27: LongWords
-- **Status:** specified
+- **Status:** done
 - **Description:** New learning content: words with 3-4 syllables and compound words (Haus-tür).
 
 ### Epic28: ShortStories
-- **Status:** specified
+- **Status:** done
 - **Description:** New learning content: short stories of 3-4 sentences that the child reads, followed by a simple comprehension question.
 
 ### Epic29: LevelStars
-- **Status:** specified
+- **Status:** done
 - **Description:** Every level can earn up to 3 stars depending on how well a round went. Missing stars on the level map give a reason to replay levels.
 
 ### Epic30: DinoCare
-- **Status:** specified
+- **Status:** done
 - **Description:** Tamagotchi-like care: every completed round gives the dino something - food, a game, or a clean nest (poop removed) - with a short animation. The care state slowly decreases over time, which gives a gentle reason to keep playing, also with easier dinos.
+
+### Epic31: CustomWords
+- **Status:** done
+- **Description:** In the parent area, adults can add their own words (e.g. names of family members, pets, or words from school) and delete words. Only words are managed; the syllables of a word are derived from it and become available in the syllable level automatically.

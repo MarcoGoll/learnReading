@@ -5,6 +5,7 @@ import { isParentUnlocked } from './game/parentGate.js';
 import { preloadSvgs } from './components/svgLoader.js';
 import { dinoAssetPaths } from './components/dino.js';
 import { renderTopBar } from './components/topBar.js';
+import { installTextFitting } from './components/fitText.js';
 import { initSounds } from './audio/soundPlayer.js';
 import { renderHome } from './screens/home.js';
 import { renderLevel1 } from './screens/level1.js';
@@ -15,7 +16,10 @@ import { renderChallengeMenu, renderChallengeVariant } from './screens/challenge
 import { renderPractice } from './screens/practice.js';
 import { renderParents } from './screens/parents.js';
 import { renderParentStats } from './screens/parentStats.js';
+import { renderParentWords } from './screens/parentWords.js';
+import { registerCustomContent, practiceKeyFilter } from './content/customContent.js';
 import { renderWardrobe } from './screens/wardrobe.js';
+import { renderValley } from './screens/valley.js';
 import { practiceItemCount } from './logic/practice.js';
 
 /** Level screens by level number. */
@@ -45,10 +49,12 @@ function registerRoutes() {
   addRoute(/^\/$/, renderHome);
   addRoute(/^\/level\/([1-5])$/, (container, params) => LEVEL_SCREENS[params[0]](container), levelGuard);
   addRoute(/^\/level\/(5)\/([a-zA-Z]+)$/, (container, params) => renderChallengeVariant(container, params[1]), levelGuard);
-  addRoute(/^\/practice$/, renderPractice, () => (practiceItemCount(store.getState().history) > 0 ? null : '/'));
+  addRoute(/^\/practice$/, renderPractice, () => (practiceItemCount(store.getState().history, practiceKeyFilter(store.getState())) > 0 ? null : '/'));
   addRoute(/^\/wardrobe$/, renderWardrobe);
+  addRoute(/^\/valley$/, renderValley);
   addRoute(/^\/parents$/, renderParents, parentGuard);
   addRoute(/^\/parents\/stats$/, renderParentStats, parentGuard);
+  addRoute(/^\/parents\/words$/, renderParentWords, parentGuard);
 }
 
 /**
@@ -58,6 +64,9 @@ async function startApp() {
   await preloadSvgs(dinoAssetPaths());
   initSounds();
   renderTopBar(document.getElementById('top-bar'));
+  installTextFitting();
+  registerCustomContent(store.getState());
+  store.subscribe(registerCustomContent);
   registerRoutes();
   startRouter(document.getElementById('screen'));
 }

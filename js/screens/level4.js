@@ -1,35 +1,37 @@
 import { el } from '../components/dom.js';
 import { wordCard, syllableCard } from '../components/itemCards.js';
 import { messageDialog } from '../components/dialog.js';
-import { wordById } from '../data/words.js';
+import { wordById, ALL_WORDS } from '../data/allWords.js';
 import { syllableById } from '../data/syllables.js';
-import { buildTask, buildRound, checkAnswer, isLevelFourComplete, LEVEL_FOUR_BASE, MIN_BUILT_WORDS } from '../logic/dragDropLevel.js';
+import { buildTask, buildRound, checkAnswer, pieceOf, LEVEL_FOUR_BASE } from '../logic/dragDropLevel.js';
 import { itemKey } from '../logic/history.js';
+import { level4Words } from '../content/levelRules.js';
+import { activeJourney } from '../state/journeyState.js';
 import { store } from '../state/store.js';
 import { runBuildTasks } from '../game/buildTaskRunner.js';
 import { endLevelRound } from '../game/levelFlow.js';
 import { navigate } from '../router.js';
 
+/** Word ids that can serve as distractor parts of compound words. */
+const PART_CANDIDATES = [...new Set(ALL_WORDS.flatMap((word) => word.parts || []))];
+
 /**
- * Builds the message about missing built words for level 5.
- * @param {object} state - Game state.
- * @returns {string} Message or empty string.
+ * Returns the content of a tile: a syllable or a part word.
+ * @param {object} tile - Tile with a syllable id or a part word id.
+ * @returns {Array<HTMLElement>} Tile content.
  */
-function missingMessage(state) {
-  const missing = Math.max(0, MIN_BUILT_WORDS - state.pools.builtWords.length);
-  if (missing === 0) {
-    return '';
-  }
-  return missing === 1 ? 'Noch 1 Wort bauen bis Level 5!' : `Noch ${missing} Wörter bauen bis Level 5!`;
+function renderTile(tile) {
+  return tile.part ? [wordCard(wordById(tile.part))] : [syllableCard(syllableById(tile.syllable))];
 }
 
 /**
- * Returns the content of a syllable tile.
- * @param {object} tile - Tile with a syllable id.
- * @returns {Array<HTMLElement>} Tile content.
+ * Returns the target (spoken text and pictures) of a task; compound words show their parts' pictures.
+ * @param {object} task - Build task.
+ * @returns {object} Target options.
  */
-function renderSyllableTile(tile) {
-  return [syllableCard(syllableById(tile.syllable))];
+function targetFor(task) {
+  const partPictures = task.word.parts ? task.word.parts.map(wordById).map((part) => part && part.picture).filter(Boolean) : [];
+  return { text: task.word.display, picture: task.word.picture, pictures: partPictures.length > 0 ? partPictures : undefined, revealLabel: 'Wort zeigen' };
 }
 
 /**
@@ -47,17 +49,15 @@ function buildConfig(container, screen, tasks) {
     goalIdOf: (task) => task.word.id,
     base: LEVEL_FOUR_BASE,
     tasks,
-    targetFor: (task) => ({ text: task.word.display, picture: task.word.picture, revealLabel: 'Wort zeigen' }),
-    renderTile: renderSyllableTile,
-    check: (task, placed) => checkAnswer(task, placed.map((tileId) => task.tiles.find((tile) => tile.tileId === tileId).syllable)),
+    targetFor,
+    renderTile,
+    check: (task, placed) => checkAnswer(task, placed.map((tileId) => pieceOf(task.tiles.find((tile) => tile.tileId === tileId)))),
     solutionFor: (task) => el('div', { className: 'drag-task__solution-word' }, [wordCard(task.word)]),
     historyKey: (task) => itemKey('word', task.word.id),
     onFinished: (results, session) => endLevelRound(container, {
       level: 4,
       correctIds: results.filter((result) => result.success).map((result) => result.task.word.id),
-      roundScore: session.roundScore(),
-      isComplete: (current) => isLevelFourComplete(current.pools.builtWords),
-      messageFor: missingMessage,
+      session,
       onReplay: () => startRound(container, screen)
     })
   };
@@ -70,8 +70,9 @@ function buildConfig(container, screen, tasks) {
  */
 function startRound(container, screen) {
   const state = store.getState();
-  const words = state.pools.words.map(wordById).filter(Boolean);
-  const tasks = buildRound(words, state.pools.builtWords).map((word) => buildTask(word, state.pools.syllables));
+  const words = level4Words(state);
+  const tasks = buildRound(words, activeJourney(state).mastered[4])
+    .map((word) => buildTask(word, state.pools.syllables, Math.random, PART_CANDIDATES));
   if (tasks.length === 0) {
     messageDialog('Lies zuerst in Level 3 ein paar Wörter!').then(() => navigate('/'));
     return;

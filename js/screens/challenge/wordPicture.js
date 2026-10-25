@@ -1,6 +1,6 @@
 import { el } from '../../components/dom.js';
 import { wordCard } from '../../components/itemCards.js';
-import { WORDS } from '../../data/words.js';
+import { ALL_WORDS } from '../../data/allWords.js';
 import { buildTask, buildRound, MIN_PICTURE_TARGETS } from '../../logic/wordPicture.js';
 import { itemKey } from '../../logic/history.js';
 import { runChoiceTasks } from '../../game/choiceTaskRunner.js';
@@ -29,7 +29,7 @@ export const wordPictureVariant = {
    * @returns {Function} Cleanup function.
    */
   run(container, material, finish) {
-    const allPictured = WORDS.filter((word) => word.picture);
+    const allPictured = ALL_WORDS.filter((word) => word.picture);
     return runChoiceTasks(container, {
       title: 'Wort und Bild',
       tasks: buildRound(material.pictureTargets, 6).map((target) => buildTask(target, allPictured)),

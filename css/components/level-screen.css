@@ -46,7 +46,7 @@
   justify-content: center;
   gap: 16px;
   width: 100%;
-  max-width: 760px;
+  max-width: 980px;
   padding-left: clamp(70px, 12vw, 140px);
 }
 
@@ -55,6 +55,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  min-width: 0;
   min-height: clamp(200px, 38vh, 340px);
   padding: 24px;
 }

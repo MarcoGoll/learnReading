@@ -81,23 +81,80 @@
 }
 
 /* Stage 3: dragonfly flies in and gets caught */
-.evolution-scene__dragonfly {
+.evolution-scene__flyer {
   position: absolute;
   width: 22%;
   left: 100%;
   top: 10%;
 }
 
-.evolution-scene--changed .evolution-scene__dragonfly {
+.evolution-scene--changed .evolution-scene__flyer {
   animation: evolution-dragonfly 1.6s ease-in-out forwards;
 }
 
-.evolution-scene--stage-3.evolution-scene--changed .dino__head {
+.evolution-scene--stage-3.evolution-scene--changed .dino__head,
+.evolution-scene--pterosaur.evolution-scene--stage-4.evolution-scene--changed .dino__head {
   animation: evolution-snap 0.4s ease-in-out 1.2s 2;
 }
 
-/* Stage 4: roar with screen shake */
-.evolution-scene--stage-4.evolution-scene--changed {
+/* Triceratops: a branch or stone is pushed away */
+.evolution-scene__pushed {
+  position: absolute;
+  left: 62%;
+  bottom: 8%;
+  width: 34%;
+}
+
+.evolution-scene--changed .evolution-scene__pushed {
+  animation: evolution-push 2.2s ease-in-out 0.6s forwards;
+}
+
+.evolution-scene--triceratops.evolution-scene--changed .evolution-scene__new {
+  animation: evolution-appear 0.6s ease-out forwards, evolution-nudge 2.2s ease-in-out 0.6s;
+}
+
+/* Long-neck: tree top above, lake below */
+.evolution-scene__treetop {
+  position: absolute;
+  right: -8%;
+  top: -6%;
+  width: 46%;
+}
+
+.evolution-scene--longneck.evolution-scene--stage-3.evolution-scene--changed .dino__head {
+  animation: evolution-reach 1.2s ease-in-out 0.6s 2 alternate;
+}
+
+.evolution-scene__lake {
+  position: absolute;
+  left: -5%;
+  bottom: -2%;
+  width: 110%;
+}
+
+.evolution-scene--longneck.evolution-scene--stage-4.evolution-scene--changed .evolution-scene__new {
+  animation: evolution-appear 0.6s ease-out forwards, evolution-walk 2.4s ease-in-out 0.6s 2 alternate;
+}
+
+/* Pterosaur: wings flap, first flight above a cloud */
+.evolution-scene--pterosaur.evolution-scene--changed .dino__wing {
+  animation: evolution-flap 0.35s ease-in-out 0.6s 8 alternate;
+}
+
+.evolution-scene__cloud {
+  position: absolute;
+  left: 10%;
+  bottom: 0;
+  width: 70%;
+}
+
+.evolution-scene--pterosaur.evolution-scene--stage-3.evolution-scene--changed .evolution-scene__new,
+.evolution-scene--pterosaur.evolution-scene--stage-5.evolution-scene--changed .evolution-scene__new {
+  animation: evolution-appear 0.6s ease-out forwards, evolution-hover 1.4s ease-in-out 0.6s 3 alternate;
+}
+
+/* T-Rex stage 4: roar with screen shake */
+.evolution-scene--trex.evolution-scene--stage-4.evolution-scene--changed {
   animation: evolution-screen-shake 0.12s linear 0.5s 10;
 }
 
@@ -119,6 +176,41 @@
 /* Stage 5: the dino grows */
 .evolution-scene--stage-5.evolution-scene--changed .evolution-scene__new {
   animation: evolution-grow 1.4s ease-out forwards;
+}
+
+@keyframes evolution-push {
+  to {
+    transform: translateX(60%) rotate(20deg);
+    opacity: 0;
+  }
+}
+
+@keyframes evolution-nudge {
+  50% {
+    transform: translateX(10%);
+  }
+}
+
+@keyframes evolution-reach {
+  to {
+    transform: translate(6px, -14px) rotate(-8deg);
+  }
+}
+
+@keyframes evolution-flap {
+  to {
+    transform: scaleY(0.4);
+  }
+}
+
+@keyframes evolution-hover {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-14%);
+  }
 }
 
 @keyframes evolution-fade-in {
@@ -241,7 +333,7 @@
 
 /* Reduced motion: keep the scene, but without shaking the whole screen. */
 @media (prefers-reduced-motion: reduce) {
-  .evolution-scene--stage-4.evolution-scene--changed {
+  .evolution-scene--trex.evolution-scene--stage-4.evolution-scene--changed {
     animation: none;
   }
 }

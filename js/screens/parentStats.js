@@ -3,8 +3,9 @@ import { store } from '../state/store.js';
 import { navigate } from '../router.js';
 import { difficultItems, activityLastDays, entriesByType } from '../logic/statistics.js';
 import { letterById } from '../data/letters.js';
-import { wordById } from '../data/words.js';
-import { sentenceById } from '../data/sentences.js';
+import { wordById } from '../data/allWords.js';
+import { sentenceById } from '../data/allSentences.js';
+import { storyById } from '../data/stories.js';
 
 /** Section titles per item type. */
 const TYPE_TITLES = { letter: 'Buchstaben', syllable: 'Silben', word: 'Wörter', sentence: 'Sätze' };
@@ -16,7 +17,12 @@ const TYPE_TITLES = { letter: 'Buchstaben', syllable: 'Silben', word: 'Wörter',
  * @returns {string} Display text.
  */
 function displayText(type, id) {
-  const lookup = { letter: () => letterById(id)?.display, word: () => wordById(id)?.display, sentence: () => sentenceById(id)?.text };
+  const lookup = {
+    letter: () => letterById(id)?.display,
+    word: () => wordById(id)?.display,
+    sentence: () => sentenceById(id)?.text,
+    story: () => storyById(id)?.title
+  };
   return (lookup[type] && lookup[type]()) || id;
 }
 

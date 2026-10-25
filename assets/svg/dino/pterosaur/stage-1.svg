@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="dino-svg">
+  
+  <g class="dino__figure" transform="translate(36 50) scale(0.66)">
+    <g class="dino__wing dino__wing--left"><path d="M92 104 L14 84 Q30 120 60 138 L90 130 Z" fill="#ce93d8"/><path d="M92 104 L14 84" stroke="#7b1fa2" stroke-width="4" stroke-linecap="round"/></g>
+    <g class="dino__wing dino__wing--right"><path d="M108 104 L186 84 Q170 120 140 138 L110 130 Z" fill="#ce93d8"/><path d="M108 104 L186 84" stroke="#7b1fa2" stroke-width="4" stroke-linecap="round"/></g>
+    <g class="dino__tail"><path d="M96 146 L100 170 L104 146 Z" fill="#7b1fa2"/></g>
+    <g class="dino__leg dino__leg--back"><rect x="88" y="142" width="8" height="18" rx="4" fill="#7b1fa2"/></g>
+    <g class="dino__leg dino__leg--front"><rect x="104" y="142" width="8" height="18" rx="4" fill="#7b1fa2"/></g>
+    <g class="dino__torso"><ellipse cx="100" cy="122" rx="20" ry="28" fill="#ab47bc"/><ellipse cx="100" cy="128" rx="11" ry="17" fill="#e1bee7"/></g>
+    <g class="dino__anchor dino__anchor--neck" transform="translate(100 94) scale(0.7)"></g>
+    <g class="dino__head">
+      <path d="M92 66 Q70 50 58 44 Q80 46 100 62 Z" fill="#7b1fa2"/>
+      <ellipse cx="100" cy="76" rx="18" ry="15" fill="#ab47bc"/>
+      <path d="M112 72 L156 80 L112 86 Z" fill="#ffca28"/>
+      <g class="dino__eye"><circle cx="104" cy="72" r="6" fill="#fff"/><circle cx="106" cy="73" r="3.3000000000000003" fill="#263238"/><circle cx="107.5" cy="70.5" r="1.2000000000000002" fill="#fff"/></g>
+      <g class="dino__anchor dino__anchor--eyes" transform="translate(106 72) scale(0.6)"></g><g class="dino__anchor dino__anchor--head" transform="translate(102 56) scale(0.7)"></g>
+    </g>
+  </g>
+  <path class="dino__shell" d="M40 150 L52 140 L64 152 L78 138 L92 152 L106 138 L120 152 L134 140 L148 152 L160 142 Q164 196 100 196 Q36 196 40 150 Z" fill="#fff8e1" stroke="#e0c98f" stroke-width="3"/>
+</svg>

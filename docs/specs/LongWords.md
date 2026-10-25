@@ -48,3 +48,8 @@ Content of the long-neck journey: words with 3-4 syllables and compound words (H
 ## Open Risks / Assumptions
 
 - Some long words contain consonant clusters (e.g. "Schnee"); the list only uses clusters that are covered by the letter combinations or single letters.
+
+## Implementation Notes
+
+- The long-neck profile uses 62 new long and compound words plus all 3+ syllable words of the earlier lists (98 words in total).
+- Compound words are only those that are written exactly as their two part words (no linking -n- or -s-), so that they can be built from the part words.

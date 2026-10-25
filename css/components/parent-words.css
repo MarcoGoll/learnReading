@@ -1,0 +1,139 @@
+.parent-words__help {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.parent-words__form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+
+.parent-words__input,
+.parent-words__search {
+  flex: 1 1 220px;
+  min-height: 48px;
+  padding: 8px 14px;
+  border: 2px solid #cfd8dc;
+  border-radius: 14px;
+  font: inherit;
+  font-size: 1.15rem;
+}
+
+.parent-words__preview {
+  min-height: 1.4em;
+  margin: 0;
+  font-family: var(--font-reading);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
+.parent-words__message {
+  margin: 0;
+}
+
+.parent-words__message--error {
+  color: var(--color-wrong);
+  font-weight: 700;
+}
+
+.parent-words__message--success {
+  color: var(--color-correct);
+  font-weight: 700;
+}
+
+.parent-words__search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.parent-words__groups {
+  width: 100%;
+}
+
+.parent-words__group {
+  margin: 10px 0;
+  border-radius: 12px;
+  background: #fafafa;
+  box-shadow: inset 0 0 0 2px #eceff1;
+}
+
+.parent-words__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.parent-words__summary::-webkit-details-marker {
+  display: none;
+}
+
+.parent-words__chevron {
+  transition: transform 0.2s;
+}
+
+.parent-words__group[open] .parent-words__chevron {
+  transform: rotate(180deg);
+}
+
+.parent-words__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0 10px 12px;
+  list-style: none;
+}
+
+.parent-words__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: #f5f7f8;
+}
+
+.parent-words__row--custom {
+  background: #e8f5e9;
+}
+
+.parent-words__row--hidden .parent-words__word {
+  color: var(--color-muted);
+  text-decoration: line-through;
+}
+
+.parent-words__word {
+  flex: 1;
+  font-family: var(--font-reading);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.parent-words__tag {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--color-correct);
+  font-size: 0.8rem;
+  color: #fff;
+}
+
+.parent-words__tag--hidden {
+  background: var(--color-muted);
+}
+
+.parent-words__delete {
+  border-color: var(--color-wrong);
+  color: var(--color-wrong);
+}

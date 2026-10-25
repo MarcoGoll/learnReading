@@ -6,10 +6,12 @@ import { availableSentences, buildRound as buildSentenceRound } from '../js/logi
 import { pictureTargets, buildTask as buildPictureTask, buildRound as buildPictureRound } from '../js/logic/wordPicture.js';
 import { similarityScore, buildTask as buildFindTask } from '../js/logic/findTheWord.js';
 import { gapCandidates, buildTask as buildGapTask } from '../js/logic/gapSentence.js';
-import { buildDeck, createMemoryGame, flip, isPairCorrect, isFinished } from '../js/logic/wordMemory.js';
+import { buildDeck, createMemoryGame, flip, isFinished } from '../js/logic/wordMemory.js';
 import { builderSentences, buildTask as buildSentenceTask, checkAnswer as checkSentence } from '../js/logic/sentenceBuilder.js';
-import { WORDS, wordById } from '../js/data/words.js';
-import { SENTENCES, SIGHT_WORDS, sentenceById } from '../js/data/sentences.js';
+import { WORDS } from '../js/data/words.js';
+import { wordById } from '../js/data/allWords.js';
+import { SENTENCES, SIGHT_WORDS } from '../js/data/sentences.js';
+import { sentenceById } from '../js/data/allSentences.js';
 import { seededRandom } from './helpers.js';
 
 const mama = wordById('mama');
@@ -99,17 +101,16 @@ test('memory deck has word and picture cards per pair', () => {
   assert.equal(deck.filter((card) => card.kind === 'word').length, 6);
 });
 
-test('memory counts mistakes only after both cards were seen', () => {
+test('memory reports matches and mismatches and ends when all pairs are found', () => {
   const targets = ['mama', 'oma', 'rose'].map(wordById);
   const game = createMemoryGame(buildDeck(targets, 3, seededRandom(1)));
   flip(game, 'mama-word');
   assert.equal(flip(game, 'oma-word').event, 'mismatch');
-  assert.equal(isPairCorrect(game, 'mama'), true);
   flip(game, 'mama-picture');
   flip(game, 'oma-picture');
   flip(game, 'mama-word');
   assert.equal(flip(game, 'rose-word').event, 'mismatch');
-  assert.equal(isPairCorrect(game, 'mama'), false);
+  assert.equal(game.matchedWordIds.length, 0);
   flip(game, 'mama-word');
   assert.equal(flip(game, 'mama-picture').event, 'match');
   ['oma-word', 'oma-picture', 'rose-word', 'rose-picture'].forEach((cardId) => flip(game, cardId));

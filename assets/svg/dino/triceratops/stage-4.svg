@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="dino-svg">
+  
+  <g class="dino__figure" transform="translate(14 30) scale(0.86)">
+    <g class="dino__tail"><path d="M42 120 Q14 124 6 146 Q30 140 48 138 Z" fill="#ff9800"/></g>
+    <g class="dino__leg dino__leg--back"><rect x="46" y="140" width="20" height="38" rx="10" fill="#e65100"/><ellipse cx="56" cy="178" rx="14" ry="5" fill="#e65100"/><rect x="104" y="140" width="20" height="38" rx="10" fill="#e65100"/><ellipse cx="114" cy="178" rx="14" ry="5" fill="#e65100"/></g>
+    <g class="dino__torso"><ellipse cx="88" cy="124" rx="56" ry="34" fill="#ff9800"/><ellipse cx="92" cy="136" rx="34" ry="18" fill="#ffe0b2"/></g>
+    <g class="dino__leg dino__leg--front"><rect x="64" y="146" width="20" height="34" rx="10" fill="#ff9800"/><ellipse cx="74" cy="180" rx="14" ry="5" fill="#ff9800"/><rect x="120" y="146" width="20" height="34" rx="10" fill="#ff9800"/><ellipse cx="130" cy="180" rx="14" ry="5" fill="#ff9800"/></g>
+    <g class="dino__anchor dino__anchor--neck" transform="translate(126 112) scale(0.9)"></g>
+    <g class="dino__head">
+      <circle cx="144" cy="96" r="34" fill="#ffcc80"/><circle cx="126" cy="76" r="5" fill="#ffb74d"/><circle cx="150" cy="66" r="5" fill="#ffb74d"/><circle cx="170" cy="78" r="5" fill="#ffb74d"/>
+      <ellipse cx="160" cy="110" rx="28" ry="21" fill="#ff9800"/>
+      <path d="M182 104 Q198 110 190 122 Q180 124 176 116 Z" fill="#e65100"/>
+      <path d="M160 92 L192 66 L168 96 Z M150 92 L172 62 L158 96 Z" fill="#fff8e1" stroke="#bf360c" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M184 104 L194 92 L188 108 Z" fill="#fff8e1" stroke="#bf360c" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M150 124 Q166 130 182 120" stroke="#e65100" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <g class="dino__eye"><circle cx="166" cy="104" r="9" fill="#fff"/><circle cx="168" cy="105" r="4.95" fill="#263238"/><circle cx="169.5" cy="102.5" r="1.8" fill="#fff"/></g>
+      <g class="dino__anchor dino__anchor--eyes" transform="translate(166 104) scale(0.85)"></g><g class="dino__anchor dino__anchor--head" transform="translate(150 64) scale(0.9)"></g>
+    </g>
+  </g>
+  
+</svg>

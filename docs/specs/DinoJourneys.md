@@ -89,3 +89,8 @@ The exact item lists and goals are defined in the content epics (ClosedSyllables
 
 - The level screens must be refactored to work with content profiles; this is the largest technical change of the new epics.
 - The ShortStories variant is only available in the pterosaur journey.
+
+## Implementation Notes
+
+- Each journey stores the items mastered per level (`mastered`), so goals of later journeys count only what was read in that journey; the shared pools keep everything for availability.
+- The content profiles live in `js/content/profiles.js`, the level rules in `js/content/levelRules.js`.

@@ -33,6 +33,13 @@ test('syllable rounds put unmastered syllables first and have at most 10', () =>
   assert.ok(!round.slice(0, 8).some((syllable) => ['ma', 'mo'].includes(syllable.id)));
 });
 
+test('a syllable round read without mistakes makes 5 words possible', () => {
+  const available = availableSyllables(['m', 'a', 'o', 'l', 's', 'i', 'e', 'r'], SYLLABLES);
+  const round = buildSyllableRound(available, [], 10, seededRandom(5), WORDS);
+  assert.equal(round.length, 10);
+  assert.ok(buildableWords(round.map((syllable) => syllable.id), WORDS).length >= 5);
+});
+
 test('level 2 is complete when 5 words can be built', () => {
   const pool = ['ma', 'o', 'pa', 'la', 'so', 'fa', 'mo'];
   assert.ok(buildableWords(pool, WORDS).length >= 5);
@@ -57,33 +64,50 @@ test('level 3 needs 5 words', () => {
   assert.equal(isLevelThreeComplete(['a', 'b', 'c', 'd', 'e']), true);
 });
 
-test('finishing a round merges the pool and completes the level once', () => {
+test('finishing a round merges pools and journey progress and completes the level once', () => {
   const state = createDefaultState();
-  const outcome = finishRound(state, { level: 1, correctIds: ['a', 'o', 'm', 'l', 's', 'n', 't', 'e'], roundScore: 70, isComplete: (current) => isLevelOneComplete(current.pools.letters) });
+  const rule = (current) => isLevelOneComplete(current.journeys.trex.mastered[1]);
+  const outcome = finishRound(state, { level: 1, correctIds: ['a', 'o', 'm', 'l', 's', 'n', 't', 'e'], roundScore: 80, isComplete: rule, stats: { correctCount: 8, taskCount: 8, notYetCount: 0 } });
+  const trex = state.journeys.trex;
   assert.equal(outcome.levelCompletedNow, true);
   assert.equal(outcome.isNewRecord, true);
-  assert.equal(state.currentLevel, 2);
-  assert.equal(state.dinoStage, 1);
-  const again = finishRound(state, { level: 1, correctIds: ['a', 'e'], roundScore: 20, isComplete: () => true });
-  assert.equal(again.levelCompletedNow, false);
+  assert.equal(outcome.stars, 3);
+  assert.equal(trex.currentLevel, 2);
+  assert.equal(trex.dinoStage, 1);
   assert.equal(state.pools.letters.length, 8);
-  assert.equal(state.dinoStage, 1);
+  const again = finishRound(state, { level: 1, correctIds: ['a', 'e'], roundScore: 20, isComplete: () => true, stats: { correctCount: 1, taskCount: 4, notYetCount: 0 } });
+  assert.equal(again.levelCompletedNow, false);
+  assert.equal(trex.mastered[1].length, 8);
+  assert.equal(trex.stars[1], 3);
+  assert.equal(trex.dinoStage, 1);
 });
 
 test('a too small pool can be filled up by replaying', () => {
   const state = createDefaultState();
-  const rule = (current) => isLevelOneComplete(current.pools.letters);
+  const rule = (current) => isLevelOneComplete(current.journeys.trex.mastered[1]);
   finishRound(state, { level: 1, correctIds: ['a', 'm', 'l', 's', 'n', 't', 'e'], roundScore: 70, isComplete: rule });
-  assert.equal(state.completedLevels.length, 0);
+  assert.equal(state.journeys.trex.completedLevels.length, 0);
   const outcome = finishRound(state, { level: 1, correctIds: ['o'], roundScore: 10, isComplete: rule });
   assert.equal(outcome.levelCompletedNow, true);
 });
 
-test('locked levels are detected', () => {
+test('locked levels are detected in the active journey', () => {
   const state = createDefaultState();
   assert.equal(isLevelUnlocked(state, 1), true);
   assert.equal(isLevelUnlocked(state, 2), false);
-  completeLevel(state, 1);
+  completeLevel(state.journeys.trex, 1);
   assert.equal(isLevelUnlocked(state, 2), true);
   assert.equal(isLevelUnlocked(state, 6), false);
+  state.activeJourney = 'triceratops';
+  assert.equal(isLevelUnlocked(state, 1), false);
+});
+
+test('completing level 5 unlocks the next journey once', () => {
+  const state = createDefaultState();
+  state.journeys.trex.currentLevel = 5;
+  const outcome = finishRound(state, { level: 5, correctIds: [], roundScore: 100, isComplete: () => true });
+  assert.equal(outcome.unlockedJourney.id, 'triceratops');
+  assert.equal(state.journeys.triceratops.unlocked, true);
+  assert.equal(state.journeys.triceratops.started, false);
+  assert.equal(state.journeys.trex.dinoStage, 5);
 });

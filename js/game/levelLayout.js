@@ -4,7 +4,7 @@ import { createCompanionDino } from '../components/dino.js';
 import { store } from '../state/store.js';
 import { createGoalBanner } from '../components/goalBanner.js';
 import { levelGoal } from '../logic/levelGoals.js';
-import { WORDS } from '../data/words.js';
+import { activeJourney, activeJourneyDef } from '../state/journeyState.js';
 
 /**
  * Builds the common layout of a level screen: header with title and score board,
@@ -19,7 +19,8 @@ import { WORDS } from '../data/words.js';
  */
 export function createLevelLayout(container, { title, recordLevel, hint, goalLevel }) {
   const state = store.getState();
-  const scoreBoard = createScoreBoard(state.score.levelRecords[recordLevel] || 0);
+  const journey = activeJourney(state);
+  const scoreBoard = createScoreBoard(journey.levelRecords[recordLevel] || 0);
   const stage = el('div', { className: 'level-screen__stage' });
   const companionArea = el('div', { className: 'level-screen__companion' });
   const hintElement = el('p', { className: 'level-screen__hint', text: hint || '' });
@@ -34,9 +35,9 @@ export function createLevelLayout(container, { title, recordLevel, hint, goalLev
     footer
   ]);
   container.replaceChildren(root);
-  const companion = createCompanionDino(companionArea, state.dinoStage, state.rewards.worn);
+  const companion = createCompanionDino(companionArea, activeJourneyDef(state).species, journey.dinoStage, journey.worn);
   const showGoal = (roundIds = []) => {
-    if (goalBanner) goalBanner.update(levelGoal(goalLevel, store.getState(), WORDS, roundIds));
+    if (goalBanner) goalBanner.update(levelGoal(goalLevel, store.getState(), roundIds));
   };
   showGoal();
   return { root, stage, footer, hint: hintElement, scoreBoard, companion, showGoal };

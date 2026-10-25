@@ -1,47 +1,30 @@
 import { syllableCard } from '../components/itemCards.js';
 import { messageDialog } from '../components/dialog.js';
-import { SYLLABLES } from '../data/syllables.js';
-import { WORDS } from '../data/words.js';
 import { correctItems } from '../logic/readingRound.js';
-import { availableSyllables, buildRound, isLevelTwoComplete, missingWords, isReachableWithLetters } from '../logic/syllableLevel.js';
+import { buildRound } from '../logic/syllableLevel.js';
+import { buildableWords } from '../logic/wordLevel.js';
 import { itemKey } from '../logic/history.js';
+import { level2Syllables, goalTarget } from '../content/levelRules.js';
+import { activeProfile } from '../content/profiles.js';
+import { activeJourney } from '../state/journeyState.js';
 import { store } from '../state/store.js';
 import { runReadingRound } from '../game/readingRoundRunner.js';
 import { endLevelRound } from '../game/levelFlow.js';
 import { navigate } from '../router.js';
 
+/** Hint that explains where and how the syllables of the goal are learned. */
+const SYLLABLE_HINT = 'So geht es: Lies hier jede Silbe laut vor. Jede richtig gelesene Silbe ist gelernt. '
+  + 'Aus gelernten Silben entstehen die Wörter für Level 3.';
+
 /**
- * Builds the message about missing words for level 3.
+ * Builds the extra message when the known sounds cannot produce enough words.
  * @param {object} state - Game state.
  * @returns {string} Message or empty string.
  */
 function missingMessage(state) {
-  if (!isReachableWithLetters(state.pools.letters, SYLLABLES, WORDS)) {
-    return 'Lerne in Level 1 noch mehr Buchstaben, vor allem Selbstlaute wie A, O oder E!';
-  }
-  const missing = missingWords(state.pools.syllables, WORDS);
-  if (missing === 0) {
-    return '';
-  }
-  return missing === 1 ? 'Noch 1 Wort bis Level 3!' : `Noch ${missing} Wörter bis Level 3!`;
-}
-
-/**
- * Applies the end of a level 2 round and shows the summary.
- * @param {HTMLElement} container - Screen container.
- * @param {object} screen - Screen context holding the current cleanup.
- * @param {Array<object>} results - Round results.
- * @param {object} session - Round session.
- */
-function finishLevelRound(container, screen, results, session) {
-  endLevelRound(container, {
-    level: 2,
-    correctIds: correctItems(results).map((syllable) => syllable.id),
-    roundScore: session.roundScore(),
-    isComplete: (current) => isLevelTwoComplete(current.pools.syllables, WORDS),
-    messageFor: missingMessage,
-    onReplay: () => startRound(container, screen)
-  });
+  const allAvailable = level2Syllables(state).map((syllable) => syllable.id);
+  const reachable = buildableWords(allAvailable, activeProfile(state).words).length >= goalTarget(2, state);
+  return reachable ? '' : 'Lerne in Level 1 noch mehr Laute, vor allem Selbstlaute wie A, O oder E!';
 }
 
 /**
@@ -51,13 +34,14 @@ function finishLevelRound(container, screen, results, session) {
  */
 function startRound(container, screen) {
   const state = store.getState();
-  const items = buildRound(availableSyllables(state.pools.letters, SYLLABLES), state.pools.syllables);
+  const items = buildRound(level2Syllables(state), activeJourney(state).mastered[2], 10, Math.random, activeProfile(state).words);
   if (items.length === 0) {
-    messageDialog('Lerne zuerst in Level 1 ein paar Buchstaben!').then(() => navigate('/'));
+    messageDialog('Lerne zuerst in Level 1 ein paar Laute!').then(() => navigate('/'));
     return;
   }
   screen.cleanup = runReadingRound(container, {
     title: 'Level 2: Silben',
+    hint: SYLLABLE_HINT,
     recordLevel: 2,
     level: 2,
     goalLevel: 2,
@@ -66,12 +50,18 @@ function startRound(container, screen) {
     renderItem: syllableCard,
     historyKey: (syllable) => itemKey('syllable', syllable.id),
     speakText: (syllable) => syllable.id,
-    onFinished: (results, session) => finishLevelRound(container, screen, results, session)
+    onFinished: (results, session) => endLevelRound(container, {
+      level: 2,
+      correctIds: correctItems(results).map((syllable) => syllable.id),
+      session,
+      messageFor: missingMessage,
+      onReplay: () => startRound(container, screen)
+    })
   });
 }
 
 /**
- * Renders level 2 (syllables).
+ * Renders level 2 (syllables of the active journey).
  * @param {HTMLElement} container - Screen container.
  * @returns {Function} Cleanup function.
  */

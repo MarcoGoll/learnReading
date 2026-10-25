@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import { LETTERS, splitIntoLetters } from '../js/data/letters.js';
-import { SYLLABLES } from '../js/data/syllables.js';
+import { OPEN_SYLLABLES } from '../js/data/syllables.js';
 import { WORDS, displaySyllables } from '../js/data/words.js';
 import { SENTENCES, SIGHT_WORDS } from '../js/data/sentences.js';
 import { REWARDS } from '../js/data/rewards.js';
@@ -19,15 +19,15 @@ test('syllables split into known letters', () => {
   assert.deepEqual(splitIntoLetters('bie'), ['b', 'ie']);
 });
 
-test('every syllable is open (ends with a vowel letter)', () => {
-  const vowelIds = LETTERS.filter((item) => item.type === 'vowel').map((item) => item.id);
-  SYLLABLES.forEach((syllable) => {
+test('every syllable of the first journey is open (ends with a vowel letter)', () => {
+  const vowelIds = [...LETTERS.filter((item) => item.type === 'vowel').map((item) => item.id), 'y'];
+  OPEN_SYLLABLES.forEach((syllable) => {
     assert.ok(vowelIds.includes(syllable.letters.at(-1)), `closed syllable ${syllable.id}`);
   });
 });
 
 test('word list has about 200 words made of known syllables', () => {
-  const syllableIds = new Set(SYLLABLES.map((syllable) => syllable.id));
+  const syllableIds = new Set(OPEN_SYLLABLES.map((syllable) => syllable.id));
   assert.ok(WORDS.length >= 170, `only ${WORDS.length} words`);
   WORDS.forEach((word) => {
     word.syllables.forEach((syllable) => assert.ok(syllableIds.has(syllable), `${word.id}: ${syllable}`));
@@ -64,10 +64,10 @@ test('sentence alternatives use the same tokens', () => {
   });
 });
 
-test('rewards are sorted by threshold and have SVG files', () => {
+test('point rewards are sorted by price and all rewards have SVG files', () => {
   REWARDS.forEach((reward, index) => {
-    if (index > 0) {
-      assert.ok(reward.threshold > REWARDS[index - 1].threshold);
+    if (index > 0 && reward.price !== null && REWARDS[index - 1].price !== null) {
+      assert.ok(reward.price >= REWARDS[index - 1].price);
     }
     assert.ok(existsSync(new URL(`../assets/svg/accessories/${reward.id}.svg`, import.meta.url)), reward.id);
   });

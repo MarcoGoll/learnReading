@@ -65,10 +65,34 @@
   font-weight: 700;
 }
 
-.wardrobe__threshold {
+.wardrobe__item--buyable {
+  border-color: var(--color-gold);
+  animation: care-pulse 1.4s ease-in-out infinite;
+}
+
+.wardrobe__item--buyable .wardrobe__picture {
+  filter: none;
+}
+
+.wardrobe__price {
   display: flex;
   align-items: center;
   gap: 4px;
   font-size: 0.9rem;
+  white-space: nowrap;
   color: var(--color-muted);
+}
+
+.wardrobe__price .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.wardrobe__price--buyable {
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
+.wardrobe__price--buyable .icon {
+  color: var(--color-gold);
 }

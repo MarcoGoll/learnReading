@@ -17,7 +17,7 @@ class RoundSession {
     this.level = level;
     this.updateState = updateState;
     this.today = today;
-    this.counters = { roundScore: 0, streak: 0, correctCount: 0, taskCount: 0 };
+    this.counters = { roundScore: 0, streak: 0, correctCount: 0, taskCount: 0, notYetCount: 0 };
     this.lastUndo = null;
   }
 
@@ -32,6 +32,14 @@ class RoundSession {
 
   /** @returns {number} Number of judged results (without "not yet"). */
   taskCount() { return this.counters.taskCount; }
+
+  /** @returns {number} Number of items marked "not yet". */
+  notYetCount() { return this.counters.notYetCount; }
+
+  /** @returns {{correctCount: number, taskCount: number, notYetCount: number}} Counts for the stars. */
+  stats() {
+    return { correctCount: this.counters.correctCount, taskCount: this.counters.taskCount, notYetCount: this.counters.notYetCount };
+  }
 
   /** @returns {boolean} True if the last result can be undone. */
   canUndo() { return this.lastUndo !== null; }
@@ -89,6 +97,7 @@ export function createRoundSession(options) {
  */
 function applyResult(counters, result, { level, attempt = 1, base = basePoints(level), consolationPoints = 0 }) {
   if (result === 'notYet') {
+    counters.notYetCount += 1;
     return 0;
   }
   counters.taskCount += 1;
