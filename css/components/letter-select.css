@@ -1,0 +1,69 @@
+.letter-select {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.letter-select__hint {
+  margin: 0 0 16px;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+.letter-select__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 10px;
+}
+
+.letter-select__tile {
+  position: relative;
+  min-height: 72px;
+  border: 3px solid transparent;
+  border-radius: var(--radius-medium);
+  background: #fff;
+  font-size: 1.7rem;
+  font-weight: 700;
+  box-shadow: 0 4px 0 #cfd8dc;
+}
+
+.letter-select__tile--selected {
+  border-color: var(--color-correct);
+  background: #e8f5e9;
+}
+
+.letter-select__star {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  width: 18px;
+  height: 18px;
+  color: var(--color-gold);
+}
+
+.letter-select__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.letter-select .goal-banner {
+  margin-bottom: 12px;
+}
+
+.letter-select__vowel-hint {
+  margin: 0 auto 14px;
+  max-width: 760px;
+  padding: 8px 14px;
+  border-radius: var(--radius-medium);
+  background: rgba(255, 255, 255, 0.85);
+  text-align: center;
+}
+
+.letter-select__vowel-hint--warning {
+  border: 3px solid var(--color-primary);
+  font-weight: 700;
+}

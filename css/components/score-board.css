@@ -1,0 +1,74 @@
+.score-board {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.score-board__score {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 18px;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 1.6rem;
+  font-weight: 700;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.score-board__icon {
+  color: var(--color-gold);
+}
+
+.score-board__value {
+  display: inline-block;
+  min-width: 2ch;
+}
+
+.score-board__record {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  color: var(--color-muted);
+}
+
+.score-board__streak {
+  display: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+}
+
+.score-board__streak--visible {
+  display: inline-block;
+  animation: score-board-pulse 1.4s ease-in-out infinite;
+}
+
+.score-board__streak--pop {
+  animation: score-board-pop 0.5s ease-out, score-board-pulse 1.4s ease-in-out 0.5s infinite;
+}
+
+@keyframes score-board-pulse {
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes score-board-pop {
+  0% {
+    transform: scale(0.3);
+  }
+
+  70% {
+    transform: scale(1.25);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}

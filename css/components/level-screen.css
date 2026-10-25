@@ -1,0 +1,118 @@
+.level-screen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.level-screen__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.level-screen__title {
+  margin: 0;
+  font-size: clamp(1.3rem, 3.5vw, 1.9rem);
+}
+
+.level-screen__main {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+}
+
+.level-screen__companion {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: clamp(90px, 16vw, 150px);
+  pointer-events: none;
+}
+
+.level-screen__stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 760px;
+  padding-left: clamp(70px, 12vw, 140px);
+}
+
+.level-screen__card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: clamp(200px, 38vh, 340px);
+  padding: 24px;
+}
+
+.level-screen__hint {
+  align-self: center;
+  margin: 0;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  text-align: center;
+  color: var(--color-text);
+}
+
+.level-screen__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.read-aloud-button {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 2px solid #cfd8dc;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--color-muted);
+}
+
+.read-aloud-button[hidden],
+.read-aloud-button--unavailable {
+  display: none;
+}
+
+.adult-reveal {
+  min-height: 1.5em;
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+}
+
+@media (max-width: 600px) {
+  .level-screen__stage {
+    padding-left: 0;
+  }
+
+  .level-screen__companion {
+    width: 80px;
+    bottom: -20px;
+    opacity: 0.9;
+  }
+}

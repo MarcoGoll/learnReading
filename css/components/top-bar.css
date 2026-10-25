@@ -1,0 +1,40 @@
+.top-bar {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--top-bar-height);
+  padding: 8px 16px;
+  padding-top: max(8px, env(safe-area-inset-top));
+}
+
+.top-bar__title {
+  flex: 1;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-grass-dark);
+}
+
+.top-bar__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.top-bar__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  font-size: 1.1rem;
+  color: var(--color-text);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.top-bar__button[hidden] {
+  display: none;
+}

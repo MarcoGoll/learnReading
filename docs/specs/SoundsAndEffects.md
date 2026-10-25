@@ -19,9 +19,8 @@ Funny sounds, quiet background music, and animations that keep the child attenti
 
 | Event | Sound (character) |
 |-------|-------------------|
-| `correct` | Short cheerful jingle / "boing-ding" (2-3 variations, chosen randomly) |
-| `wrong` | Friendly comic sound (e.g. "wah-wah", slide whistle), never harsh |
-| `streak` | Rising arpeggio when a streak starts / grows |
+| `correct` | One plain, short confirmation sound (always the same; changed after user feedback) |
+| `wrong` | One plain, short error sound (always the same) |
 | `levelComplete` | Fanfare |
 | `newRecord` | Applause / party horn |
 | `evolution` | One sound per stage scene (egg crack, tapping steps, snap, roar, big stomp) |
@@ -53,7 +52,7 @@ setSoundsEnabled(isEnabled)
 - Wrong: the item wiggles horizontally (no red flashing).
 - Streak: streak badge pops in and pulses.
 - New record / level complete: confetti (lightweight DOM/CSS particles, no library).
-- Respect `prefers-reduced-motion` (fades instead of movement).
+- Animations always run, also with `prefers-reduced-motion` (they are core feedback for the child); only the screen shake of the roar scene is dropped in that mode. (Changed after user feedback: replacing all movement by fades made points and evolutions invisible in Chrome.)
 
 ### Companion dino
 
@@ -68,7 +67,7 @@ setSoundsEnabled(isEnabled)
 - Correct answers trigger bounce, stars, and flying points; wrong answers trigger a wiggle.
 - The companion dino in the current stage reacts to every correct and wrong judgement.
 - All sound files are CC0 and listed with their source in `assets/sounds/LICENSES.md`.
-- With `prefers-reduced-motion`, movement animations are replaced by fades.
+- With `prefers-reduced-motion`, all feedback animations still run; only the screen shake is removed.
 
 ## Open Risks / Assumptions
 

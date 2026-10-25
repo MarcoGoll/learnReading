@@ -1,0 +1,247 @@
+.evolution-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px;
+  background: radial-gradient(circle at 50% 45%, #fffde7 0%, #ffe082 45%, #ffb74d 100%);
+  animation: evolution-fade-in 0.4s ease-out;
+}
+
+.evolution-scene__stage {
+  position: relative;
+  width: min(70vw, 60vh, 420px);
+  aspect-ratio: 1;
+}
+
+.evolution-scene__stage .dino {
+  position: absolute;
+  inset: 0;
+  max-width: none;
+}
+
+.evolution-scene__new {
+  opacity: 0;
+}
+
+.evolution-scene__old {
+  animation: evolution-shake 0.35s ease-in-out infinite;
+}
+
+.evolution-scene--changed .evolution-scene__old {
+  animation: evolution-vanish 0.4s ease-in forwards;
+}
+
+.evolution-scene--changed .evolution-scene__new {
+  animation: evolution-appear 0.8s ease-out forwards;
+}
+
+.evolution-scene__props {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.evolution-scene__text {
+  margin: 0;
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+  font-weight: 700;
+  text-align: center;
+  opacity: 0;
+}
+
+.evolution-scene--changed .evolution-scene__text {
+  animation: evolution-appear 0.6s ease-out 0.5s forwards;
+}
+
+.evolution-scene__continue {
+  animation: evolution-fade-in 0.4s ease-out;
+}
+
+/* Stage 1: shell pieces fly away */
+.evolution-scene__shell {
+  position: absolute;
+  left: 20%;
+  top: 40%;
+  width: 60%;
+  opacity: 0;
+}
+
+.evolution-scene--changed .evolution-scene__shell {
+  animation: evolution-shell 1.2s ease-out forwards;
+}
+
+/* Stage 2: the little dino walks */
+.evolution-scene--stage-2.evolution-scene--changed .evolution-scene__new {
+  animation: evolution-appear 0.6s ease-out forwards, evolution-walk 2.4s ease-in-out 0.6s 2 alternate;
+}
+
+/* Stage 3: dragonfly flies in and gets caught */
+.evolution-scene__dragonfly {
+  position: absolute;
+  width: 22%;
+  left: 100%;
+  top: 10%;
+}
+
+.evolution-scene--changed .evolution-scene__dragonfly {
+  animation: evolution-dragonfly 1.6s ease-in-out forwards;
+}
+
+.evolution-scene--stage-3.evolution-scene--changed .dino__head {
+  animation: evolution-snap 0.4s ease-in-out 1.2s 2;
+}
+
+/* Stage 4: roar with screen shake */
+.evolution-scene--stage-4.evolution-scene--changed {
+  animation: evolution-screen-shake 0.12s linear 0.5s 10;
+}
+
+.evolution-scene__roar {
+  position: absolute;
+  right: -6%;
+  top: 0;
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  font-weight: 700;
+  color: var(--color-wrong);
+  opacity: 0;
+  transform: rotate(-12deg);
+}
+
+.evolution-scene--changed .evolution-scene__roar {
+  animation: evolution-appear 0.4s ease-out 0.6s forwards;
+}
+
+/* Stage 5: the dino grows */
+.evolution-scene--stage-5.evolution-scene--changed .evolution-scene__new {
+  animation: evolution-grow 1.4s ease-out forwards;
+}
+
+@keyframes evolution-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes evolution-shake {
+  0%, 100% {
+    transform: rotate(0);
+  }
+
+  25% {
+    transform: rotate(-4deg);
+  }
+
+  75% {
+    transform: rotate(4deg);
+  }
+}
+
+@keyframes evolution-vanish {
+  to {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes evolution-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes evolution-shell {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-120px) rotate(40deg) scale(1.3);
+  }
+}
+
+@keyframes evolution-walk {
+  from {
+    transform: translateX(-12%);
+  }
+
+  to {
+    transform: translateX(12%);
+  }
+}
+
+@keyframes evolution-dragonfly {
+  0% {
+    left: 100%;
+    top: 5%;
+    opacity: 1;
+  }
+
+  70% {
+    left: 78%;
+    top: 22%;
+    opacity: 1;
+  }
+
+  100% {
+    left: 74%;
+    top: 26%;
+    opacity: 0;
+  }
+}
+
+@keyframes evolution-snap {
+  50% {
+    transform: rotate(-12deg) translateX(6px);
+  }
+}
+
+@keyframes evolution-screen-shake {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(-8px, 4px);
+  }
+
+  75% {
+    transform: translate(8px, -4px);
+  }
+}
+
+@keyframes evolution-grow {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Reduced motion: keep the scene, but without shaking the whole screen. */
+@media (prefers-reduced-motion: reduce) {
+  .evolution-scene--stage-4.evolution-scene--changed {
+    animation: none;
+  }
+}

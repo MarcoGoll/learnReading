@@ -88,6 +88,15 @@ The store module exposes `loadState()`, `saveState(state)`, `updateState(mutator
 - **Parent gate:** gear icon -> addition task -> correct answer opens `#/parents`; wrong answer closes the dialog.
 - **Reset:** in the parent area, with an additional confirmation dialog; resets the whole state including highscore.
 
+## Level Goals (added after user feedback)
+
+The child must always see what is needed to complete a level:
+
+- **Goal banner** on every level screen (and on the level 1 selection screen): goal text, progress bar, and status ("Selbstlaute 1 von 2, Mitlaute 3 von 5"). It updates after every judgement, counting items of the running round. When the goal is reached during a round, it turns green with "Ziel erreicht! Spiel die Runde zu Ende, dann ist Level X geschafft." and a fanfare.
+- **Round summary** says clearly "Level X geschafft! Level X+1 ist jetzt frei!", "Noch nicht geschafft" (with what is missing and "Nochmal" as the main button), or "Runde geschafft!" for an already completed level; it contains the goal banner.
+- **Level map:** the open level shows a small progress bar "Ziel: 3 von 7".
+- Goals: level 1 = 2 vowels + 5 consonants, level 2 = syllables for 5 words, level 3 = 5 words read, level 4 = 5 words built, level 5 = 3 passed adventures. Logic in `js/logic/levelGoals.js` (unit tested).
+
 ## Acceptance Criteria
 
 - Opening the app shows the home screen with dino, highscore, and level map; only level 1 is open on first start.
@@ -98,6 +107,7 @@ The store module exposes `loadState()`, `saveState(state)`, `updateState(mutator
 - The parent area is only reachable after solving the addition task; reset requires an additional confirmation.
 - Layout works on a laptop and on a tablet in landscape and portrait without horizontal scrolling.
 - All item texts are shown in Andika.
+- Every level screen shows the goal banner with live progress; the summary states clearly whether the level is completed.
 
 ## Open Risks / Assumptions
 

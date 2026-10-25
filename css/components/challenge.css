@@ -1,0 +1,138 @@
+.challenge-menu {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.challenge-menu__progress {
+  margin: 0 0 16px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.challenge-menu__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.challenge-menu__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 12px;
+  border: none;
+  border-radius: 50% 50% 40% 40% / 30% 30% 20% 20%;
+  background: #fff3c4;
+  box-shadow: 0 8px 0 #e0c98f;
+  transition: transform 0.15s;
+}
+
+.challenge-menu__card:active:not(:disabled) {
+  transform: translateY(4px);
+}
+
+.challenge-menu__card--unavailable {
+  background: #eceff1;
+  box-shadow: 0 8px 0 #cfd8dc;
+}
+
+.challenge-menu__picture {
+  width: 110px;
+  height: 110px;
+}
+
+.challenge-menu__title {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.challenge-menu__hint {
+  font-size: 0.95rem;
+  color: var(--color-muted);
+}
+
+.challenge-menu__badge {
+  position: absolute;
+  right: 14px;
+  top: 12px;
+  width: 36px;
+  height: 36px;
+  color: var(--color-correct-dark);
+}
+
+.choice-task {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  padding: 20px;
+}
+
+.choice-task__prompt .item-card {
+  font-size: clamp(3rem, 10vw, 5.5rem);
+}
+
+.picture-choice,
+.word-choice {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+}
+
+.picture-choice {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.word-choice {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.picture-choice__option,
+.word-choice__option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 110px;
+  padding: 10px;
+  border: 4px solid transparent;
+  border-radius: var(--radius-medium);
+  background: #fff;
+  box-shadow: 0 5px 0 #cfd8dc;
+}
+
+.word-choice__option .item-card {
+  font-size: clamp(2rem, 6vw, 3.2rem);
+}
+
+.picture-choice__image {
+  width: 100%;
+  max-width: 170px;
+  height: auto;
+}
+
+.choice-task__option--correct {
+  border-color: var(--color-correct);
+  background: #e8f5e9;
+}
+
+.choice-task__option--wrong {
+  border-color: var(--color-wrong);
+  background: #ffebee;
+}
+
+.gap-sentence__gap {
+  display: inline-flex;
+  min-width: 3em;
+  min-height: 1.1em;
+  border-bottom: 6px dashed var(--color-secondary);
+}
+
+.gap-sentence__gap--filled {
+  border-bottom-color: var(--color-correct);
+  animation: effects-bounce 0.6s ease-out;
+}

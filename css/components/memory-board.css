@@ -1,0 +1,71 @@
+.memory-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 720px;
+}
+
+.memory-board__card {
+  position: relative;
+  aspect-ratio: 1.15;
+  padding: 0;
+  border: none;
+  background: transparent;
+  perspective: 800px;
+}
+
+.memory-board__back,
+.memory-board__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-medium);
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.15);
+  backface-visibility: hidden;
+  transition: transform 0.4s;
+}
+
+.memory-board__back {
+  background: var(--color-grass);
+}
+
+.memory-board__back img {
+  width: 60%;
+  opacity: 0.85;
+}
+
+.memory-board__face {
+  padding: 6px;
+  background: #fff;
+  transform: rotateY(180deg);
+}
+
+.memory-board__face .item-card {
+  font-size: clamp(1.3rem, 4vw, 2.2rem);
+}
+
+.memory-board__picture {
+  width: 90%;
+  height: 90%;
+}
+
+.memory-board__card--flipped .memory-board__back {
+  transform: rotateY(180deg);
+}
+
+.memory-board__card--flipped .memory-board__face {
+  transform: rotateY(360deg);
+}
+
+.memory-board__card--matched .memory-board__face {
+  box-shadow: 0 0 0 4px var(--color-correct), 0 0 18px var(--color-gold);
+}
+
+@media (orientation: portrait) {
+  .memory-board {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

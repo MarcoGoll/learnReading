@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<circle cx="100" cy="100" r="96" fill="#fff3e0"/>
+<path d="M100 110 V180" stroke="#43a047" stroke-width="6"/><path d="M100 160 Q70 140 64 160 Q84 172 100 160 Z M100 150 Q130 130 136 150 Q116 162 100 150 Z" fill="#66bb6a"/><path d="M100 110 Q70 90 60 50 Q90 70 100 110 Z" fill="#fff" stroke="#f8bbd0" stroke-width="3"/><path d="M100 110 Q130 90 140 50 Q110 70 100 110 Z" fill="#fff" stroke="#f8bbd0" stroke-width="3"/><path d="M100 110 Q86 70 100 34 Q114 70 100 110 Z" fill="#fff" stroke="#f8bbd0" stroke-width="3"/><path d="M100 104 l-8 -30 M100 104 l8 -30" stroke="#ff9800" stroke-width="3"/>
+</svg>

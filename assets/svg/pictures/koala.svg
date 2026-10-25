@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<circle cx="100" cy="100" r="96" fill="#f3e5f5"/>
+<circle cx="56" cy="70" r="28" fill="#90a4ae"/><circle cx="144" cy="70" r="28" fill="#90a4ae"/><circle cx="56" cy="70" r="16" fill="#f8bbd0"/><circle cx="144" cy="70" r="16" fill="#f8bbd0"/><circle cx="100" cy="110" r="52" fill="#b0bec5"/><circle cx="78" cy="100" r="5" fill="#333"/><circle cx="122" cy="100" r="5" fill="#333"/><ellipse cx="100" cy="122" rx="16" ry="20" fill="#37474f"/><path d="M90 150 Q100 156 110 150" stroke="#37474f" stroke-width="3" fill="none"/>
+</svg>

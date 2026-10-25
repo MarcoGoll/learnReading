@@ -1,4 +1,24 @@
-# Spec-Driven Development Template (Claude Code)
+# Lesedino - learnReading
+
+A browser game that helps a child learn to read German, played together with an adult who judges each read-aloud item. Progress grows a dinosaur from egg to fully grown T-Rex. Details: `docs/roadmap.md`, `docs/epics.md`, `docs/specs/`.
+
+## Run locally
+
+```bash
+npm start            # static server on http://localhost:8080 (python3 required)
+npm test             # unit tests (Node 22, no dependencies)
+npm run build        # runs the tests, then copies the runtime files into dist/
+```
+
+ES modules do not load from `file://`, so always use a local server.
+
+## Deploy (Vercel)
+
+Import the GitHub repository in Vercel once ("Add New Project"); `vercel.json` sets the build command (`npm run build`) and the output directory (`dist`). Every push to `master` then runs the tests and deploys only if they pass.
+
+---
+
+## Spec-Driven Development Template (Claude Code)
 
 Template for new projects that are to be developed with Claude Code following a fixed spec-driven-development workflow. Details on the workflow and conventions are in [`CLAUDE.md`](./CLAUDE.md).
 

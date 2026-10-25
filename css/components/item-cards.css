@@ -1,0 +1,46 @@
+.item-card {
+  font-family: var(--font-reading);
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.item-card--letter {
+  font-size: clamp(5rem, 18vw, 10rem);
+  letter-spacing: 0.08em;
+}
+
+.item-card--syllable,
+.item-card--word {
+  font-size: clamp(4rem, 14vw, 8rem);
+}
+
+.item-card--sentence {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.35em;
+  font-size: clamp(2.2rem, 7vw, 4rem);
+}
+
+.item-card__part--consonant,
+.item-card__syllable--odd {
+  color: var(--color-syllable-odd);
+}
+
+.item-card__part--vowel,
+.item-card__syllable--even {
+  color: var(--color-syllable-even);
+}
+
+.sentence-card__token--sight {
+  padding: 0 0.15em;
+  border-radius: 0.2em;
+  background: var(--color-sight-word);
+  color: var(--color-text);
+}
+
+.sentence-card__mark {
+  margin-left: -0.3em;
+}

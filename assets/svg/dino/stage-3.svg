@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="dino-svg">
+  
+  <g class="dino__figure" transform="translate(18 34) scale(0.82)">
+    <g class="dino__tail"><path d="M62 128 Q26 132 8 166 Q40 156 70 150 Z" fill="#5cb85c"/></g>
+    <g class="dino__leg dino__leg--back"><rect x="64" y="140" width="22" height="42" rx="11" fill="#3e8e41"/><ellipse cx="78" cy="182" rx="16" ry="6" fill="#3e8e41"/></g>
+    <g class="dino__leg dino__leg--front"><rect x="100" y="142" width="22" height="40" rx="11" fill="#5cb85c"/><ellipse cx="115" cy="182" rx="16" ry="6" fill="#5cb85c"/></g>
+    <g class="dino__torso">
+      <path d="M52 112 l8 -14 l6 14 M66 102 l9 -14 l6 14 M82 96 l9 -14 l6 14" fill="#ffb74d"/>
+      <ellipse cx="88" cy="130" rx="44" ry="38" fill="#5cb85c"/>
+      <ellipse cx="100" cy="138" rx="26" ry="25" fill="#e3f5b8"/>
+    </g>
+    <g class="dino__anchor dino__anchor--neck" transform="translate(112 104) rotate(-20)"></g>
+    <g class="dino__head">
+      <path d="M100 98 Q104 60 132 48 Q160 38 178 56 Q190 70 182 86 Q176 98 150 100 Q124 104 100 98 Z" fill="#5cb85c"/>
+      <path d="M118 96 Q150 104 178 88" fill="none" stroke="#3e8e41" stroke-width="3" stroke-linecap="round"/>
+      
+      <circle cx="176" cy="66" r="2.5" fill="#3e8e41"/>
+      <circle cx="160" cy="86" r="6" fill="#ff8a80" opacity="0.6"/>
+      <g class="dino__eye"><circle cx="146" cy="66" r="11" fill="#fff"/><circle cx="149" cy="67" r="6" fill="#263238"/><circle cx="151" cy="64" r="2" fill="#fff"/></g>
+      <g class="dino__anchor dino__anchor--eyes" transform="translate(146 66)"></g>
+      <g class="dino__anchor dino__anchor--head" transform="translate(140 46) rotate(-8)"></g>
+    </g>
+    <g class="dino__arm"><path d="M120 124 q14 2 16 12" fill="none" stroke="#3e8e41" stroke-width="7" stroke-linecap="round"/></g>
+  </g>
+  
+</svg>

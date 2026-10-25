@@ -1,0 +1,84 @@
+.judge-controls {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.judge-controls__secondary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.judge-controls__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: var(--radius-medium);
+  font-weight: 700;
+  transition: transform 0.1s;
+}
+
+.judge-controls__button:active:not(:disabled) {
+  transform: translateY(3px);
+}
+
+.judge-controls__button--correct,
+.judge-controls__button--wrong {
+  flex: 0 1 220px;
+  min-height: 88px;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.judge-controls__button--correct .icon,
+.judge-controls__button--wrong .icon {
+  width: 2.2em;
+  height: 2.2em;
+}
+
+.judge-controls__button--correct {
+  background: var(--color-correct);
+  box-shadow: 0 6px 0 var(--color-correct-dark);
+}
+
+.judge-controls__button--wrong {
+  background: var(--color-wrong);
+  box-shadow: 0 6px 0 var(--color-wrong-dark);
+}
+
+.judge-controls__button--skip,
+.judge-controls__button--undo,
+.judge-controls__button--not-yet {
+  min-height: 48px;
+  padding: 6px 14px;
+  font-size: 0.95rem;
+  background: #fff;
+  box-shadow: 0 3px 0 #cfd8dc;
+}
+
+@media (max-width: 600px) {
+  .judge-controls {
+    flex-wrap: wrap;
+  }
+
+  .judge-controls__secondary {
+    order: 3;
+    width: 100%;
+  }
+
+  .judge-controls__button--correct,
+  .judge-controls__button--wrong {
+    flex: 1 1 40%;
+    min-height: 76px;
+  }
+}

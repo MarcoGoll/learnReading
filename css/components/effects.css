@@ -1,0 +1,130 @@
+.effects--bounce {
+  animation: effects-bounce 0.6s ease-out;
+}
+
+.effects--wiggle {
+  animation: effects-wiggle 0.5s ease-in-out;
+}
+
+.effects--pop {
+  animation: effects-pop 0.35s ease-out;
+}
+
+.effects__star {
+  position: fixed;
+  z-index: 50;
+  width: 30px;
+  height: 30px;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: effects-star 0.8s ease-out forwards;
+}
+
+.effects__points {
+  position: fixed;
+  z-index: 50;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-correct);
+  text-shadow: 0 2px 0 #fff;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: effects-fly 0.9s ease-in forwards;
+}
+
+.effects__confetti-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.effects__confetti {
+  position: absolute;
+  top: -20px;
+  width: 12px;
+  height: 18px;
+  border-radius: 3px;
+  animation: effects-confetti linear forwards;
+}
+
+@keyframes effects-bounce {
+  0% {
+    transform: scale(1);
+  }
+
+  30% {
+    transform: scale(1.18);
+  }
+
+  55% {
+    transform: scale(0.94);
+  }
+
+  80% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes effects-wiggle {
+  0%, 100% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-18px);
+  }
+
+  40% {
+    transform: translateX(16px);
+  }
+
+  60% {
+    transform: translateX(-10px);
+  }
+
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+@keyframes effects-pop {
+  50% {
+    transform: scale(1.25);
+  }
+}
+
+@keyframes effects-star {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.2) rotate(180deg);
+  }
+}
+
+@keyframes effects-fly {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.3);
+  }
+
+  100% {
+    opacity: 0.6;
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.6);
+  }
+}
+
+@keyframes effects-confetti {
+  to {
+    transform: translate(var(--drift), 110vh) rotate(720deg);
+  }
+}

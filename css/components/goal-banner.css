@@ -1,0 +1,87 @@
+.goal-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 10px 18px;
+  border: 3px solid #ffe082;
+  border-radius: var(--radius-medium);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.goal-banner__icon {
+  width: 36px;
+  height: 36px;
+  color: var(--color-gold);
+}
+
+.goal-banner__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.goal-banner__text {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.goal-banner__bar {
+  display: block;
+  height: 14px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eceff1;
+}
+
+.goal-banner__fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--color-primary);
+  transition: width 0.6s ease-out;
+}
+
+.goal-banner__status {
+  font-size: 1rem;
+  color: var(--color-muted);
+}
+
+.goal-banner--reached {
+  border-color: var(--color-correct);
+  background: #f1f8e9;
+}
+
+.goal-banner--reached .goal-banner__fill {
+  background: var(--color-correct);
+}
+
+.goal-banner--reached .goal-banner__status {
+  font-weight: 700;
+  color: var(--color-correct-dark);
+}
+
+.goal-banner--celebrate {
+  animation: goal-banner-celebrate 0.9s ease-out;
+}
+
+@keyframes goal-banner-celebrate {
+  0% {
+    transform: scale(1);
+  }
+
+  30% {
+    transform: scale(1.06);
+  }
+
+  60% {
+    transform: scale(0.98);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}

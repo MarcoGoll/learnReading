@@ -12,6 +12,7 @@ A cute T-Rex grows with the child's progress. Each completed level unlocks exact
 | Coupling | One stage per completed level (first completion only) | Simple and easy for the child to understand |
 | Stage 4 | First roar on a rock | Works well as animation with a funny sound |
 | Name | Chosen at first start (adult types it), stored in the state, used on home screen and in texts | Strengthens the child's attachment |
+| Intro | The naming dialog starts with a short story (an egg in the jungle that the child helps grow); after naming, a greeting "Die Reise von <Name> beginnt!" explains that every completed level lets the dino grow | Gives the child a reason to play |
 | Presentation | Full-screen scene (about 4-6 s) with sound after a level is completed for the first time; afterwards the dino is shown in its new stage on the home screen with an idle animation | Makes the evolution a highlight |
 
 ## Technical Details
@@ -31,7 +32,7 @@ A cute T-Rex grows with the child's progress. Each completed level unlocks exact
 
 - Hand-written, simple flat SVGs under `assets/svg/dino/` (one file per stage, plus separate parts like eggshell, dragonfly, rock where needed).
 - SVGs are inlined into the DOM so their parts (eyes, tail, legs) can be animated with CSS keyframes; JS only starts/ends scenes and sequences steps.
-- Respect `prefers-reduced-motion`: reduce animations to simple fades.
+- Animations also run with `prefers-reduced-motion`; only the screen shake of stage 4 is dropped there.
 - BEM blocks: `dino` (modifiers `--stage-0` ... `--stage-5`), `evolution-scene`.
 
 ### Component API
@@ -61,7 +62,7 @@ Level completed for the first time -> foundation increases `dinoStage` -> round 
 - Completing level n for the first time plays the scene for stage n once and leaves the dino at stage n; replaying a completed level does not advance the dino.
 - Each stage has its own idle animation on the home screen.
 - After level 5, the fully grown dino is shown with confetti and a congratulation text.
-- With `prefers-reduced-motion`, animations are reduced.
+- With `prefers-reduced-motion`, the scenes still play; only the screen shake is removed.
 - The stage survives a page reload.
 
 ## Open Risks / Assumptions
