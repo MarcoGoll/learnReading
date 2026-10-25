@@ -53,6 +53,7 @@ The levels build on each other: only items the child mastered in one level are u
 5. **Level 4 - Drag and drop** - building words from syllables via drag and drop (mouse and touch).
 6. **Later levels and final dino stage** - level 5+ and the fully grown dino.
 7. **Polish and deployment** - more animations and sounds, tablet usability, publishing via static hosting.
+8. **Long-term motivation** - more dino species as difficulty stages, a dino valley, harder content (closed syllables, letter combinations, long words, short stories), level stars, and Tamagotchi-like dino care.
 
 The individual epics are worked out in `/brainstorming`.
 
