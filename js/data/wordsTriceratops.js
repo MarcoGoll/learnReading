@@ -1,4 +1,6 @@
 import { parseWordSpecs } from './wordParser.js';
+import { EXTRA_TRICERATOPS_SPECS } from './wordsTriceratopsExtra.js';
+import { TRICERATOPS_VERB_SPECS } from './wordsTriceratopsVerbs.js';
 
 /**
  * Word list of the Triceratops journey: words with closed syllables (ending in a consonant)
@@ -31,4 +33,4 @@ const WORD_SPECS = [
 ];
 
 /** Words of the Triceratops journey. */
-export const WORDS_TRICERATOPS = parseWordSpecs(WORD_SPECS);
+export const WORDS_TRICERATOPS = parseWordSpecs([...WORD_SPECS, ...EXTRA_TRICERATOPS_SPECS, ...TRICERATOPS_VERB_SPECS]);

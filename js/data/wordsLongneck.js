@@ -1,4 +1,5 @@
 import { parseWordSpecs } from './wordParser.js';
+import { EXTRA_LONGNECK_SPECS } from './wordsLongneckExtra.js';
 
 /**
  * New words of the long-neck journey: words with 3-4 syllables and compound words.
@@ -28,4 +29,4 @@ const WORD_SPECS = [
 ];
 
 /** New words of the long-neck journey. */
-export const WORDS_LONGNECK = parseWordSpecs(WORD_SPECS);
+export const WORDS_LONGNECK = parseWordSpecs([...WORD_SPECS, ...EXTRA_LONGNECK_SPECS]);

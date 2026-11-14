@@ -138,3 +138,21 @@ Status values: `planned -> specified -> in progress -> done`
 ### Epic31: CustomWords
 - **Status:** done
 - **Description:** In the parent area, adults can add their own words (e.g. names of family members, pets, or words from school) and delete words. Only words are managed; the syllables of a word are derived from it and become available in the syllable level automatically.
+
+## Variety and Clarity
+
+### Epic32: ContentExpansion
+- **Status:** done
+- **Description:** Much more learning content for more variety: about ten times as many words, sentences, and stories where the learning structure allows it (the T-Rex keeps open syllables only), plus about 60 new word pictures.
+
+### Epic33: ProgressHints
+- **Status:** done
+- **Description:** Clear hints on the level map and in the dino valley that explain for every dino which level is next and what exactly is missing to get further.
+
+### Epic34: ShopExpansion
+- **Status:** done
+- **Description:** Ten more wardrobe accessories with rising prices and five super accessories with very high prices as a long-term goal.
+
+### Epic35: PoopCare
+- **Status:** done
+- **Description:** The cleanliness bar is removed. A poop pile appears some hours after feeding; cleaning is only offered while a pile is there and makes the dino clean again.

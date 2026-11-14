@@ -26,9 +26,9 @@ test('every syllable of the first journey is open (ends with a vowel letter)', (
   });
 });
 
-test('word list has about 200 words made of known syllables', () => {
+test('word list has at least 400 words made of known syllables', () => {
   const syllableIds = new Set(OPEN_SYLLABLES.map((syllable) => syllable.id));
-  assert.ok(WORDS.length >= 170, `only ${WORDS.length} words`);
+  assert.ok(WORDS.length >= 400, `only ${WORDS.length} words`);
   WORDS.forEach((word) => {
     word.syllables.forEach((syllable) => assert.ok(syllableIds.has(syllable), `${word.id}: ${syllable}`));
     assert.equal(word.syllables.join(''), word.id);
@@ -42,7 +42,7 @@ test('word ids are unique and display syllables keep the case', () => {
 
 test('every picture reference has an SVG file', () => {
   const pictured = WORDS.filter((word) => word.picture);
-  assert.ok(pictured.length >= 60, `only ${pictured.length} pictures`);
+  assert.ok(pictured.length >= 70, `only ${pictured.length} pictures`);
   pictured.forEach((word) => {
     assert.ok(existsSync(new URL(`../assets/svg/pictures/${word.picture}.svg`, import.meta.url)), word.picture);
   });
@@ -50,7 +50,7 @@ test('every picture reference has an SVG file', () => {
 
 test('every sentence token is a known word or a sight word', () => {
   const wordIds = new Set(WORDS.map((word) => word.id));
-  assert.ok(SENTENCES.length >= 75, `only ${SENTENCES.length} sentences`);
+  assert.ok(SENTENCES.length >= 1000, `only ${SENTENCES.length} sentences`);
   SENTENCES.forEach((sentence) => {
     assert.ok(sentence.tokens.length >= 2 && sentence.tokens.length <= 4, sentence.text);
     assert.ok(sentence.tokens.some((token) => wordIds.has(token)), sentence.text);

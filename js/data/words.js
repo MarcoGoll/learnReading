@@ -1,4 +1,5 @@
 import { parseWordSpecs, displaySyllables } from './wordParser.js';
+import { EXTRA_WORD_SPECS } from './wordsExtra.js';
 
 /**
  * Word list of the first journey (T-Rex) for levels 3-5. Each entry is "Syl-la-bles type [p]":
@@ -44,6 +45,6 @@ const WORD_SPECS = [
 ];
 
 /** Words of the first journey (T-Rex): open syllables only. */
-export const WORDS = parseWordSpecs(WORD_SPECS);
+export const WORDS = parseWordSpecs([...WORD_SPECS, ...EXTRA_WORD_SPECS]);
 
 export { displaySyllables };

@@ -1,11 +1,10 @@
 import { el, icon } from './dom.js';
 import { currentNeeds, moodOf } from '../logic/care.js';
 
-/** Icons and labels of the three needs. */
+/** Icons and labels of the two needs (cleanliness is shown by the poop pile, not by a bar). */
 const NEEDS = [
   { key: 'hunger', iconName: 'restaurant', label: 'Satt' },
-  { key: 'fun', iconName: 'sports_baseball', label: 'Spaß' },
-  { key: 'clean', iconName: 'cleaning_services', label: 'Sauber' }
+  { key: 'fun', iconName: 'sports_baseball', label: 'Spaß' }
 ];
 
 /** Small poop pile shown next to a dino with a dirty nest. */
@@ -15,7 +14,7 @@ export const POOP_SVG = '<svg viewBox="0 0 60 50" class="care__poop" aria-hidden
 const MOOD_TEXTS = { happy: 'ist glücklich', hungry: 'hat Hunger', bored: 'ist langweilig', dirty: 'braucht ein sauberes Nest' };
 
 /**
- * Creates the three care bars of a dino (hunger, fun, cleanliness).
+ * Creates the two care bars of a dino (hunger, fun).
  * @param {object} care - Care state of the dino.
  * @param {number} [now=Date.now()] - Current time.
  * @returns {HTMLElement} Bars element.
@@ -40,19 +39,19 @@ export function createCareBars(care, now = Date.now()) {
  * @returns {string} Text.
  */
 export function moodText(name, care, now = Date.now()) {
-  return `${name} ${MOOD_TEXTS[moodOf(currentNeeds(care, now))]}`;
+  return `${name} ${MOOD_TEXTS[moodOf(care, now)]}`;
 }
 
 /**
- * Adds mood decorations to a dino container: poop pile for a dirty nest, mood class for animations.
+ * Adds mood decorations to a dino container: poop pile while one is there, mood class for animations.
  * @param {HTMLElement} container - Element that contains the dino (gets position relative).
  * @param {object} care - Care state.
  * @param {number} [now=Date.now()] - Current time.
  */
 export function decorateMood(container, care, now = Date.now()) {
-  const mood = moodOf(currentNeeds(care, now));
+  const mood = moodOf(care, now);
   container.classList.add('care__host', `care__host--${mood}`);
-  if (mood === 'dirty' || currentNeeds(care, now).clean < 50) {
+  if (mood === 'dirty') {
     container.append(el('span', { className: 'care__poop-wrap', html: POOP_SVG }));
   }
 }

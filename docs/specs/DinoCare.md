@@ -1,5 +1,7 @@
 # Spec: DinoCare (Epic30)
 
+> Note: the cleanliness need was replaced by the poop pile of PoopCare (Epic35); see `docs/specs/PoopCare.md`.
+
 ## Overview / Goal
 
 Tamagotchi-like care for every dino: after each finished round the child may feed the dino, play with it, or clean its nest (remove the poop), each with a short funny animation. The needs decrease gently over days. This gives a reason to keep playing, also with easier dinos after all journeys are done.

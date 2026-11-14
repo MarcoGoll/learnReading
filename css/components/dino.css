@@ -229,3 +229,17 @@
     transform: scaleY(0.75);
   }
 }
+
+.dino .dino__anchor--super {
+  animation: dino-super-sparkle 1.8s ease-in-out infinite;
+}
+
+@keyframes dino-super-sparkle {
+  0%, 100% {
+    filter: drop-shadow(0 0 1px #fff59d);
+  }
+
+  50% {
+    filter: drop-shadow(0 0 6px #ffeb3b) brightness(1.15);
+  }
+}

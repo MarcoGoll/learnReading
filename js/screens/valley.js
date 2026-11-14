@@ -10,6 +10,7 @@ import { store } from '../state/store.js';
 import { navigate } from '../router.js';
 import { playSound } from '../audio/soundPlayer.js';
 import { pickRandom } from '../logic/random.js';
+import { progressHint } from '../logic/progressHints.js';
 
 /** Intro texts when a new egg hatches into a journey. */
 const EGG_INTROS = {
@@ -50,12 +51,14 @@ function randomizeMovement(element, canFly) {
 }
 
 /**
- * Returns the progress text of a started journey.
- * @param {object} journey - Journey state.
+ * Returns the progress text of a started journey: the next level and what is missing there.
+ * @param {string} journeyId - Journey id.
+ * @param {object} state - Game state.
  * @returns {string} Text.
  */
-function progressText(journey) {
-  return journey.dinoStage >= 5 ? 'ausgewachsen' : `Level ${Math.min(journey.currentLevel, 5)} von 5`;
+function progressText(journeyId, state) {
+  const hint = progressHint(journeyId, state);
+  return hint.isBlocked ? `Level ${hint.level}: ${hint.text}` : hint.short;
 }
 
 /**
@@ -93,7 +96,7 @@ function valleySpot(definition, state) {
   return el('button', { className: `valley__spot${isActive ? ' valley__spot--active' : ''}`, attrs: { type: 'button' }, on: { click: () => chooseDino(definition) } }, [
     walker(definition, journey),
     el('span', { className: 'valley__name', text: journey.dinoName || definition.speciesName }),
-    el('span', { className: 'valley__info', text: progressText(journey) }),
+    el('span', { className: 'valley__info', text: progressText(definition.id, state) }),
     el('span', { className: 'valley__stars' }, [icon('star', 'valley__star'), el('span', { text: `${journeyStarTotal(journey.stars)} von ${MAX_JOURNEY_STARS}` })]),
     createCareBars(journey.care),
     isActive ? el('span', { className: 'valley__active', text: 'Du spielst gerade' }) : null

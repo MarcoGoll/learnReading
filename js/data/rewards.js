@@ -2,6 +2,8 @@
  * Dino accessories the child buys in the wardrobe with collected points (price in points).
  * The first three are cheap (within the first rounds); after that the prices rise steeply,
  * so the child has to save points over many rounds for each further accessory.
+ * Ten further accessories (6000-15000) and five super accessories (25000-50000, flag super) are
+ * long-term goals; super accessories are marked in the wardrobe and sparkle on the dino.
  * Special accessories (price null) are unlocked by collecting all stars of a journey.
  */
 export const REWARDS = [
@@ -29,6 +31,22 @@ export const REWARDS = [
   { id: 'divingMask', name: 'Taucherbrille', slot: 'eyes', price: 3500 },
   { id: 'superheroCape', name: 'Heldenumhang', slot: 'neck', price: 4000 },
   { id: 'goldenCrown', name: 'Goldkrone', slot: 'head', price: 5000 },
+  { id: 'chefHat', name: 'Kochmütze', slot: 'head', price: 6000 },
+  { id: 'rainbowGlasses', name: 'Regenbogenbrille', slot: 'eyes', price: 7000 },
+  { id: 'necktie', name: 'Krawatte', slot: 'neck', price: 7500 },
+  { id: 'propellerCap', name: 'Propellermütze', slot: 'head', price: 8000 },
+  { id: 'catEyeGlasses', name: 'Katzenbrille', slot: 'eyes', price: 9000 },
+  { id: 'shellNecklace', name: 'Muschelkette', slot: 'neck', price: 10000 },
+  { id: 'knightHelmet', name: 'Ritterhelm', slot: 'head', price: 11000 },
+  { id: 'starVisor', name: 'Sternenvisier', slot: 'eyes', price: 12000 },
+  { id: 'butterflyWings', name: 'Schmetterlingsflügel', slot: 'neck', price: 13000 },
+  { id: 'unicornHorn', name: 'Einhorn-Horn', slot: 'head', price: 15000 },
+  // Super accessories: very expensive long-term goals
+  { id: 'diamondCrown', name: 'Diamantkrone', slot: 'head', price: 25000, super: true },
+  { id: 'starCape', name: 'Sternenumhang', slot: 'neck', price: 30000, super: true },
+  { id: 'diamondGlasses', name: 'Diamantbrille', slot: 'eyes', price: 35000, super: true },
+  { id: 'fireWings', name: 'Feuerflügel', slot: 'neck', price: 40000, super: true },
+  { id: 'galaxyCrown', name: 'Galaxiekrone', slot: 'head', price: 50000, super: true },
   // Special accessories for all 15 stars of a journey (only for that dino)
   { id: 'goldenCape', name: 'Goldener Umhang', slot: 'neck', price: null, journey: 'trex' },
   { id: 'hornFlowers', name: 'Hörner-Blumen', slot: 'head', price: null, journey: 'triceratops' },

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createDefaultState } from '../js/state/defaultState.js';
 import { activeJourney, unlockNextJourney, startJourney, switchJourney, waitingEgg, isFamilyComplete } from '../js/state/journeyState.js';
 import { starsForRound, applyStars, journeyStarTotal, hasAllStars } from '../js/logic/stars.js';
-import { currentNeeds, applyCareAction, suggestedAction, moodOf } from '../js/logic/care.js';
+import { currentNeeds, applyCareAction, suggestedAction, moodOf, hasPoop, POOP_DELAY_MS } from '../js/logic/care.js';
 import { unlockStarRewards, toggleWorn, isWearableBy } from '../js/logic/rewards.js';
 import { REWARDS, rewardById } from '../js/data/rewards.js';
 import { createRoundSession } from '../js/logic/roundSession.js';
@@ -74,22 +74,33 @@ test('all stars of a journey unlock its special accessory, wearable only by that
 });
 
 test('care needs decrease by a third per day and never below 0', () => {
-  const care = { hunger: 90, fun: 60, clean: 30, updatedAt: 1000 };
-  assert.deepEqual(currentNeeds(care, 1000), { hunger: 90, fun: 60, clean: 30 });
-  assert.deepEqual(currentNeeds(care, 1000 + DAY), { hunger: 57, fun: 27, clean: 0 });
-  assert.deepEqual(currentNeeds({ hunger: 100, fun: 100, clean: 100, updatedAt: 0 }, 5 * DAY), { hunger: 100, fun: 100, clean: 100 });
+  const care = { hunger: 90, fun: 30, poopAt: 0, updatedAt: 1000 };
+  assert.deepEqual(currentNeeds(care, 1000), { hunger: 90, fun: 30 });
+  assert.deepEqual(currentNeeds(care, 1000 + DAY), { hunger: 57, fun: 0 });
+  assert.deepEqual(currentNeeds({ hunger: 100, fun: 100, poopAt: 0, updatedAt: 0 }, 5 * DAY), { hunger: 100, fun: 100 });
 });
 
 test('a care action raises its need by 50 and the lowest need is suggested', () => {
-  const care = { hunger: 80, fun: 70, clean: 20, updatedAt: 1000 };
-  assert.equal(suggestedAction(currentNeeds(care, 1000)), 'clean');
-  const cleaned = applyCareAction(care, 'clean', 1000);
-  assert.equal(cleaned.clean, 70);
-  assert.equal(cleaned.updatedAt, 1000);
+  const care = { hunger: 80, fun: 20, poopAt: 0, updatedAt: 1000 };
+  assert.equal(suggestedAction(care, 1000), 'play');
+  assert.equal(applyCareAction(care, 'play', 1000).fun, 70);
   assert.equal(applyCareAction(care, 'feed', 1000).hunger, 100);
-  assert.equal(moodOf({ hunger: 80, fun: 60, clean: 70 }), 'happy');
-  assert.equal(moodOf({ hunger: 30, fun: 60, clean: 70 }), 'hungry');
-  assert.equal(moodOf({ hunger: 80, fun: 20, clean: 70 }), 'bored');
+  assert.equal(moodOf({ hunger: 80, fun: 60, poopAt: 0, updatedAt: 1000 }, 1000), 'happy');
+  assert.equal(moodOf({ hunger: 30, fun: 60, poopAt: 0, updatedAt: 1000 }, 1000), 'hungry');
+  assert.equal(moodOf({ hunger: 80, fun: 20, poopAt: 0, updatedAt: 1000 }, 1000), 'bored');
+});
+
+test('a poop pile appears 3 hours after feeding and is removed by cleaning', () => {
+  const fed = applyCareAction({ hunger: 50, fun: 100, poopAt: 0, updatedAt: 1000 }, 'feed', 1000);
+  assert.equal(fed.poopAt, 1000 + POOP_DELAY_MS);
+  assert.equal(hasPoop(fed, 1000 + POOP_DELAY_MS - 1), false);
+  assert.equal(hasPoop(fed, 1000 + POOP_DELAY_MS), true);
+  assert.equal(applyCareAction(fed, 'feed', 2000).poopAt, fed.poopAt);
+  assert.equal(suggestedAction(fed, 1000 + POOP_DELAY_MS), 'clean');
+  assert.equal(moodOf(fed, 1000 + POOP_DELAY_MS), 'dirty');
+  const cleaned = applyCareAction(fed, 'clean', 1000 + POOP_DELAY_MS);
+  assert.equal(cleaned.poopAt, 0);
+  assert.equal(hasPoop(cleaned, 1000 + 5 * DAY), false);
 });
 
 test('the round session counts not-yet results for the stars', () => {

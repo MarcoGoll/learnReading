@@ -1,7 +1,9 @@
 import { tokenize } from './sentences.js';
+import { EXTRA_STORY_SPECS } from './storiesExtra.js';
+import { EXTRA_STORY_SPECS_2 } from './storiesExtra2.js';
 
 /**
- * Short stories of the pterosaur journey. Each story has 3-4 sentences, picture ids for its
+ * Short stories of the pterosaur journey (more in storiesExtra.js and storiesExtra2.js). Each story has 3-4 sentences, picture ids for its
  * illustration (existing word pictures shown side by side), and one comprehension question
  * whose answer and options are word ids with pictures.
  */
@@ -44,7 +46,7 @@ function parseStory([id, title, sentences, pictures, questionText, answer, optio
 }
 
 /** All stories. */
-export const STORIES = STORY_SPECS.map(parseStory);
+export const STORIES = [...STORY_SPECS, ...EXTRA_STORY_SPECS, ...EXTRA_STORY_SPECS_2].map(parseStory);
 
 /**
  * Finds a story by id.

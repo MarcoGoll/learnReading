@@ -1,6 +1,6 @@
 import { el, restartAnimation } from './dom.js';
 import { getSvg, getSvgInner } from './svgLoader.js';
-import { REWARDS } from '../data/rewards.js';
+import { REWARDS, rewardById } from '../data/rewards.js';
 import { JOURNEYS } from '../data/journeys.js';
 
 /** Highest dino stage. */
@@ -43,7 +43,9 @@ export function applyAccessories(dinoElement, worn) {
   ['head', 'eyes', 'neck'].forEach((slot) => {
     const anchor = dinoElement.querySelector(`.dino__anchor--${slot}`);
     if (anchor) {
-      anchor.innerHTML = worn && worn[slot] ? getSvgInner(accessoryPath(worn[slot])) : '';
+      const rewardId = worn && worn[slot];
+      anchor.innerHTML = rewardId ? getSvgInner(accessoryPath(rewardId)) : '';
+      anchor.classList.toggle('dino__anchor--super', Boolean(rewardId && rewardById(rewardId) && rewardById(rewardId).super));
     }
   });
 }

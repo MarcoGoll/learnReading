@@ -222,3 +222,28 @@
 .level-map__star--empty {
   color: rgba(0, 0, 0, 0.18);
 }
+
+.home__next-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 0;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: var(--color-card);
+  font-size: 1.05rem;
+  font-weight: 700;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.08);
+}
+
+.home__next-step--blocked {
+  background: #fff3e0;
+  border: 2px solid var(--color-primary);
+}
+
+.home__next-step-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  background-color: var(--color-primary-dark);
+}

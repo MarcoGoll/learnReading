@@ -1,4 +1,5 @@
 import { parseSentenceSpecs } from './sentences.js';
+import { EXTRA_LONGNECK_SENTENCE_SPECS } from './sentencesLongneckExtra.js';
 
 /** Sentences of the long-neck journey, each with at least one long word (2-4 words). */
 const SPECS = [
@@ -14,4 +15,4 @@ const SPECS = [
 ];
 
 /** Sentences of the long-neck journey. */
-export const SENTENCES_LONGNECK = parseSentenceSpecs(SPECS, 'l');
+export const SENTENCES_LONGNECK = parseSentenceSpecs([...SPECS, ...EXTRA_LONGNECK_SENTENCE_SPECS], 'l');

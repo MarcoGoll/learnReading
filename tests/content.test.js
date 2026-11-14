@@ -29,7 +29,7 @@ test('every word of every list consists of known syllables', () => {
 });
 
 test('Triceratops words contain a closed syllable or a combination', () => {
-  assert.ok(WORDS_TRICERATOPS.length >= 120, `only ${WORDS_TRICERATOPS.length} words`);
+  assert.ok(WORDS_TRICERATOPS.length >= 1000, `only ${WORDS_TRICERATOPS.length} words`);
   WORDS_TRICERATOPS.forEach((word) => {
     const syllables = word.syllables.map((id) => SYLLABLES.find((syllable) => syllable.id === id));
     assert.ok(syllables.some((syllable) => syllable.closed || syllable.hasCombination), word.id);
@@ -37,7 +37,7 @@ test('Triceratops words contain a closed syllable or a combination', () => {
 });
 
 test('long-neck words are long or compound, and compound parts exist', () => {
-  assert.ok(PROFILES.longneck.words.length >= 90, `only ${PROFILES.longneck.words.length} words`);
+  assert.ok(PROFILES.longneck.words.length >= 600, `only ${PROFILES.longneck.words.length} words`);
   PROFILES.longneck.words.forEach((word) => assert.ok(word.syllables.length >= 3 || word.parts, word.id));
   WORDS_LONGNECK.filter((word) => word.parts).forEach((word) => {
     word.parts.forEach((part) => assert.ok(wordById(part), `${word.id}: ${part}`));
@@ -46,21 +46,23 @@ test('long-neck words are long or compound, and compound parts exist', () => {
 });
 
 test('every picture of every word list exists', () => {
-  ALL_WORDS.filter((word) => word.picture).forEach((word) => {
+  const pictured = ALL_WORDS.filter((word) => word.picture);
+  assert.ok(pictured.length >= 190, `only ${pictured.length} pictures`);
+  pictured.forEach((word) => {
     assert.ok(existsSync(new URL(`../assets/svg/pictures/${word.picture}.svg`, import.meta.url)), word.picture);
   });
 });
 
 test('all sentences use known words or sight words', () => {
-  assert.ok(SENTENCES_TRICERATOPS.length >= 40 && SENTENCES_LONGNECK.length >= 30);
+  assert.ok(SENTENCES_TRICERATOPS.length >= 400 && SENTENCES_LONGNECK.length >= 300);
   ALL_SENTENCES.forEach((sentence) => sentence.tokens.forEach((token) => {
     assert.ok(wordById(token) || ALL_SIGHT_WORDS.includes(token), `${sentence.id}: ${token}`);
   }));
   assert.equal(new Set(ALL_SENTENCES.map((sentence) => sentence.id)).size, ALL_SENTENCES.length);
 });
 
-test('20 stories with 3-4 sentences and a picture question', () => {
-  assert.equal(STORIES.length, 20);
+test('200 stories with 3-4 sentences and a picture question', () => {
+  assert.equal(STORIES.length, 200);
   STORIES.forEach((story) => {
     assert.ok(story.sentences.length >= 3 && story.sentences.length <= 4, story.id);
     assert.ok(story.question.options.includes(story.question.answer), story.id);

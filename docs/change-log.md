@@ -195,3 +195,19 @@ Referenceable by the user, e.g. "revert CHG-0012" or "adjust CHG-0012 again".
 ## CHG-0046 - Collapsible word groups on the word management page, plural fix in the unknown-sounds hint
 - Timestamp: 2026-10-25T20:16:48+01:00
 - Files: js/screens/parentWords.js, css/components/parent-words.css
+
+## CHG-0047 - Remove the cleanliness bar: a poop pile appears 3 hours after feeding, cleaning only while it is there
+- Timestamp: 2026-11-14T10:49:00+01:00
+- Files: js/logic/care.js, js/components/careBars.js, js/game/careFlow.js, js/state/defaultState.js, tests/journeys.test.js, docs/specs/PoopCare.md (new), docs/specs/DinoCare.md
+
+## CHG-0048 - Progress hints on the home screen, for locked levels, and in the dino valley
+- Timestamp: 2026-11-14T10:49:00+01:00
+- Files: js/logic/progressHints.js (new), js/screens/home.js, js/screens/valley.js, css/components/home.css, assets/icons/info.svg (new), assets/icons/flag.svg (new), tests/progressHints.test.js (new), docs/specs/ProgressHints.md (new)
+
+## CHG-0049 - 10 new wardrobe accessories (6000-15000) and 5 super accessories (25000-50000) that sparkle
+- Timestamp: 2026-11-14T10:49:00+01:00
+- Files: js/data/rewards.js, js/components/dino.js, js/screens/wardrobe.js, css/components/wardrobe.css, css/components/dino.css, assets/svg/accessories/{chefHat,rainbowGlasses,necktie,propellerCap,catEyeGlasses,shellNecklace,knightHelmet,starVisor,butterflyWings,unicornHorn,diamondCrown,starCape,diamondGlasses,fireWings,galaxyCrown}.svg (new), docs/specs/ShopExpansion.md (new)
+
+## CHG-0050 - Content expansion: about 2000 words, 2900 sentences, 200 stories, 64 new pictures
+- Timestamp: 2026-11-14T10:49:00+01:00
+- Files: js/data/wordsExtra.js, js/data/wordsTriceratopsExtra.js, js/data/wordsTriceratopsVerbs.js, js/data/wordsLongneckExtra.js, js/data/sentencesExtra.js, js/data/sentencesTriceratopsExtra.js, js/data/sentencesLongneckExtra.js, js/data/storiesExtra.js, js/data/storiesExtra2.js (all new), js/data/words.js, js/data/wordsTriceratops.js, js/data/wordsLongneck.js, js/data/sentences.js, js/data/sentencesTriceratops.js, js/data/sentencesLongneck.js, js/data/stories.js, js/data/sightWords.js, assets/svg/pictures/*.svg (64 new), tests/data.test.js, tests/content.test.js, docs/specs/ContentExpansion.md (new), docs/epics.md

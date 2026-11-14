@@ -54,10 +54,11 @@ function wardrobeItem(reward, state, onChange) {
   const isUnlocked = state.rewards.unlocked.includes(reward.id);
   const isBuyable = canBuy(state, reward);
   const isWorn = activeJourney(state).worn[reward.slot] === reward.id;
-  const modifiers = `${isUnlocked ? '' : ' wardrobe__item--locked'}${isBuyable ? ' wardrobe__item--buyable' : ''}${isWorn ? ' wardrobe__item--worn' : ''}`;
+  const modifiers = `${isUnlocked ? '' : ' wardrobe__item--locked'}${isBuyable ? ' wardrobe__item--buyable' : ''}${isWorn ? ' wardrobe__item--worn' : ''}${reward.super ? ' wardrobe__item--super' : ''}`;
   const tile = el('button', { className: `wardrobe__item${modifiers}`, attrs: { type: 'button', 'aria-pressed': String(isWorn) } }, [
     el('span', { className: 'wardrobe__picture', html: getSvg(accessoryPath(reward.id)) }),
     el('span', { className: 'wardrobe__name', text: reward.name }),
+    reward.super ? el('span', { className: 'wardrobe__super-label', text: 'Super' }) : null,
     isUnlocked ? null : lockLabel(reward, isBuyable)
   ]);
   tile.disabled = !isUnlocked && !isBuyable;

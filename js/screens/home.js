@@ -12,6 +12,7 @@ import { POINT_REWARDS } from '../data/rewards.js';
 import { levelGoal } from '../logic/levelGoals.js';
 import { playSound } from '../audio/soundPlayer.js';
 import { practiceKeyFilter } from '../content/customContent.js';
+import { progressHint } from '../logic/progressHints.js';
 
 /** Short story shown when the game starts for the first time. */
 const INTRO_TEXT = 'Tief im Dschungel liegt ein kleines Dino-Ei. Bald schlüpft daraus ein Dino, '
@@ -67,9 +68,36 @@ function levelIsland(state, level) {
     isUnlocked && !isCompleted ? goalProgress(state, level) : null,
     isCompleted ? icon('check', 'level-map__check') : null
   ]);
-  island.disabled = !isUnlocked;
-  island.addEventListener('click', () => { playSound('click'); navigate(`/level/${level}`); });
+  island.addEventListener('click', () => {
+    playSound('click');
+    if (isUnlocked) navigate(`/level/${level}`);
+    else showLockedHint(state, level);
+  });
   return island;
+}
+
+/**
+ * Explains why a level is locked: which level must be finished first and what is missing there.
+ * @param {object} state - Game state.
+ * @param {number} level - Locked level.
+ */
+function showLockedHint(state, level) {
+  const hint = progressHint(state.activeJourney, state);
+  messageDialog(`Zuerst muss Level ${hint.level} geschafft werden. ${hint.text}`, 'OK', `Level ${level} ist noch zu`);
+}
+
+/**
+ * Creates the hint below the level map that says what to do next (null when the journey is done).
+ * @param {object} state - Game state.
+ * @returns {HTMLElement|null} Hint element.
+ */
+function nextStepHint(state) {
+  const hint = progressHint(state.activeJourney, state);
+  if (hint.isDone) return null;
+  return el('p', { className: `home__next-step${hint.isBlocked ? ' home__next-step--blocked' : ''}` }, [
+    icon(hint.isBlocked ? 'info' : 'flag', 'home__next-step-icon'),
+    el('span', { text: hint.isBlocked ? `Level ${hint.level} geht gerade nicht weiter. ${hint.text}` : `So geht es weiter: ${hint.text}` })
+  ]);
 }
 
 /**
@@ -179,7 +207,8 @@ export function renderHome(container) {
   const levels = [1, 2, 3, 4, 5].map((level) => levelIsland(state, level));
   container.replaceChildren(el('section', { className: 'home' }, [
     el('div', { className: 'home__hero' }, [dinoArea, infoPanel(state)]),
-    el('nav', { className: 'level-map', attrs: { 'aria-label': 'Levels' } }, [...levels, practiceIsland(state)])
+    el('nav', { className: 'level-map', attrs: { 'aria-label': 'Levels' } }, [...levels, practiceIsland(state)]),
+    nextStepHint(state)
   ]));
   renderDino(dinoArea, activeJourneyDef(state).species, journey.dinoStage, journey.worn);
   decorateMood(dinoArea, journey.care);

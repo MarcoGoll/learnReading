@@ -1,3 +1,5 @@
+import { EXTRA_SENTENCE_SPECS } from './sentencesExtra.js';
+
 export { SIGHT_WORDS, ALL_SIGHT_WORDS } from './sightWords.js';
 
 /**
@@ -67,7 +69,7 @@ export function parseSentenceSpecs(specs, prefix) {
 }
 
 /** Sentences of the first journey (T-Rex). */
-export const SENTENCES = parseSentenceSpecs(SENTENCE_SPECS, 's');
+export const SENTENCES = parseSentenceSpecs([...SENTENCE_SPECS, ...EXTRA_SENTENCE_SPECS], 's');
 
 /**
  * Returns the punctuation mark at the end of a sentence.

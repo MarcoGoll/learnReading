@@ -26,7 +26,7 @@ export function createJourneyState(isFirst) {
     mastered: { 1: [], 2: [], 3: [], 4: [] },
     passedVariants: [],
     worn: { head: null, eyes: null, neck: null },
-    care: { hunger: 100, fun: 100, clean: 100, updatedAt: 0 }
+    care: { hunger: 100, fun: 100, poopAt: 0, updatedAt: 0 }
   };
 }
 

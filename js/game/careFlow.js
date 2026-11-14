@@ -2,7 +2,7 @@ import { el, button, wait, restartAnimation } from '../components/dom.js';
 import { createDino } from '../components/dino.js';
 import { POOP_SVG, createCareBars } from '../components/careBars.js';
 import { burstStars } from '../components/effects.js';
-import { currentNeeds, applyCareAction, suggestedAction } from '../logic/care.js';
+import { applyCareAction, suggestedAction, hasPoop } from '../logic/care.js';
 import { activeJourney, activeJourneyDef } from '../state/journeyState.js';
 import { store } from '../state/store.js';
 import { playSound } from '../audio/soundPlayer.js';
@@ -60,7 +60,7 @@ function actionButton(definition, isSuggested, onChoose) {
 }
 
 /**
- * Builds the status area with the three need bars of the active dino.
+ * Builds the status area with the two need bars of the active dino.
  * @param {object} care - Care state of the dino.
  * @returns {HTMLElement} Status element.
  */
@@ -69,18 +69,20 @@ function careStatus(care) {
 }
 
 /**
- * Shows the care screen after a round: the child sees the current needs and feeds, plays with,
- * or cleans up after the active dino. A poop pile stays next to a dirty dino until it is cleaned.
+ * Shows the care screen after a round: the child sees the current needs and feeds or plays with
+ * the active dino. Cleaning is only offered while a poop pile lies next to the dino.
  * @param {HTMLElement} container - Screen container.
  * @returns {Promise<void>} Resolves after the chosen action's animation.
  */
 export function showCareScreen(container) {
   const state = store.getState();
   const journey = activeJourney(state);
-  const needs = currentNeeds(journey.care, Date.now());
-  const suggestion = suggestedAction(needs);
+  const now = Date.now();
+  const isDirty = hasPoop(journey.care, now);
+  const suggestion = suggestedAction(journey.care, now);
   const stage = el('div', { className: 'care__stage' }, [createDino(activeJourneyDef(state).species, journey.dinoStage, journey.worn)]);
-  if (needs.clean < 50) stage.append(el('span', { className: 'care__poop-wrap', html: POOP_SVG }));
+  if (isDirty) stage.append(el('span', { className: 'care__poop-wrap', html: POOP_SVG }));
+  const offered = ACTIONS.filter((definition) => definition.action !== 'clean' || isDirty);
   let status = careStatus(journey.care);
   return new Promise((resolve) => {
     let isDone = false;
@@ -95,7 +97,7 @@ export function showCareScreen(container) {
       await animateAction(stage, action);
       resolve();
     };
-    const buttons = el('div', { className: 'care__actions' }, ACTIONS.map((definition) => actionButton(definition, definition.action === suggestion, choose)));
+    const buttons = el('div', { className: 'care__actions' }, offered.map((definition) => actionButton(definition, definition.action === suggestion, choose)));
     container.replaceChildren(el('section', { className: 'care card' }, [
       el('h2', { className: 'care__title', text: `Was braucht ${journey.dinoName} jetzt?` }), status, stage, buttons
     ]));

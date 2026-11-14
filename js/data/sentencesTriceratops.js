@@ -1,4 +1,5 @@
 import { parseSentenceSpecs } from './sentences.js';
+import { EXTRA_TRICERATOPS_SENTENCE_SPECS } from './sentencesTriceratopsExtra.js';
 
 /** Sentences of the Triceratops journey (2-4 words, see sentences.js for the format). */
 const SPECS = [
@@ -14,4 +15,4 @@ const SPECS = [
 ];
 
 /** Sentences of the Triceratops journey. */
-export const SENTENCES_TRICERATOPS = parseSentenceSpecs(SPECS, 't');
+export const SENTENCES_TRICERATOPS = parseSentenceSpecs([...SPECS, ...EXTRA_TRICERATOPS_SENTENCE_SPECS], 't');
