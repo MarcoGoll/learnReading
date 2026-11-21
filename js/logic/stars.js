@@ -1,8 +1,17 @@
 /** Minimum judged tasks for a round to earn stars. */
 export const MIN_TASKS_FOR_STARS = 3;
 
-/** Stars of a full journey (5 levels x 3 stars). */
+/** Stars of a full reading journey (5 levels x 3 stars). */
 export const MAX_JOURNEY_STARS = 15;
+
+/**
+ * Returns the maximum stars of a journey with the given number of levels.
+ * @param {number} levelCount - Levels of the journey.
+ * @returns {number} Maximum stars (3 per level).
+ */
+export function maxJourneyStars(levelCount) {
+  return levelCount * 3;
+}
 
 /**
  * Returns the stars of a round: 1 from 50 %, 2 from 75 %, 3 for 100 % without "not yet".
@@ -37,17 +46,18 @@ export function applyStars(starsByLevel, level, stars) {
 /**
  * Returns the total stars of a journey.
  * @param {object} starsByLevel - Best stars per level.
- * @returns {number} Total 0-15.
+ * @returns {number} Total stars.
  */
 export function journeyStarTotal(starsByLevel) {
   return Object.values(starsByLevel).reduce((sum, stars) => sum + stars, 0);
 }
 
 /**
- * Checks whether all 15 stars of a journey are collected.
+ * Checks whether all stars of a journey are collected.
  * @param {object} starsByLevel - Best stars per level.
- * @returns {boolean} True with 15 stars.
+ * @param {number} [maxStars=MAX_JOURNEY_STARS] - Maximum stars of the journey.
+ * @returns {boolean} True when all stars are collected.
  */
-export function hasAllStars(starsByLevel) {
-  return journeyStarTotal(starsByLevel) >= MAX_JOURNEY_STARS;
+export function hasAllStars(starsByLevel, maxStars = MAX_JOURNEY_STARS) {
+  return journeyStarTotal(starsByLevel) >= maxStars;
 }

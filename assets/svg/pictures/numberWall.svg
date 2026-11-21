@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<circle cx="100" cy="100" r="96" fill="#fbe9e7"/>
+<g stroke="#8d4a2f" stroke-width="4" fill="#ffccbc"><rect x="76" y="40" width="48" height="36" rx="5"/><rect x="52" y="80" width="48" height="36" rx="5"/><rect x="100" y="80" width="48" height="36" rx="5"/><rect x="28" y="120" width="48" height="36" rx="5"/><rect x="76" y="120" width="48" height="36" rx="5" fill="#fff"/><rect x="124" y="120" width="48" height="36" rx="5"/></g>
+<g font-family="Andika, sans-serif" font-weight="700" font-size="22" text-anchor="middle" fill="#263238"><text x="100" y="66">8</text><text x="76" y="106">3</text><text x="124" y="106">5</text><text x="52" y="146">1</text><text x="100" y="146" fill="#ff8f3a">?</text><text x="148" y="146">3</text></g>
+</svg>

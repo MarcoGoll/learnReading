@@ -1,6 +1,7 @@
 import { goalCount, goalTarget } from '../content/levelRules.js';
 import { activeProfile } from '../content/profiles.js';
-import { activeJourney } from '../state/journeyState.js';
+import { activeJourney, activeSubject } from '../state/journeyState.js';
+import { mathLevelGoal } from './math/mathLevelGoals.js';
 
 /**
  * Returns goal text and unit of a level for the active journey's content.
@@ -31,12 +32,16 @@ function goalTexts(level, profile, target) {
 
 /**
  * Returns the goal and progress of a level in the active journey, including the running round.
+ * Math journeys use the math goals (mathLevelGoal).
  * @param {number} level - Level 1-5.
  * @param {object} state - Game state.
  * @param {Array<string>} [roundIds=[]] - Ids mastered in the running round (or passed variants).
- * @returns {{text: string, current: number, target: number, detail: string, isReached: boolean, wasCompleted: boolean}} Goal.
+ * @returns {{text: string, current: number, target: number, detail: string, isReached: boolean, completesImmediately: boolean, wasCompleted: boolean}} Goal.
  */
 export function levelGoal(level, state, roundIds = []) {
+  if (activeSubject(state) === 'math') {
+    return mathLevelGoal(level, state, roundIds);
+  }
   const target = goalTarget(level, state);
   const current = Math.min(goalCount(level, state, roundIds), target);
   const texts = goalTexts(level, activeProfile(state), target);
@@ -46,6 +51,7 @@ export function levelGoal(level, state, roundIds = []) {
     target,
     detail: `${current} von ${target} ${texts.unit}`,
     isReached: current >= target,
+    completesImmediately: level === 5,
     wasCompleted: activeJourney(state).completedLevels.includes(level)
   };
 }

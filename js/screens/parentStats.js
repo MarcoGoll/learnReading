@@ -2,6 +2,9 @@ import { el, button, icon } from '../components/dom.js';
 import { store } from '../state/store.js';
 import { navigate } from '../router.js';
 import { difficultItems, activityLastDays, entriesByType } from '../logic/statistics.js';
+
+/** Item types of the reading world shown in the statistics (math results are not listed). */
+const READING_TYPES = ['letter', 'syllable', 'word', 'sentence'];
 import { letterById } from '../data/letters.js';
 import { wordById } from '../data/allWords.js';
 import { sentenceById } from '../data/allSentences.js';
@@ -51,7 +54,7 @@ function rateLevel(rate) {
  * @returns {HTMLElement} Section.
  */
 function difficultSection(history) {
-  const items = difficultItems(history);
+  const items = difficultItems(history, READING_TYPES);
   const list = items.length === 0
     ? el('p', { text: 'Gerade ist nichts schwierig.' })
     : el('ul', { className: 'parent-stats__list' }, items.map(({ key, entry, rate }) => {

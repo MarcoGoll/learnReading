@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createDefaultState, normalizeState, migrateFromVersion1 } from '../js/state/defaultState.js';
+import { createDefaultState, normalizeState, migrateFromVersion1, STATE_VERSION } from '../js/state/defaultState.js';
 import { createStore, STORAGE_KEY } from '../js/state/store.js';
 import { memoryStorage } from './helpers.js';
 
@@ -49,7 +49,7 @@ test('a version 1 save is migrated into the T-Rex journey without loss', () => {
   };
   const state = normalizeState(oldSave);
   const trex = state.journeys.trex;
-  assert.equal(state.version, 2);
+  assert.equal(state.version, STATE_VERSION);
   assert.equal(trex.dinoName, 'Rexi');
   assert.equal(trex.currentLevel, 3);
   assert.deepEqual(trex.completedLevels, [1, 2]);

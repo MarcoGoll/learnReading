@@ -1,0 +1,87 @@
+.number-line {
+  position: relative;
+  width: 100%;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+.number-line__svg {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+.number-line__axis {
+  stroke: var(--color-text);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.number-line__mark {
+  stroke: var(--color-text);
+  stroke-width: 3;
+}
+
+.number-line__mark--ten {
+  stroke-width: 5;
+}
+
+.number-line__label {
+  font-family: var(--font-reading);
+  font-size: 26px;
+  font-weight: 700;
+  text-anchor: middle;
+  fill: var(--color-text);
+}
+
+.number-line__arc {
+  stroke: var(--color-primary);
+  stroke-width: 5;
+  stroke-dasharray: 10 7;
+  fill: none;
+}
+
+.number-line__selection circle {
+  fill: var(--color-secondary);
+  opacity: 0.85;
+}
+
+.number-line__selection text {
+  font-family: var(--font-reading);
+  font-size: 30px;
+  font-weight: 700;
+  text-anchor: middle;
+  fill: var(--color-secondary);
+}
+
+.number-line__dino {
+  position: absolute;
+  bottom: 42%;
+  left: 4%;
+  width: clamp(48px, 9vw, 72px);
+  transform: translateX(-50%);
+  transition: left 0.5s ease-in-out;
+  pointer-events: none;
+}
+
+.number-line__dino .dino {
+  max-width: none;
+}
+
+.number-line__dino--hopping {
+  animation: number-line-hop 0.5s ease-in-out;
+}
+
+.number-line__ok {
+  align-self: center;
+}
+
+.number-line__ok:disabled {
+  opacity: 0.5;
+}
+
+@keyframes number-line-hop {
+  50% {
+    transform: translate(-50%, -36px);
+  }
+}

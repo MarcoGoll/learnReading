@@ -1,4 +1,5 @@
-import { hasAllStars } from './stars.js';
+import { hasAllStars, maxJourneyStars } from './stars.js';
+import { levelCountOf } from '../data/journeys.js';
 
 /**
  * Returns the points the child can still spend in the wardrobe (total points minus spent points).
@@ -80,7 +81,7 @@ export function spentForUnlocked(unlockedIds, total, rewards) {
 export function unlockStarRewards(state, rewards) {
   const journey = state.journeys[state.activeJourney];
   const special = rewards.find((reward) => reward.journey === state.activeJourney);
-  if (!special || state.rewards.unlocked.includes(special.id) || !hasAllStars(journey.stars)) {
+  if (!special || state.rewards.unlocked.includes(special.id) || !hasAllStars(journey.stars, maxJourneyStars(levelCountOf(state.activeJourney)))) {
     return [];
   }
   state.rewards.unlocked.push(special.id);

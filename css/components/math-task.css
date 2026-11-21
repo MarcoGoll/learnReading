@@ -1,0 +1,249 @@
+.math-task {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 760px;
+  padding: 20px;
+}
+
+.math-task__header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+}
+
+.math-task__text {
+  margin: 0;
+  font-family: var(--font-reading);
+  font-size: clamp(2rem, 7vw, 3.4rem);
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-text);
+}
+
+.math-task__text--solved {
+  color: var(--color-correct-dark);
+}
+
+.math-task--solution .math-task__text {
+  color: var(--color-wrong-dark);
+}
+
+.math-task__aid {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.math-task__aid[hidden] {
+  display: none;
+}
+
+.math-task__help {
+  align-self: center;
+}
+
+.math-variant__tools {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.math-variant__wall {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.read-aloud-button--child {
+  position: static;
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
+}
+
+.read-aloud-button--child .icon {
+  width: 36px;
+  height: 36px;
+}
+
+.math-aid {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.math-aid__svg {
+  width: 100%;
+  max-width: 440px;
+  max-height: 220px;
+}
+
+.math-aid__sign {
+  font-family: var(--font-reading);
+  font-size: 30px;
+  font-weight: 700;
+  text-anchor: middle;
+  fill: var(--color-text);
+}
+
+.math-aid__label {
+  font-family: var(--font-reading);
+  font-size: 15px;
+  text-anchor: middle;
+  fill: var(--color-text);
+}
+
+.math-aid__label--target {
+  font-size: 19px;
+  font-weight: 700;
+  fill: var(--color-primary-dark);
+}
+
+.math-aid__insect--leaving {
+  opacity: 0.6;
+}
+
+.number-pad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.number-pad__display {
+  min-width: 140px;
+  padding: 6px 20px;
+  border: 3px solid var(--color-secondary);
+  border-radius: var(--radius-medium);
+  background: #fff;
+  font-family: var(--font-reading);
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-text);
+}
+
+.number-pad__display--empty {
+  color: #b0bec5;
+}
+
+.number-pad__keys {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+}
+
+.number-pad__key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  border: none;
+  border-radius: var(--radius-medium);
+  background: #fff;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+  font-family: var(--font-reading);
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.number-pad__key:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+}
+
+.number-pad__key .icon {
+  width: 32px;
+  height: 32px;
+}
+
+.number-pad__key--ok {
+  background: var(--color-correct);
+  color: #fff;
+}
+
+.number-pad__key--delete {
+  background: #eceff1;
+}
+
+.number-pad--disabled .number-pad__key {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.answer-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.answer-cards__card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 96px;
+  padding: 8px;
+  border: 3px solid transparent;
+  border-radius: var(--radius-medium);
+  background: #fff;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.12);
+  font-family: var(--font-reading);
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.answer-cards--pictures {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.answer-cards__card--picture .math-aid__svg {
+  max-width: 240px;
+  max-height: 120px;
+}
+
+.answer-cards__card--correct {
+  border-color: var(--color-correct);
+  background: #e8f5e9;
+}
+
+.answer-cards__card--wrong {
+  border-color: var(--color-wrong);
+  opacity: 0.5;
+}
+
+.memory-card {
+  font-family: var(--font-reading);
+  font-size: clamp(1.4rem, 4.5vw, 2.2rem);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.memory-card--result {
+  background: #fff3e0;
+  color: var(--color-primary-dark);
+}
+
+@media (max-width: 600px) {
+  .math-task {
+    padding: 14px;
+  }
+
+  .number-pad__key {
+    min-height: 52px;
+  }
+}

@@ -38,3 +38,23 @@ export function createReadAloudButton(getText) {
   hasGermanVoice().then((isAvailable) => { speakerButton.hidden = !isAvailable; });
   return speakerButton;
 }
+
+/**
+ * Creates the large speaker button next to a math task, meant for the child; hidden without a German voice.
+ * @param {Function} getText - Returns the speech text of the current task (or null).
+ * @returns {HTMLButtonElement} Button.
+ */
+export function createTaskSpeakerButton(getText) {
+  const speakerButton = button({
+    className: 'read-aloud-button read-aloud-button--child',
+    iconName: 'volume_up',
+    title: 'Aufgabe vorlesen',
+    onClick: () => {
+      const text = getText();
+      if (text) speak(text);
+    }
+  });
+  speakerButton.hidden = true;
+  hasGermanVoice().then((isAvailable) => { speakerButton.hidden = !isAvailable; });
+  return speakerButton;
+}

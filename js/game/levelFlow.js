@@ -12,19 +12,22 @@ import { levelGoal } from '../logic/levelGoals.js';
 import { isLevelComplete } from '../content/levelRules.js';
 import { createGoalBanner } from '../components/goalBanner.js';
 import { showCareScreen } from './careFlow.js';
+import { levelCountOf } from '../data/journeys.js';
 
 /**
  * Returns title and message of the summary so the child sees whether the level is done.
  * @param {number} level - Level number.
- * @param {object} outcome - Round outcome (levelCompletedNow).
+ * @param {object} outcome - Round outcome (levelCompletedNow, stageChanged).
  * @param {object} goal - Goal after the round.
  * @param {string} missingText - Message about what is still missing.
+ * @param {number} [levelCount=5] - Number of levels of the journey.
  * @returns {{title: string, message: string}} Texts.
  */
-export function summaryTexts(level, outcome, goal, missingText) {
+export function summaryTexts(level, outcome, goal, missingText, levelCount = 5) {
   if (outcome.levelCompletedNow) {
-    const next = level < 5 ? `Level ${level + 1} ist jetzt frei!` : 'Dein Dino ist jetzt ausgewachsen!';
-    return { title: `Level ${level} geschafft!`, message: `${next} Gleich wächst dein Dino.` };
+    const next = level < levelCount ? `Level ${level + 1} ist jetzt frei!` : 'Dein Dino ist jetzt ausgewachsen!';
+    const growth = outcome.stageChanged === false ? '' : ' Gleich wächst dein Dino.';
+    return { title: `Level ${level} geschafft!`, message: `${next}${growth}` };
   }
   if (goal.wasCompleted) {
     return { title: 'Runde geschafft!', message: `Level ${level} hast du schon geschafft. Super geübt!` };
@@ -47,12 +50,13 @@ export function applyRoundEnd(roundResult) {
 }
 
 /**
- * Continues after a round: evolution scene, optional care screen, egg notice, then the home screen.
+ * Continues after a round: evolution scene (when the dino reached a new stage), optional care
+ * screen, egg notice, then the home screen.
  * @param {HTMLElement} container - Screen container.
- * @param {object} outcome - Round outcome (levelCompletedNow, unlockedJourney, careAllowed).
+ * @param {object} outcome - Round outcome (levelCompletedNow, stageChanged, unlockedJourney, careAllowed).
  */
 export async function continueAfterRound(container, outcome) {
-  if (outcome.levelCompletedNow) {
+  if (outcome.levelCompletedNow && outcome.stageChanged !== false) {
     const state = store.getState();
     const journey = activeJourney(state);
     await playEvolutionScene(activeJourneyDef(state).species, journey.dinoStage, journey.dinoName, journey.worn);
@@ -83,7 +87,7 @@ export function endLevelRound(container, { level, correctIds, session, messageFo
   outcome.careAllowed = stats.taskCount >= MIN_TASKS_FOR_STARS;
   const state = store.getState();
   const goal = levelGoal(level, state);
-  const texts = summaryTexts(level, outcome, goal, messageFor ? messageFor(state) : '');
+  const texts = summaryTexts(level, outcome, goal, messageFor ? messageFor(state) : '', levelCountOf(state.activeJourney));
   showRoundSummary(container, {
     title: texts.title,
     goalElement: goalSummaryElement(level, goal, outcome.levelCompletedNow),

@@ -12,15 +12,15 @@ const DAY = 24 * 60 * 60 * 1000;
 
 test('the next journey is unlocked, started with a name, and becomes active', () => {
   const state = createDefaultState();
-  assert.equal(waitingEgg(state), undefined);
+  assert.equal(waitingEgg(state, 'reading'), undefined);
   assert.equal(startJourney(state, 'triceratops', 'Trixi'), false);
   assert.equal(unlockNextJourney(state, 'trex').id, 'triceratops');
   assert.equal(unlockNextJourney(state, 'trex'), null);
-  assert.equal(waitingEgg(state).id, 'triceratops');
+  assert.equal(waitingEgg(state, 'reading').id, 'triceratops');
   assert.equal(startJourney(state, 'triceratops', 'Trixi'), true);
   assert.equal(state.activeJourney, 'triceratops');
   assert.equal(activeJourney(state).dinoName, 'Trixi');
-  assert.equal(waitingEgg(state), undefined);
+  assert.equal(waitingEgg(state, 'reading'), undefined);
   assert.equal(unlockNextJourney(state, 'pterosaur'), null);
 });
 

@@ -15,7 +15,7 @@ function statusText(goal, level) {
     return `Level ${level} ist schon geschafft. Du sammelst jetzt Extra-Punkte!`;
   }
   if (goal.isReached) {
-    return level === 5
+    return goal.completesImmediately
       ? 'Geschafft! Der Dino wächst gleich.'
       : `Ziel erreicht! Spiel die Runde zu Ende, dann ist Level ${level} geschafft.`;
   }
