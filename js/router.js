@@ -10,7 +10,8 @@ let screenContainer = null;
 /**
  * Registers a route.
  * @param {RegExp} pattern - Pattern matched against the path after "#".
- * @param {Function} render - Screen render function (container, params) returning a cleanup function.
+ * @param {Function} render - Screen render function (container, params); a returned function is used as
+ *   cleanup, any other return value (e.g. a promise) is ignored.
  * @param {Function} [guard] - Returns a redirect path, or null to allow the route.
  */
 export function addRoute(pattern, render, guard) {
@@ -68,7 +69,8 @@ function renderScreen(route, params) {
   }
   screenContainer.replaceChildren();
   screenContainer.scrollTop = 0;
-  currentCleanup = route.render(screenContainer, params) || null;
+  const cleanup = route.render(screenContainer, params);
+  currentCleanup = typeof cleanup === 'function' ? cleanup : null;
   document.dispatchEvent(new CustomEvent('screenchange', { detail: { path: currentPath() } }));
 }
 

@@ -167,10 +167,21 @@ function valleyGroup(group, state) {
 }
 
 /**
+ * Plays the celebrations of both groups one after the other (each only once).
+ * @param {Array<HTMLElement>} groups - Group sections in GROUPS order.
+ */
+async function celebrateFamilies(groups) {
+  for (let i = 0; i < GROUPS.length; i += 1) {
+    await celebrateFamily(groups[i].querySelector('.valley'), GROUPS[i]);
+  }
+}
+
+/**
  * Renders the dino valley with the reading dinos and the math dinos in two groups.
+ * Synchronous on purpose: the router treats a returned value as the cleanup function.
  * @param {HTMLElement} container - Screen container.
  */
-export async function renderValley(container) {
+export function renderValley(container) {
   const state = store.getState();
   const groups = GROUPS.map((group) => valleyGroup(group, state));
   container.replaceChildren(el('section', { className: 'valley-screen' }, [
@@ -178,7 +189,5 @@ export async function renderValley(container) {
     el('p', { className: 'valley-screen__hint', text: 'Tippe auf einen Dino, um mit ihm zu spielen.' }),
     ...groups
   ]));
-  for (let i = 0; i < GROUPS.length; i += 1) {
-    await celebrateFamily(groups[i].querySelector('.valley'), GROUPS[i]);
-  }
+  celebrateFamilies(groups);
 }
