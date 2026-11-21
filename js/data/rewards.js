@@ -4,6 +4,8 @@
  * so the child has to save points over many rounds for each further accessory.
  * Ten further accessories (6000-15000) and five super accessories (25000-50000, flag super) are
  * long-term goals; super accessories are marked in the wardrobe and sparkle on the dino.
+ * Fifteen more accessories (16000-24000: fun, math, and job themes) and five more super accessories
+ * (60000-100000) were added later (ShopExpansion2).
  * Special accessories (price null) are unlocked by collecting all stars of a journey.
  */
 export const REWARDS = [
@@ -41,12 +43,32 @@ export const REWARDS = [
   { id: 'starVisor', name: 'Sternenvisier', slot: 'eyes', price: 12000 },
   { id: 'butterflyWings', name: 'Schmetterlingsflügel', slot: 'neck', price: 13000 },
   { id: 'unicornHorn', name: 'Einhorn-Horn', slot: 'head', price: 15000 },
+  { id: 'topHat', name: 'Zylinder', slot: 'head', price: 16000 },
+  { id: 'swimGoggles', name: 'Schwimmbrille', slot: 'eyes', price: 16500 },
+  { id: 'numberChain', name: 'Zahlen-Kette', slot: 'neck', price: 17000 },
+  { id: 'firefighterHelmet', name: 'Feuerwehrhelm', slot: 'head', price: 17500 },
+  { id: 'calculatorGlasses', name: 'Rechenbrille', slot: 'eyes', price: 18000 },
+  { id: 'stethoscope', name: 'Stethoskop', slot: 'neck', price: 18500 },
+  { id: 'sombrero', name: 'Sombrero', slot: 'head', price: 19000 },
+  { id: 'labGoggles', name: 'Forscherbrille', slot: 'eyes', price: 19500 },
+  { id: 'abacusNecklace', name: 'Rechenrahmen-Kette', slot: 'neck', price: 20000 },
+  { id: 'policeCap', name: 'Polizeimütze', slot: 'head', price: 21000 },
+  { id: 'welderGoggles', name: 'Schweißerbrille', slot: 'eyes', price: 21500 },
+  { id: 'partyBow', name: 'Konfetti-Schleife', slot: 'neck', price: 22000 },
+  { id: 'constructionHelmet', name: 'Bauarbeiterhelm', slot: 'head', price: 23000 },
+  { id: 'graduationCap', name: 'Doktorhut', slot: 'head', price: 23500 },
+  { id: 'astronautHelmet', name: 'Astronautenhelm', slot: 'head', price: 24000 },
   // Super accessories: very expensive long-term goals
   { id: 'diamondCrown', name: 'Diamantkrone', slot: 'head', price: 25000, super: true },
   { id: 'starCape', name: 'Sternenumhang', slot: 'neck', price: 30000, super: true },
   { id: 'diamondGlasses', name: 'Diamantbrille', slot: 'eyes', price: 35000, super: true },
   { id: 'fireWings', name: 'Feuerflügel', slot: 'neck', price: 40000, super: true },
   { id: 'galaxyCrown', name: 'Galaxiekrone', slot: 'head', price: 50000, super: true },
+  { id: 'timesTableCrown', name: 'Einmaleins-Krone', slot: 'head', price: 60000, super: true },
+  { id: 'crystalGlasses', name: 'Kristallbrille', slot: 'eyes', price: 70000, super: true },
+  { id: 'goldenNumberChain', name: 'Goldene Rechenkette', slot: 'neck', price: 80000, super: true },
+  { id: 'dragonWings', name: 'Drachenflügel', slot: 'neck', price: 90000, super: true },
+  { id: 'sunCrown', name: 'Sonnenkrone', slot: 'head', price: 100000, super: true },
   // Special accessories for all 15 stars of a journey (only for that dino)
   { id: 'goldenCape', name: 'Goldener Umhang', slot: 'neck', price: null, journey: 'trex' },
   { id: 'hornFlowers', name: 'Hörner-Blumen', slot: 'head', price: null, journey: 'triceratops' },

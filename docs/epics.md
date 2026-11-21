@@ -242,3 +242,9 @@ Status values: `planned -> specified -> in progress -> done`
 - **Status:** done
 - **Description:** The math world is split by operation: one dino each for plus, minus, times, and divided, all available from the start and independent of each other. Each dino has its own 7 levels from easy to hard and adventures that only use its operation, so the child can practise what is hard and still finish the others. Replaces the three difficulty journeys of MathJourneys and HarderMathContent.
 
+## Shop
+
+### Epic54: ShopExpansion2
+- **Status:** done
+- **Description:** Twenty more wardrobe accessories above 15000 points (fun, math, and job themes), including five new super accessories up to 100000 points.
+
