@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 /**
- * Generates the six stage SVGs (egg + 5 growth stages) of the three math dino species
+ * Generates the six stage SVGs (egg + 5 growth stages) of the four math dino species
  * in the style of the existing dinos. Run once: node scripts/generateMathDinos.js
  */
 
@@ -87,6 +87,26 @@ const PARASAUROLOPHUS = {
   }
 };
 
+/** Pachycephalosaurus: orange body on two legs, round brown dome head with studs. */
+const PACHYCEPHALOSAURUS = {
+  colors: { main: '#ffb74d', dark: '#ef6c00', belly: '#fff3e0', accent: '#8d6e63', accentDark: '#5d4037' },
+  eggSpots: '#8d6e63',
+  figure(colors) {
+    const leg = (x, color) => `<rect x="${x}" y="140" width="22" height="44" rx="11" fill="${color}"/><ellipse cx="${x + 11}" cy="184" rx="15" ry="5" fill="${color}"/>`;
+    const studs = [[132, 70], [148, 62], [166, 64], [178, 74]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="4" fill="${colors.accentDark}"/>`).join('');
+    return `<g class="dino__tail"><path d="M50 128 Q16 120 4 136 Q30 144 54 146 Z" fill="${colors.main}"/></g>`
+      + `<g class="dino__leg dino__leg--back">${leg(66, colors.dark)}</g>`
+      + `<g class="dino__torso"><ellipse cx="94" cy="128" rx="46" ry="34" fill="${colors.main}"/><ellipse cx="100" cy="138" rx="26" ry="20" fill="${colors.belly}"/></g>`
+      + `<g class="dino__leg dino__leg--front">${leg(98, colors.main)}<path d="M124 120 Q138 126 136 136" stroke="${colors.dark}" stroke-width="8" fill="none" stroke-linecap="round"/></g>`
+      + `<path d="M118 112 Q130 96 136 86 L156 96 Q146 112 132 126 Z" fill="${colors.main}"/>`
+      + '<g class="dino__anchor dino__anchor--neck" transform="translate(134 104) scale(0.8)"></g>'
+      + `<g class="dino__head"><ellipse cx="160" cy="96" rx="26" ry="18" fill="${colors.main}"/>`
+      + `<path class="dino__dome" d="M128 84 Q130 50 158 50 Q188 52 188 84 Z" fill="${colors.accent}" stroke="${colors.accentDark}" stroke-width="2"/>${studs}`
+      + `<path d="M168 104 Q178 106 184 100" stroke="${colors.dark}" stroke-width="2.5" fill="none" stroke-linecap="round"/>${eye(166, 92, 6)}`
+      + '<g class="dino__anchor dino__anchor--eyes" transform="translate(166 92) scale(0.6)"></g><g class="dino__anchor dino__anchor--head" transform="translate(158 52) scale(0.6)"></g></g>';
+  }
+};
+
 /**
  * Returns the egg SVG of a species.
  * @param {object} species - Species definition.
@@ -127,11 +147,11 @@ function stageSvg(species, stage) {
 }
 
 /**
- * Writes all stage files of the three math species.
+ * Writes all stage files of the four math species.
  */
 function generate() {
   const root = join(dirname(fileURLToPath(import.meta.url)), '..', 'assets', 'svg', 'dino');
-  Object.entries({ stegosaurus: STEGOSAURUS, ankylosaurus: ANKYLOSAURUS, parasaurolophus: PARASAUROLOPHUS }).forEach(([id, species]) => {
+  Object.entries({ stegosaurus: STEGOSAURUS, ankylosaurus: ANKYLOSAURUS, parasaurolophus: PARASAUROLOPHUS, pachycephalosaurus: PACHYCEPHALOSAURUS }).forEach(([id, species]) => {
     const folder = join(root, id);
     mkdirSync(folder, { recursive: true });
     writeFileSync(join(folder, 'stage-0.svg'), eggSvg(species));

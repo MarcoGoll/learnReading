@@ -1,5 +1,7 @@
 # Spec: HarderMathContent (Epic51)
 
+> **Superseded:** the journey structure and contents of this spec were replaced by `MathOperationDinos.md` (one dino per operation, all available from the start).
+
 ## Overview / Goal
 
 Content of the second and third math journey (Ankylosaurus and Parasaurolophus). They use the same 7 level types as journey 1 with larger number ranges and the remaining times tables, following the grade 2 curriculum.

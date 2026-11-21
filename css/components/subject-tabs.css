@@ -46,3 +46,51 @@
 .home--math .level-map {
   grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
 }
+
+.operation-bar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  max-width: 640px;
+  margin: -6px auto 0;
+}
+
+.operation-bar__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 72px;
+  padding: 4px 8px;
+  border: 3px solid transparent;
+  border-radius: var(--radius-medium);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.operation-bar__button--active {
+  border-color: var(--color-secondary);
+  background: #fff;
+}
+
+.operation-bar__sign {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+}
+
+.operation-bar__sign svg {
+  width: 100%;
+  height: 100%;
+  fill: var(--color-secondary);
+  stroke: var(--color-secondary);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.operation-bar__dino {
+  width: 56px;
+  max-width: 56px;
+}

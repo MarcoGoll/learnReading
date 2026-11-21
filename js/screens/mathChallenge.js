@@ -12,7 +12,7 @@ import { playSound } from '../audio/soundPlayer.js';
 import { continueAfterRound, goalSummaryElement } from '../game/levelFlow.js';
 import { mathLevelGoal, isMathLevelComplete } from '../logic/math/mathLevelGoals.js';
 import { mathProfileOf, MATH_VARIANTS_TO_COMPLETE } from '../content/mathProfiles.js';
-import { MATH_VARIANTS, mathVariantById } from './mathChallenge/variantRegistry.js';
+import { mathVariantsOf, mathVariantById } from './mathChallenge/variantRegistry.js';
 
 /** Level number of the math adventures. */
 export const MATH_CHALLENGE_LEVEL = 7;
@@ -38,12 +38,14 @@ function variantCard(variant, passed) {
  * @param {HTMLElement} container - Screen container.
  */
 export function renderMathChallengeMenu(container) {
-  const passed = activeJourney(store.getState()).passedVariants;
+  const state = store.getState();
+  const passed = activeJourney(state).passedVariants;
+  const variants = mathVariantsOf(mathProfileOf(state.activeJourney));
   const progress = Math.min(passed.length, MATH_VARIANTS_TO_COMPLETE);
   container.replaceChildren(el('section', { className: 'challenge-menu' }, [
     el('h1', { className: 'screen-title', text: 'Level 7: Abenteuer' }),
     el('p', { className: 'challenge-menu__progress', text: `${progress} von ${MATH_VARIANTS_TO_COMPLETE} Abenteuern geschafft` }),
-    el('div', { className: 'challenge-menu__grid' }, MATH_VARIANTS.map((variant) => variantCard(variant, passed)))
+    el('div', { className: 'challenge-menu__grid' }, variants.map((variant) => variantCard(variant, passed)))
   ]));
 }
 
@@ -113,11 +115,12 @@ function showVariantSummary(container, variant, result) {
  * @returns {Function|undefined} Cleanup function.
  */
 export function renderMathChallengeVariant(container, variantId) {
+  const profile = mathProfileOf(store.getState().activeJourney);
   const variant = mathVariantById(variantId);
-  if (!variant) {
+  if (!variant || !profile.challenge.variants.includes(variantId)) {
     navigate('/math/level/7');
     return undefined;
   }
-  const context = { challenge: mathProfileOf(store.getState().activeJourney).challenge };
+  const context = { challenge: profile.challenge };
   return variant.run(container, context, (result) => showVariantSummary(container, variant, result));
 }

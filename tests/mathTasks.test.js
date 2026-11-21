@@ -15,21 +15,38 @@ test('level 1 of journey 1 has count and pickQuantity tasks for 0-10', () => {
   assert.deepEqual([...new Set(tasks.map((task) => task.operation))], ['count', 'pickQuantity']);
 });
 
-test('addition and subtraction up to 10 have 66 tasks each within 0-10', () => {
+test('plus up to 10 and minus up to 10 stay within 0-10', () => {
   const additions = allTasks(level('stegosaurus', 2));
-  const subtractions = allTasks(level('stegosaurus', 3));
   assert.equal(additions.length, 66);
-  assert.equal(subtractions.length, 66);
-  assert.ok(additions.every((task) => task.answer <= 10));
-  assert.ok(subtractions.every((task) => task.answer >= 0 && task.operands[0] >= task.operands[1]));
+  assert.ok(additions.every((task) => task.operation === 'add' && task.answer <= 10));
+  const minusFive = allTasks(level('ankylosaurus', 1));
+  assert.equal(minusFive.length, 21);
+  const minusTen = allTasks(level('ankylosaurus', 2));
+  assert.ok(minusTen.every((task) => task.operation === 'subtract' && task.answer >= 0 && task.operands[0] > 5));
 });
 
-test('level 4 stays within 0-20 and excludes pure level 2/3 tasks', () => {
-  const tasks = allTasks(level('stegosaurus', 4));
-  assert.ok(tasks.every((task) => task.answer >= 0 && task.answer <= 20));
-  assert.ok(tasks.every((task) => [...task.operands, task.answer].some((number) => number > 10)));
-  assert.ok(tasks.some(crossesTen));
-  assert.ok(tasks.some((task) => !crossesTen(task)));
+test('each dino only uses its own operation (plus dino also has the numbers level)', () => {
+  const expected = { stegosaurus: 'add', ankylosaurus: 'subtract', parasaurolophus: 'multiply', pachycephalosaurus: 'divide' };
+  Object.entries(expected).forEach(([journeyId, operation]) => {
+    [1, 2, 3, 4, 5, 6].forEach((number) => {
+      const tasks = allTasks(level(journeyId, number));
+      const allowed = journeyId === 'stegosaurus' && number === 1 ? ['count', 'pickQuantity'] : [operation];
+      assert.ok(tasks.every((task) => allowed.includes(task.operation)), `${journeyId} level ${number}`);
+    });
+    assert.deepEqual(MATH_PROFILES[journeyId].challenge.operations, [operation]);
+  });
+});
+
+test('plus and minus ladders: up to 20 without, then with crossing ten, then up to 100', () => {
+  ['stegosaurus', 'ankylosaurus'].forEach((journeyId) => {
+    const noCrossing20 = allTasks(level(journeyId, 3));
+    const crossing20 = allTasks(level(journeyId, 4));
+    assert.ok(noCrossing20.every((task) => !crossesTen(task) && task.answer <= 20 && Math.max(...task.operands) <= 20));
+    assert.ok(crossing20.every((task) => crossesTen(task) && Math.max(...task.operands, task.answer) <= 20));
+    assert.ok(noCrossing20.every((task) => [...task.operands, task.answer].some((number) => number > 10)));
+    assert.ok(allTasks(level(journeyId, 5)).every((task) => !crossesTen(task) && task.answer <= 100));
+    assert.ok(allTasks(level(journeyId, 6)).every((task) => crossesTen(task) && Math.max(...task.operands, task.answer) <= 100));
+  });
 });
 
 test('crossing ten is detected for addition and subtraction', () => {
@@ -40,32 +57,31 @@ test('crossing ten is detected for addition and subtraction', () => {
   assert.equal(crossesTen(createArithmeticTask('add', 38, 5)), true);
 });
 
-test('multiplication uses the core tables in both orders without duplicates', () => {
-  const tasks = allTasks(level('stegosaurus', 5));
-  assert.equal(tasks.length, 64);
-  assert.equal(new Set(tasks.map((task) => task.id)).size, 64);
-  assert.ok(tasks.every((task) => task.operands.some((operand) => [1, 2, 5, 10].includes(operand))));
-  assert.ok(tasks.some((task) => task.id === 'multiply:3*5') && tasks.some((task) => task.id === 'multiply:5*3'));
+test('times levels add tables step by step, both orders, no duplicates', () => {
+  const tables = { 1: [1, 2, 10], 2: [5], 3: [3, 4], 4: [6], 5: [7, 8, 9] };
+  Object.entries(tables).forEach(([number, list]) => {
+    const tasks = allTasks(level('parasaurolophus', Number(number)));
+    assert.equal(new Set(tasks.map((task) => task.id)).size, tasks.length);
+    assert.ok(tasks.every((task) => task.operands.some((operand) => list.includes(operand))));
+    assert.ok(tasks.length >= MATH_PROFILES.parasaurolophus.levels[number].goal);
+  });
+  assert.equal(allTasks(level('parasaurolophus', 6)).length, 100);
+  assert.ok(allTasks(level('parasaurolophus', 2)).some((task) => task.id === 'multiply:5*3') && allTasks(level('parasaurolophus', 2)).some((task) => task.id === 'multiply:3*5'));
   assert.equal(tablePairs([1, 2, 5, 10]).length, 64);
 });
 
-test('division inverts the multiplications and has no remainder', () => {
-  const tasks = allTasks(level('stegosaurus', 6));
-  assert.ok(tasks.every((task) => Number.isInteger(task.answer) && task.operands[1] >= 1 && task.operands[1] <= 10));
-  const products = new Set(allTasks(level('stegosaurus', 5)).map((task) => `${task.answer}:${task.operands[1]}`));
-  assert.ok(tasks.every((task) => products.has(`${task.operands[0]}:${task.operands[1]}`)));
+test('division inverts the times tables of the same level and has no remainder', () => {
+  [1, 2, 3, 4, 5, 6].forEach((number) => {
+    const tasks = allTasks(level('pachycephalosaurus', number));
+    const products = new Set(allTasks(level('parasaurolophus', number)).map((task) => `${task.answer}:${task.operands[1]}`));
+    assert.ok(tasks.every((task) => Number.isInteger(task.answer) && task.operands[1] >= 1 && task.operands[1] <= 10));
+    assert.ok(tasks.every((task) => products.has(`${task.operands[0]}:${task.operands[1]}`)));
+  });
   assert.equal(createArithmeticTask('divide', 15, 5).text, '15 : 5 = ?');
   assert.equal(createArithmeticTask('divide', 15, 5).speech, '15 geteilt durch 5');
 });
 
-test('journey 2 and 3 tasks stay within 0-100 and follow the crossing rules', () => {
-  const noCrossing = [...allTasks(level('ankylosaurus', 2)), ...allTasks(level('ankylosaurus', 3))];
-  assert.ok(noCrossing.every((task) => !crossesTen(task) && task.answer >= 0 && task.answer <= 100));
-  assert.ok(allTasks(level('ankylosaurus', 4)).every(crossesTen));
-  assert.ok(allTasks(level('parasaurolophus', 2)).every((task) => task.operands.every((operand) => operand >= 10)));
-  const mixed = allTasks(level('parasaurolophus', 6));
-  assert.ok(mixed.some((task) => task.operation === 'multiply') && mixed.some((task) => task.operation === 'divide'));
-  assert.ok(allTasks(level('parasaurolophus', 4)).some((task) => task.missingIndex !== null));
+test('every level has enough tasks for its goal and stays within 0-100', () => {
   Object.keys(MATH_PROFILES).forEach((journeyId) => {
     [1, 2, 3, 4, 5, 6].forEach((number) => {
       const tasks = allTasks(level(journeyId, number));
@@ -100,7 +116,8 @@ test('round limits: at most 2 zero tasks, about half crossing ten', () => {
   for (let seed = 1; seed < 6; seed += 1) {
     const round = selectRoundTasks(additions, { config: level('stegosaurus', 2), randomFn: seededRandom(seed) });
     assert.ok(round.filter((task) => task.operands.includes(0)).length <= 2);
-    const mixed = selectRoundTasks(allTasks(level('stegosaurus', 4)), { config: level('stegosaurus', 4), randomFn: seededRandom(seed) });
+    const mixedConfig = { kind: 'mixedAddSubtract', max: 20, excludeUpTo: 10, crossingShare: 0.5 };
+    const mixed = selectRoundTasks(allTasks(mixedConfig), { config: mixedConfig, randomFn: seededRandom(seed) });
     const crossing = mixed.filter(crossesTen).length;
     assert.ok(crossing >= 4 && crossing <= 6, `crossing ${crossing}`);
   }
@@ -128,11 +145,14 @@ test('missing-number tasks and speech texts', () => {
   assert.equal(solutionSpeech(createNumberTask('count', 4)), 'Die Lösung ist 4.');
 });
 
-test('the level 7 mix contains all four operations without zero operands', () => {
-  const tasks = mixedTasks(MATH_PROFILES.stegosaurus.challenge, 12, seededRandom(5));
+test('the level 7 mix keeps an even share of several operations without zero operands', () => {
+  const mix = { operations: ['add', 'subtract', 'multiply', 'divide'], max: 20, tables: [1, 2, 5, 10] };
+  const tasks = mixedTasks(mix, 12, seededRandom(5));
   assert.equal(tasks.length, 12);
   ['add', 'subtract', 'multiply', 'divide'].forEach((operation) => {
     assert.equal(tasks.filter((task) => task.operation === operation).length, 3);
   });
   assert.ok(tasks.every((task) => task.operands.every((operand) => operand > 0)));
+  const plusOnly = mixedTasks(MATH_PROFILES.stegosaurus.challenge, 10, seededRandom(5));
+  assert.ok(plusOnly.length === 10 && plusOnly.every((task) => task.operation === 'add'));
 });

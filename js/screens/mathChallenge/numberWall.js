@@ -167,7 +167,7 @@ export const numberWallVariant = {
    */
   run(container, { challenge }, finish) {
     const layout = createLevelLayout(container, { title: 'Rechenmauer', recordLevel: 7, goalLevel: 7 });
-    const walls = createWallRound(challenge.wallMax);
+    const walls = createWallRound(challenge.wallMax, Math.random, challenge.wallMode);
     const context = { layout, walls, finish, wallIndex: 0, solved: 0, gapCount: walls.reduce((sum, wall) => sum + wall.gaps.length, 0), active: null, locked: false };
     context.session = createRoundSession({ level: 7, updateState: store.updateState });
     context.pad = createNumberPad({ onSubmit: (value) => submit(context, value) });

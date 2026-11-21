@@ -1,77 +1,110 @@
 /**
- * Math content profiles: per math journey the 7 levels with title, task config, input type,
- * visual help, and goal size, plus the settings of the level 7 adventures.
+ * Math content profiles: one dino per operation, each with 7 levels (title, task config, input type,
+ * visual help, goal size) and the settings of its level 7 adventures.
  * aidMode "always" shows the picture all the time, "onRequest" via the help button and after a mistake.
  */
 
-/** Goal sizes of levels 1-6 (different tasks correct at the first attempt) and variants of level 7. */
-const GOALS = { 1: 10, 2: 15, 3: 15, 4: 20, 5: 15, 6: 15, 7: 3 };
-
-/** Units of the goal texts per operation kind. */
+/** Units of the goal texts per task kind. */
 const UNITS = {
-  numbers: 'Zahlen-Aufgaben', add: 'Plus-Aufgaben', subtract: 'Minus-Aufgaben', mixedAddSubtract: 'Plus- und Minus-Aufgaben',
-  multiply: 'Mal-Aufgaben', divide: 'Geteilt-Aufgaben', mixedMultiplyDivide: 'Einmaleins-Aufgaben'
+  numbers: 'Zahlen-Aufgaben', add: 'Plus-Aufgaben', subtract: 'Minus-Aufgaben',
+  multiply: 'Mal-Aufgaben', divide: 'Geteilt-Aufgaben'
 };
 
+/** Times tables per level of the times and divided dinos (level 6 mixes all). */
+const TABLES_BY_LEVEL = { 1: [1, 2, 10], 2: [5], 3: [3, 4], 4: [6], 5: [7, 8, 9], 6: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] };
+
+/** Goal sizes of the times and divided levels (single tables have fewer tasks). */
+const TABLE_GOALS = { 1: 15, 2: 12, 3: 15, 4: 12, 5: 15, 6: 20 };
+
+/** Titles of the times and divided levels. */
+const TABLE_TITLES = { 1: 'Reihen 1, 2, 10', 2: 'Reihe 5', 3: 'Reihen 3, 4', 4: 'Reihe 6', 5: 'Reihen 7, 8, 9', 6: 'Alle Reihen' };
+
 /**
- * Builds one level entry with the shared goal size and unit.
- * @param {number} level - Level 1-6.
+ * Builds one level entry.
  * @param {string} title - Map title.
  * @param {object} config - Task config (kind and options).
+ * @param {number} goal - Different tasks to answer correctly at the first attempt.
  * @param {object} display - input ("cards" or "pad"), aid, and aidMode.
  * @returns {object} Level entry.
  */
-function level(level, title, config, display) {
-  return { title, config, goal: GOALS[level], unit: UNITS[config.kind], ...display };
+function level(title, config, goal, display) {
+  return { title, config, goal, unit: UNITS[config.kind], ...display };
 }
 
-/** First math journey: numbers up to 10, plus/minus up to 20, core times tables. */
-const STEGOSAURUS = {
-  levels: {
-    1: level(1, 'Zahlen', { kind: 'numbers', min: 0, max: 10, types: ['count', 'pickQuantity'] }, { input: 'cards', aid: 'dots', aidMode: 'always' }),
-    2: level(2, 'Plus', { kind: 'add', max: 10, maxZeroTasksPerRound: 2 }, { input: 'pad', aid: 'insects', aidMode: 'always' }),
-    3: level(3, 'Minus', { kind: 'subtract', max: 10, maxTrivialTasksPerRound: 2 }, { input: 'pad', aid: 'insects', aidMode: 'always' }),
-    4: level(4, 'Bis 20', { kind: 'mixedAddSubtract', max: 20, excludeUpTo: 10, crossingShare: 0.5 }, { input: 'pad', aid: 'tenFrame', aidMode: 'onRequest' }),
-    5: level(5, 'Mal', { kind: 'multiply', tables: [1, 2, 5, 10], factorMax: 10 }, { input: 'pad', aid: 'eggRows', aidMode: 'onRequest' }),
-    6: level(6, 'Geteilt', { kind: 'divide', tables: [1, 2, 5, 10], factorMax: 10 }, { input: 'pad', aid: 'sharing', aidMode: 'onRequest' })
-  },
-  challenge: { operations: ['add', 'subtract', 'multiply', 'divide'], max: 20, tables: [1, 2, 5, 10], wallMax: 20, lineMax: 20 }
+/**
+ * Builds the six levels of the plus or minus dino.
+ * @param {string} kind - "add" or "subtract".
+ * @param {object} first - Entry of level 1.
+ * @param {object} second - Entry of level 2.
+ * @returns {object} Levels 1-6.
+ */
+function lineLevels(kind, first, second) {
+  const pad = (aid, aidMode) => ({ input: 'pad', aid, aidMode });
+  return {
+    1: first,
+    2: second,
+    3: level('Bis 20', { kind, max: 20, excludeUpTo: 10, crossing: 'none' }, 15, pad('tenFrame', 'always')),
+    4: level('Bis 20 mit Übergang', { kind, max: 20, excludeUpTo: 10, crossing: 'only' }, 15, pad('tenFrame', 'onRequest')),
+    5: level('Bis 100', { kind, max: 100, excludeUpTo: 20, crossing: 'none' }, 15, pad('tensAndUnits', 'always')),
+    6: level('Bis 100 mit Übergang', { kind, max: 100, excludeUpTo: 20, crossing: 'only' }, 15, pad('tensAndUnits', 'onRequest'))
+  };
+}
+
+/**
+ * Builds the six levels of the times or divided dino.
+ * @param {string} kind - "multiply" or "divide".
+ * @param {string} aid - "eggRows" or "sharing".
+ * @returns {object} Levels 1-6.
+ */
+function tableLevels(kind, aid) {
+  return Object.fromEntries([1, 2, 3, 4, 5, 6].map((number) => [number, level(
+    TABLE_TITLES[number],
+    { kind, tables: TABLES_BY_LEVEL[number], factorMax: 10 },
+    TABLE_GOALS[number],
+    { input: 'pad', aid, aidMode: number <= 2 ? 'always' : 'onRequest' }
+  )]));
+}
+
+/** Plus dino: numbers first, then plus up to 10, 20, and 100. */
+const PLUS = {
+  operation: 'add',
+  levels: lineLevels('add',
+    level('Zahlen', { kind: 'numbers', min: 0, max: 10, types: ['count', 'pickQuantity'] }, 10, { input: 'cards', aid: 'dots', aidMode: 'always' }),
+    level('Plus bis 10', { kind: 'add', max: 10, maxZeroTasksPerRound: 2 }, 15, { input: 'pad', aid: 'insects', aidMode: 'always' })),
+  challenge: { operations: ['add'], max: 100, tables: [], wallMax: 100, wallMode: 'add', lineMax: 100, variants: ['missingNumber', 'mathMemory', 'numberWall', 'numberLine'] }
 };
 
-/** Second math journey: numbers up to 100 and times tables 3, 4, 6. */
-const ANKYLOSAURUS = {
-  levels: {
-    1: level(1, 'Zahlen bis 100', { kind: 'numbers', min: 10, max: 100, types: ['count', 'pickQuantity'] }, { input: 'cards', aid: 'tensAndUnits', aidMode: 'always' }),
-    2: level(2, 'Plus bis 100', { kind: 'add', max: 100, excludeUpTo: 20, crossing: 'none' }, { input: 'pad', aid: 'tensAndUnits', aidMode: 'always' }),
-    3: level(3, 'Minus bis 100', { kind: 'subtract', max: 100, excludeUpTo: 20, crossing: 'none' }, { input: 'pad', aid: 'tensAndUnits', aidMode: 'always' }),
-    4: level(4, 'Mit Übergang', { kind: 'mixedAddSubtract', max: 100, excludeUpTo: 20, crossing: 'only' }, { input: 'pad', aid: 'tensAndUnits', aidMode: 'onRequest' }),
-    5: level(5, 'Mal', { kind: 'multiply', tables: [3, 4, 6], factorMax: 10 }, { input: 'pad', aid: 'eggRows', aidMode: 'onRequest' }),
-    6: level(6, 'Geteilt', { kind: 'divide', tables: [3, 4, 6], factorMax: 10 }, { input: 'pad', aid: 'sharing', aidMode: 'onRequest' })
-  },
-  challenge: { operations: ['add', 'subtract', 'multiply', 'divide'], max: 100, excludeUpTo: 20, tables: [3, 4, 6], wallMax: 100, lineMax: 100 }
+/** Minus dino: minus up to 5, 10, 20, and 100. */
+const MINUS = {
+  operation: 'subtract',
+  levels: lineLevels('subtract',
+    level('Minus bis 5', { kind: 'subtract', max: 5, maxTrivialTasksPerRound: 3 }, 10, { input: 'pad', aid: 'insects', aidMode: 'always' }),
+    level('Minus bis 10', { kind: 'subtract', max: 10, excludeUpTo: 5, maxTrivialTasksPerRound: 2 }, 15, { input: 'pad', aid: 'insects', aidMode: 'always' })),
+  challenge: { operations: ['subtract'], max: 100, tables: [], wallMax: 100, wallMode: 'subtract', lineMax: 100, variants: ['missingNumber', 'mathMemory', 'numberWall', 'numberLine'] }
 };
 
-/** Third math journey: two-digit numbers up to 100 and the full times table. */
-const PARASAUROLOPHUS = {
-  levels: {
-    1: level(1, 'Zahlen-Profi', { kind: 'numbers', min: 1, max: 100, types: ['next', 'previous', 'nextTen', 'half'] }, { input: 'cards', aid: 'numberLine', aidMode: 'always' }),
-    2: level(2, 'Plus-Profi', { kind: 'add', max: 100, twoDigit: true }, { input: 'pad', aid: 'tensAndUnits', aidMode: 'onRequest' }),
-    3: level(3, 'Minus-Profi', { kind: 'subtract', max: 100, twoDigit: true }, { input: 'pad', aid: 'tensAndUnits', aidMode: 'onRequest' }),
-    4: level(4, 'Gemischt', { kind: 'mixedAddSubtract', max: 100, excludeUpTo: 20, missingNumbers: true }, { input: 'pad', aid: 'tensAndUnits', aidMode: 'onRequest' }),
-    5: level(5, 'Mal', { kind: 'multiply', tables: [7, 8, 9], factorMax: 10 }, { input: 'pad', aid: 'eggRows', aidMode: 'onRequest' }),
-    6: level(6, 'Einmaleins', { kind: 'mixedMultiplyDivide', tables: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], factorMax: 10 }, { input: 'pad', aid: 'eggRows', aidMode: 'onRequest' })
-  },
-  challenge: { operations: ['add', 'subtract', 'multiply', 'divide'], max: 100, excludeUpTo: 20, tables: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], wallMax: 100, lineMax: 100 }
+/** Times dino: one or two new tables per level. */
+const TIMES = {
+  operation: 'multiply',
+  levels: tableLevels('multiply', 'eggRows'),
+  challenge: { operations: ['multiply'], max: 100, tables: TABLES_BY_LEVEL[6], lineMax: 100, variants: ['missingNumber', 'mathMemory', 'numberLine'] }
+};
+
+/** Divided dino: the inverse of the times tables, always without remainder. */
+const DIVIDED = {
+  operation: 'divide',
+  levels: tableLevels('divide', 'sharing'),
+  challenge: { operations: ['divide'], max: 100, tables: TABLES_BY_LEVEL[6], variants: ['missingNumber', 'mathMemory', 'shareFood'] }
 };
 
 /** Math profiles by journey id. */
-export const MATH_PROFILES = { stegosaurus: STEGOSAURUS, ankylosaurus: ANKYLOSAURUS, parasaurolophus: PARASAUROLOPHUS };
+export const MATH_PROFILES = { stegosaurus: PLUS, ankylosaurus: MINUS, parasaurolophus: TIMES, pachycephalosaurus: DIVIDED };
 
 /** Title of level 7 on the map. */
 export const CHALLENGE_TITLE = 'Abenteuer';
 
-/** Variants needed to complete level 7. */
-export const MATH_VARIANTS_TO_COMPLETE = GOALS[7];
+/** Passed adventures needed to complete level 7 (every dino offers at least 3). */
+export const MATH_VARIANTS_TO_COMPLETE = 3;
 
 /**
  * Returns the math profile of a journey.

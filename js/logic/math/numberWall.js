@@ -3,10 +3,14 @@ import { shuffle } from '../random.js';
 /** Brick indices of a 3-row wall: bottom 0-2, middle 3-4, top 5. Each upper brick sums the two below. */
 export const WALL_SUMS = { 3: [0, 1], 4: [1, 2], 5: [3, 4] };
 
-/** Gap patterns that can be solved step by step (all need at least one subtraction or addition). */
-const GAP_PATTERNS = [
-  [3, 4, 5], [0, 4, 5], [2, 3, 5], [1, 5], [0, 4], [2, 3], [3, 5], [4, 5], [0, 2, 5], [1, 3]
-];
+/** Gap patterns that only need additions (upper bricks missing). */
+const ADD_PATTERNS = [[3, 4, 5], [3, 5], [4, 5]];
+
+/** Gap patterns that need at least one subtraction (a lower or middle brick from the brick above). */
+const SUBTRACT_PATTERNS = [[0, 4, 5], [2, 3, 5], [1, 5], [0, 4], [2, 3], [0, 2, 5], [1, 3]];
+
+/** Gap patterns per wall mode. */
+const GAP_PATTERNS = { add: ADD_PATTERNS, subtract: SUBTRACT_PATTERNS, mixed: [...ADD_PATTERNS, ...SUBTRACT_PATTERNS] };
 
 /** Walls per round. */
 export const WALLS_PER_ROUND = 4;
@@ -60,15 +64,16 @@ export function isWallSolvable(wall) {
  * Creates a random wall whose top brick (a + 2b + c) does not exceed the limit.
  * @param {number} maxTop - Largest allowed top brick (20 or 100).
  * @param {Function} [randomFn=Math.random] - Random source.
+ * @param {string} [mode='mixed'] - "add" (only sums), "subtract" (at least one subtraction), or "mixed".
  * @returns {{bricks: Array<number>, gaps: Array<number>}} Wall.
  */
-export function createWall(maxTop, randomFn = Math.random) {
+export function createWall(maxTop, randomFn = Math.random, mode = 'mixed') {
   const randomUpTo = (max) => 1 + Math.floor(randomFn() * Math.max(1, max));
   const second = randomUpTo(Math.floor((maxTop - 2) / 4));
   const first = randomUpTo(maxTop - 2 * second - 1);
   const third = randomUpTo(maxTop - 2 * second - first);
   const bricks = wallFromBottom([first, second, third]);
-  const gaps = shuffle(GAP_PATTERNS, randomFn).find((pattern) => isWallSolvable({ bricks, gaps: pattern }));
+  const gaps = shuffle(GAP_PATTERNS[mode], randomFn).find((pattern) => isWallSolvable({ bricks, gaps: pattern }));
   return { bricks, gaps: [...gaps].sort((left, right) => left - right) };
 }
 
@@ -76,10 +81,11 @@ export function createWall(maxTop, randomFn = Math.random) {
  * Creates the walls of a round.
  * @param {number} maxTop - Largest top brick.
  * @param {Function} [randomFn=Math.random] - Random source.
+ * @param {string} [mode='mixed'] - Wall mode (see createWall).
  * @returns {Array<object>} Walls.
  */
-export function createWallRound(maxTop, randomFn = Math.random) {
-  return Array.from({ length: WALLS_PER_ROUND }, () => createWall(maxTop, randomFn));
+export function createWallRound(maxTop, randomFn = Math.random, mode = 'mixed') {
+  return Array.from({ length: WALLS_PER_ROUND }, () => createWall(maxTop, randomFn, mode));
 }
 
 /**

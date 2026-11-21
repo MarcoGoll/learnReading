@@ -169,10 +169,12 @@ Status values: `planned -> specified -> in progress -> done`
 
 ### Epic38: MathJourneys
 - **Status:** done
+- **Note:** reorganised by Epic53 MathOperationDinos (one dino per operation).
 - **Description:** Math has its own dino journeys, separate from the reading journeys, so progress in one subject never blocks the other. Points, stars, shop, dino care, and the dino valley are shared with the reading world.
 
 ### Epic39: MathDinoSpecies
 - **Status:** done
+- **Note:** reorganised by Epic53 MathOperationDinos (one dino per operation).
 - **Description:** Three new species for the three math journeys (for example Stegosaurus, Ankylosaurus, and Parasaurolophus), each with its own growth stages, idle animations, and evolution scenes in the existing style.
 
 ## Math Levels
@@ -227,8 +229,16 @@ Status values: `planned -> specified -> in progress -> done`
 
 ### Epic51: HarderMathContent
 - **Status:** done
+- **Note:** reorganised by Epic53 MathOperationDinos (one dino per operation).
 - **Description:** Larger number ranges and harder tasks for the second and third math journey, for example numbers up to 100 and the full times tables.
 
 ### Epic52: ReadTaskAloud
 - **Status:** done
 - **Description:** On request, a math task is spoken aloud by the browser, so the child can play the math world even while reading is still hard.
+
+## Math World - Rework
+
+### Epic53: MathOperationDinos
+- **Status:** done
+- **Description:** The math world is split by operation: one dino each for plus, minus, times, and divided, all available from the start and independent of each other. Each dino has its own 7 levels from easy to hard and adventures that only use its operation, so the child can practise what is hard and still finish the others. Replaces the three difficulty journeys of MathJourneys and HarderMathContent.
+

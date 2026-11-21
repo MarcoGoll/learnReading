@@ -11,7 +11,8 @@ const STAGE_TEXTS = {
   pterosaur: { 1: '{name} ist geschlüpft!', 2: '{name} schlägt mit den Flügeln!', 3: '{name} fliegt zum ersten Mal!', 4: '{name} fängt einen Fisch!', 5: '{name} ist ausgewachsen!' },
   stegosaurus: { 1: '{name} ist geschlüpft!', 2: '{name} macht die ersten Schritte!', 3: '{name} zählt seine ersten Steine!', 4: '{name} stellt stolz seine Rückenplatten auf!', 5: '{name} ist ausgewachsen!' },
   ankylosaurus: { 1: '{name} ist geschlüpft!', 2: '{name} macht die ersten Schritte!', 3: '{name} zählt seine ersten Steine!', 4: '{name} schwingt die Schwanzkeule!', 5: '{name} ist ausgewachsen!' },
-  parasaurolophus: { 1: '{name} ist geschlüpft!', 2: '{name} macht die ersten Schritte!', 3: '{name} zählt seine ersten Steine!', 4: '{name} trötet mit seinem Kamm!', 5: '{name} ist ausgewachsen!' }
+  parasaurolophus: { 1: '{name} ist geschlüpft!', 2: '{name} macht die ersten Schritte!', 3: '{name} zählt seine ersten Steine!', 4: '{name} trötet mit seinem Kamm!', 5: '{name} ist ausgewachsen!' },
+  pachycephalosaurus: { 1: '{name} ist geschlüpft!', 2: '{name} macht die ersten Schritte!', 3: '{name} zählt seine ersten Steine!', 4: '{name} schiebt mit dem Dickkopf einen Stein weg!', 5: '{name} ist ausgewachsen!' }
 };
 
 /** Small SVG props: egg shell, dragonfly, branch, stone, leaves, waves, fish, roar text. */
@@ -36,7 +37,8 @@ const SCENE_PROPS = {
   pterosaur: { 1: ['shell'], 3: ['cloud'], 4: ['fish'] },
   stegosaurus: { 1: ['shell'], 3: ['pebbles'], 4: ['leaves'] },
   ankylosaurus: { 1: ['shell'], 3: ['pebbles'], 4: ['stone'] },
-  parasaurolophus: { 1: ['shell'], 3: ['pebbles'], 4: ['leaves'] }
+  parasaurolophus: { 1: ['shell'], 3: ['pebbles'], 4: ['leaves'] },
+  pachycephalosaurus: { 1: ['shell'], 3: ['pebbles'], 4: ['stone'] }
 };
 
 /** Time after which a tap may end the scene early. */

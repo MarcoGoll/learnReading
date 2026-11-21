@@ -304,7 +304,6 @@
 }
 
 .valley--math {
-  grid-template-columns: repeat(3, 1fr);
   background:
     radial-gradient(ellipse at 30% 92%, #b39ddb 0 14%, transparent 15%),
     linear-gradient(#d1c4e9 0 30%, #c5e1a5 30% 100%);

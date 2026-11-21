@@ -1,5 +1,7 @@
 # Spec: MathJourneys (Epic38)
 
+> **Superseded:** the journey structure and contents of this spec were replaced by `MathOperationDinos.md` (one dino per operation, all available from the start).
+
 ## Overview / Goal
 
 Math gets three own dino journeys, modelled as additional entries in the existing journey system. Each math journey has 7 levels, its own dino, progress, stars, records, care, and worn accessories. Points, rewards, and the valley are shared with reading. Progress in one subject never blocks the other.

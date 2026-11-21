@@ -260,6 +260,18 @@
   animation: dino-crest 3s ease-in-out infinite;
 }
 
+.dino--pachycephalosaurus.dino--stage-4 .dino__head,
+.dino--pachycephalosaurus.dino--stage-5 .dino__head {
+  transform-origin: 30% 90%;
+  animation: dino-headbutt 2.8s ease-in-out infinite;
+}
+
+@keyframes dino-headbutt {
+  50% {
+    transform: rotate(8deg);
+  }
+}
+
 @keyframes dino-plates {
   50% {
     transform: scaleY(1.08);

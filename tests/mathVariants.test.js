@@ -4,6 +4,7 @@ import { createWall, createWallRound, isWallSolvable, wallFromBottom, brickSpeec
 import { hopPath, numberLineTasks, numberAt } from '../js/logic/math/numberLine.js';
 import { buildMathDeck, isMemoryPassed } from '../js/logic/math/mathMemory.js';
 import { createArithmeticTask } from '../js/logic/math/task.js';
+import { shareTasks, createSharing, givePiece, takePiece, isShared, isFair } from '../js/logic/math/shareFood.js';
 import { mixedTasks } from '../js/logic/math/taskGenerator.js';
 import { MATH_PROFILES } from '../js/content/mathProfiles.js';
 import { seededRandom } from './helpers.js';
@@ -42,14 +43,49 @@ test('the dino hops to the ten first when crossing and jumps in steps for times'
   assert.equal(numberAt(1.2, 20), 20);
 });
 
-test('number line tasks have no division and fit the line', () => {
-  const tasks = numberLineTasks(MATH_PROFILES.stegosaurus.challenge, 10, seededRandom(2));
-  assert.equal(tasks.length, 10);
-  assert.ok(tasks.every((task) => task.operation !== 'divide' && task.answer <= 20 && task.answer >= 0));
+test('number line tasks use the dino operation and fit the line', () => {
+  [['stegosaurus', 'add'], ['ankylosaurus', 'subtract'], ['parasaurolophus', 'multiply']].forEach(([journeyId, operation]) => {
+    const tasks = numberLineTasks(MATH_PROFILES[journeyId].challenge, 10, seededRandom(2));
+    assert.equal(tasks.length, 10, journeyId);
+    assert.ok(tasks.every((task) => task.operation === operation && task.answer <= 100 && task.answer >= 0));
+  });
+});
+
+test('wall modes: plus walls need only sums, minus walls need a subtraction', () => {
+  const randomFn = seededRandom(9);
+  for (let i = 0; i < 50; i += 1) {
+    assert.ok(createWall(100, randomFn, 'add').gaps.every((gap) => gap >= 3));
+    assert.ok(createWall(100, randomFn, 'subtract').gaps.some((gap) => gap <= 2));
+  }
+});
+
+test('sharing food: tasks, giving, taking back, fairness', () => {
+  const tasks = shareTasks(seededRandom(3));
+  assert.equal(tasks.length, 6);
+  assert.ok(tasks.every((task) => task.operation === 'divide' && task.operands[0] <= 30 && task.operands[1] >= 2 && task.operands[1] <= 5 && Number.isInteger(task.answer)));
+  const sharing = createSharing(createArithmeticTask('divide', 6, 3));
+  assert.deepEqual(sharing, { heap: 6, plates: [0, 0, 0] });
+  givePiece(sharing, 0); givePiece(sharing, 0); givePiece(sharing, 1); givePiece(sharing, 1); givePiece(sharing, 2);
+  assert.equal(isShared(sharing), false);
+  givePiece(sharing, 0);
+  assert.equal(isShared(sharing), true);
+  assert.equal(isFair(sharing), false);
+  assert.equal(givePiece(sharing, 2), false);
+  takePiece(sharing, 0);
+  givePiece(sharing, 2);
+  assert.equal(isShared(sharing) && isFair(sharing), true);
+  assert.equal(takePiece({ heap: 0, plates: [0] }, 0), false);
+});
+
+test('each dino offers the adventures of its operation (always at least 3)', () => {
+  assert.deepEqual(MATH_PROFILES.stegosaurus.challenge.variants, ['missingNumber', 'mathMemory', 'numberWall', 'numberLine']);
+  assert.deepEqual(MATH_PROFILES.parasaurolophus.challenge.variants, ['missingNumber', 'mathMemory', 'numberLine']);
+  assert.deepEqual(MATH_PROFILES.pachycephalosaurus.challenge.variants, ['missingNumber', 'mathMemory', 'shareFood']);
+  Object.values(MATH_PROFILES).forEach((profile) => assert.ok(profile.challenge.variants.length >= 3));
 });
 
 test('the math memory has 6 pairs with different results', () => {
-  const tasks = mixedTasks(MATH_PROFILES.stegosaurus.challenge, 30, seededRandom(4));
+  const tasks = mixedTasks({ operations: ['add', 'subtract', 'multiply', 'divide'], max: 20, tables: [1, 2, 5, 10] }, 30, seededRandom(4));
   const deck = buildMathDeck(tasks, 6, seededRandom(4));
   assert.equal(deck.length, 12);
   const results = deck.filter((card) => card.kind === 'result').map((card) => card.text);

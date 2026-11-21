@@ -48,14 +48,15 @@ export function hopPath(task) {
 }
 
 /**
- * Creates the tasks of a number line round: plus, minus, and times within the line range.
+ * Creates the tasks of a number line round: the dino's operations that fit a line (plus, minus, times).
  * @param {object} challenge - Challenge settings of the journey (max, tables, lineMax).
  * @param {number} count - Number of tasks.
  * @param {Function} [randomFn=Math.random] - Random source.
  * @returns {Array<object>} Tasks.
  */
 export function numberLineTasks(challenge, count, randomFn = Math.random) {
-  const mix = { ...challenge, operations: LINE_OPERATIONS, max: challenge.lineMax };
+  const operations = challenge.operations.filter((operation) => LINE_OPERATIONS.includes(operation));
+  const mix = { ...challenge, operations, max: challenge.lineMax };
   return mixedTasks(mix, count * 3, randomFn)
     .filter((task) => task.answer <= challenge.lineMax && (task.operation !== 'multiply' || task.operands[0] <= 10))
     .slice(0, count);

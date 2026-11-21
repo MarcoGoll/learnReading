@@ -3,7 +3,8 @@ import { renderDino } from '../components/dino.js';
 import { promptDialog, messageDialog } from '../components/dialog.js';
 import { createCareBars, moodText, decorateMood } from '../components/careBars.js';
 import { store } from '../state/store.js';
-import { activeJourney, activeJourneyDef, waitingEgg, activeSubject, switchSubject, startJourney } from '../state/journeyState.js';
+import { activeJourney, activeJourneyDef, waitingEgg, activeSubject, switchSubject, switchJourney, startJourney } from '../state/journeyState.js';
+import { createOperationBar } from '../components/operationBar.js';
 import { createSubjectTabs } from '../components/subjectTabs.js';
 import { mathLevelTitles } from '../content/mathProfiles.js';
 import { levelCountOf } from '../data/journeys.js';
@@ -21,8 +22,14 @@ import { progressHint } from '../logic/progressHints.js';
 const INTRO_TEXT = 'Tief im Dschungel liegt ein kleines Dino-Ei. Bald schlüpft daraus ein Dino, '
   + 'und du kannst ihm helfen, groß zu werden. Zuerst braucht dein Dino einen Namen.';
 
-/** Intro text when the math world is opened for the first time. */
-const MATH_INTRO_TEXT = 'Ein neues Ei! Dieser Dino liebt Zahlen. Wenn du rechnest, wächst er.';
+/** What the child does with each math dino (greeting after naming). */
+const MATH_GREETING_TASKS = {
+  add: 'Zähle und rechne Plus-Aufgaben.', subtract: 'Rechne Minus-Aufgaben.',
+  multiply: 'Lerne das Einmaleins.', divide: 'Verteile gerecht und rechne Geteilt-Aufgaben.'
+};
+
+/** Journey that was active before an unnamed egg was opened (restored when naming is cancelled). */
+let journeyBeforeEgg = null;
 
 /** Titles of the reading levels on the map. */
 const LEVEL_TITLES = { 1: 'Laute', 2: 'Silben', 3: 'Wörter', 4: 'Wörter bauen', 5: 'Abenteuer' };
@@ -181,7 +188,7 @@ function wardrobeButton(state) {
 function infoPanel(state) {
   const journey = activeJourney(state);
   const valleyButton = button({ className: 'big-button home__valley', iconName: 'park', label: 'Dino-Tal', onClick: () => navigate('/valley') });
-  const egg = waitingEgg(state, activeSubject(state));
+  const egg = activeSubject(state) === 'reading' ? waitingEgg(state, 'reading') : null;
   if (egg && egg.id !== state.activeJourney) {
     valleyButton.append(el('span', { className: 'home__badge', text: 'Neues Ei!' }));
   }
@@ -205,10 +212,11 @@ function infoPanel(state) {
  * @param {HTMLElement} container - Screen container (re-rendered afterwards).
  */
 async function askForName(container) {
-  const isMath = activeSubject(store.getState()) === 'math';
-  const name = await promptDialog({ intro: isMath ? MATH_INTRO_TEXT : INTRO_TEXT, question: 'Wie soll dein Dino heißen?', confirmLabel: 'Fertig' });
+  const definition = activeJourneyDef(store.getState());
+  const isMath = definition.subject === 'math';
+  const name = await promptDialog({ intro: isMath ? definition.intro : INTRO_TEXT, question: 'Wie soll dein Dino heißen?', confirmLabel: 'Fertig' });
   if (!name) {
-    if (isMath) store.updateState((state) => switchSubject(state, 'reading'));
+    if (isMath) store.updateState(restoreAfterCancel);
     renderHome(container);
     return;
   }
@@ -217,17 +225,27 @@ async function askForName(container) {
     else startJourney(state, state.activeJourney, name);
   });
   renderHome(container);
-  await messageDialog(greetingText(name, isMath), "Los geht's", `Die Reise von ${name} beginnt!`);
+  await messageDialog(greetingText(name, isMath ? definition.operation : null), "Los geht's", `Die Reise von ${name} beginnt!`);
+}
+
+/**
+ * Goes back after the naming of a math egg was cancelled: to the dino played before, or to reading.
+ * @param {object} state - Game state (mutated).
+ */
+function restoreAfterCancel(state) {
+  const previous = journeyBeforeEgg && state.journeys[journeyBeforeEgg];
+  if (previous && previous.started) switchJourney(state, journeyBeforeEgg);
+  else switchSubject(state, 'reading');
 }
 
 /**
  * Returns the personal greeting shown after the dino got its name.
  * @param {string} name - Dino name.
- * @param {boolean} [isMath=false] - Whether the dino belongs to the math world.
+ * @param {string|null} [operation=null] - Operation of a math dino; null for reading dinos.
  * @returns {string} Greeting text.
  */
-export function greetingText(name, isMath = false) {
-  const task = isMath ? 'Zähle, rechne Plus und Minus, Mal und Geteilt.' : 'Lies Buchstaben, Silben und Wörter.';
+export function greetingText(name, operation = null) {
+  const task = operation ? MATH_GREETING_TASKS[operation] : 'Lies Buchstaben, Silben und Wörter.';
   return `Noch schläft ${name} in seinem Ei. Hilf ${name} dabei, groß und stark zu werden: `
     + `${task} Mit jedem Level, das du schaffst, wächst ${name} ein Stück!`;
 }
@@ -239,7 +257,23 @@ export function greetingText(name, isMath = false) {
  */
 function chooseSubject(container, subject) {
   playSound('click');
+  journeyBeforeEgg = store.getState().activeJourney;
   store.updateState((state) => switchSubject(state, subject));
+  renderHome(container);
+}
+
+/**
+ * Makes another math dino active (an egg asks for its name) and re-renders the home screen.
+ * @param {HTMLElement} container - Screen container.
+ * @param {string} journeyId - Chosen math journey.
+ */
+function chooseMathDino(container, journeyId) {
+  playSound('click');
+  journeyBeforeEgg = store.getState().activeJourney;
+  store.updateState((state) => {
+    state.activeJourney = journeyId;
+    state.lastJourneyBySubject.math = journeyId;
+  });
   renderHome(container);
 }
 
@@ -255,6 +289,7 @@ export function renderHome(container) {
   const levels = levelNumbers.map((level) => levelIsland(state, level));
   container.replaceChildren(el('section', { className: `home home--${activeSubject(state)}` }, [
     createSubjectTabs(activeSubject(state), (subject) => chooseSubject(container, subject)),
+    activeSubject(state) === 'math' ? createOperationBar(state, (journeyId) => chooseMathDino(container, journeyId)) : null,
     el('div', { className: 'home__hero' }, [dinoArea, infoPanel(state)]),
     el('nav', { className: 'level-map', attrs: { 'aria-label': 'Levels' } }, [...levels, practiceIsland(state)]),
     nextStepHint(state)

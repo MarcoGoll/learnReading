@@ -3,7 +3,7 @@ import { REWARDS } from '../data/rewards.js';
 import { spentForUnlocked } from '../logic/rewards.js';
 
 /** Current version of the persisted state format. */
-export const STATE_VERSION = 3;
+export const STATE_VERSION = 4;
 
 /** Number of levels in each reading journey (math journeys have 7, see journeys.js). */
 export const LEVEL_COUNT = 5;
@@ -20,13 +20,13 @@ function emptyMastered(subject) {
 
 /**
  * Creates the progress of one journey (one dino).
- * @param {boolean} isFirst - Whether this is the first journey of its subject (unlocked from the beginning).
- * @param {string} [subject='reading'] - Subject; the first math journey is unlocked but waits as an egg.
+ * @param {boolean} isFirst - Whether this is the first reading journey (unlocked and started from the beginning).
+ * @param {string} [subject='reading'] - Subject; every math dino is unlocked but waits as an egg.
  * @returns {object} Journey state.
  */
 export function createJourneyState(isFirst, subject = 'reading') {
   return {
-    unlocked: isFirst,
+    unlocked: isFirst || subject === 'math',
     started: isFirst && subject === 'reading',
     dinoName: '',
     currentLevel: 1,
@@ -143,6 +143,30 @@ export function migrateFromVersion2(oldState) {
 }
 
 /**
+ * Converts a version 3 state into version 4: the math world is reorganised into one dino per operation
+ * and starts anew (math journeys, math history); reading progress, points, and accessories stay.
+ * @param {object} oldState - Version 3 state.
+ * @returns {object} Version 4 state (not yet normalized).
+ */
+export function migrateFromVersion3(oldState) {
+  const journeys = { ...(isPlainObject(oldState.journeys) ? oldState.journeys : {}) };
+  journeysOfSubject('math').forEach((journey) => { journeys[journey.id] = createJourneyState(false, 'math'); });
+  const history = Object.fromEntries(Object.entries(isPlainObject(oldState.history) ? oldState.history : {}).filter(([key]) => !key.startsWith('math:')));
+  const reading = oldState.lastJourneyBySubject && oldState.lastJourneyBySubject.reading;
+  const readingJourney = journeysOfSubject('reading').some((journey) => journey.id === reading) ? reading : 'trex';
+  const isMathActive = journeysOfSubject('math').some((journey) => journey.id === oldState.activeJourney);
+  return {
+    ...oldState,
+    version: STATE_VERSION,
+    journeys,
+    history,
+    activeJourney: isMathActive ? readingJourney : oldState.activeJourney,
+    lastJourneyBySubject: { reading: readingJourney, math: journeysOfSubject('math')[0].id },
+    mathFamilyCelebrated: false
+  };
+}
+
+/**
  * Turns raw stored data into a valid state; version 1 data is migrated, invalid data yields the default state.
  * @param {*} rawState - Parsed data from storage.
  * @returns {object} Valid game state.
@@ -156,6 +180,9 @@ export function normalizeState(rawState) {
   }
   if (rawState.version === 2) {
     return normalizeState(migrateFromVersion2(rawState));
+  }
+  if (rawState.version === 3) {
+    return normalizeState(migrateFromVersion3(rawState));
   }
   if (rawState.version !== STATE_VERSION) {
     return createDefaultState();

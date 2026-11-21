@@ -220,3 +220,8 @@ Referenceable by the user, e.g. "revert CHG-0012" or "adjust CHG-0012 again".
 ## CHG-0052 - Fix: leaving the dino valley (home button, dino tap) works again
 - Timestamp: 2026-11-21T19:00:00+01:00
 - Files: js/screens/valley.js, js/router.js
+
+## CHG-0053 - Math world split into one dino per operation (plus, minus, times, divided) with share-food adventure
+- Timestamp: 2026-11-21T20:30:00+01:00
+- Files: js/data/journeys.js, js/state/defaultState.js, js/content/mathProfiles.js, js/logic/math/taskGenerator.js, js/logic/math/numberLine.js, js/logic/math/numberWall.js, js/logic/math/shareFood.js (new), js/components/operationBar.js (new), js/components/evolutionScene.js, js/screens/home.js, js/screens/valley.js, js/screens/mathChallenge.js, js/screens/mathChallenge/variantRegistry.js, js/screens/mathChallenge/numberWall.js, js/screens/mathChallenge/shareFood.js (new), css/components/subject-tabs.css, css/components/math-task.css, css/components/valley.css, css/components/dino.css, scripts/generateMathDinos.js, assets/svg/dino/pachycephalosaurus/stage-0..5.svg (new), assets/svg/pictures/shareFood.svg (new), tests/mathTasks.test.js, tests/mathJourneys.test.js, tests/mathVariants.test.js, docs/roadmap.md, docs/epics.md, docs/specs/MathOperationDinos.md (new), docs/specs/MathJourneys.md, docs/specs/HarderMathContent.md
+

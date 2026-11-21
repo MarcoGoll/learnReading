@@ -41,12 +41,12 @@ function matchesCrossing(task, crossing = 'any') {
  * Checks the operand rules of an addition or subtraction config.
  * @param {object} task - Task.
  * @param {object} config - excludeUpTo (all numbers small), twoDigit (both operands >= 10), crossing;
- *   ranges above 20 never use 0 as an operand.
+ *   ranges above 10 never use 0 as an operand.
  * @returns {boolean} True if allowed.
  */
 function matchesRules(task, config) {
   const numbers = [...task.operands, task.answer];
-  if (config.max > 20 && task.operands.includes(0)) return false;
+  if (config.max > 10 && task.operands.includes(0)) return false;
   if (config.excludeUpTo && numbers.every((number) => number <= config.excludeUpTo)) return false;
   if (config.twoDigit && task.operands.some((operand) => operand < 10)) return false;
   return matchesCrossing(task, config.crossing);

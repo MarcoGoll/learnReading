@@ -16,16 +16,13 @@ import { progressHint } from '../logic/progressHints.js';
 const EGG_INTROS = {
   triceratops: 'Im Ei wartet ein kleiner Triceratops mit drei Hörnern. Mit ihm lernst du Buchstabenverbindungen wie St und Sp und Silben wie Ball und Tisch.',
   longneck: 'Im Ei wartet ein kleiner Langhals. Mit ihm liest du lange Wörter wie Schokolade und Baumhaus.',
-  pterosaur: 'Im Ei wartet ein kleiner Flugsaurier. Mit ihm liest du kurze Geschichten.',
-  stegosaurus: 'Im Ei wartet ein kleiner Stegosaurus mit Platten auf dem Rücken. Mit ihm zählst und rechnest du.',
-  ankylosaurus: 'Im Ei wartet ein kleiner Panzersaurier. Mit ihm rechnest du mit Zahlen bis 100.',
-  parasaurolophus: 'Im Ei wartet ein kleiner Kammsaurier. Mit ihm wirst du ein Rechen-Profi und lernst das ganze Einmaleins.'
+  pterosaur: 'Im Ei wartet ein kleiner Flugsaurier. Mit ihm liest du kurze Geschichten.'
 };
 
 /** Groups of the valley with their celebration texts. */
 const GROUPS = [
   { subject: 'reading', title: 'Lese-Dinos', flag: 'familyCelebrated', celebrationTitle: 'Deine Dino-Familie ist komplett!', text: 'Alle vier Dinos sind groß und stark. Du bist ein echter Lese-Profi!' },
-  { subject: 'math', title: 'Rechen-Dinos', flag: 'mathFamilyCelebrated', celebrationTitle: 'Deine Rechen-Dino-Familie ist komplett!', text: 'Alle drei Rechen-Dinos sind groß und stark. Du bist ein echter Rechen-Profi!' }
+  { subject: 'math', title: 'Rechen-Dinos', flag: 'mathFamilyCelebrated', celebrationTitle: 'Deine Rechen-Dino-Familie ist komplett!', text: 'Alle vier Rechen-Dinos sind groß und stark. Du bist ein echter Rechen-Profi!' }
 ];
 
 /** Movement patterns of walking dinos (CSS modifiers of valley__walker). */
@@ -128,7 +125,7 @@ function chooseDino(definition) {
  */
 async function hatchEgg(definition) {
   playSound('click');
-  const name = await promptDialog({ intro: EGG_INTROS[definition.id], question: `Wie soll dein ${definition.speciesName} heißen?`, confirmLabel: 'Fertig' });
+  const name = await promptDialog({ intro: definition.intro || EGG_INTROS[definition.id], question: `Wie soll dein ${definition.speciesName} heißen?`, confirmLabel: 'Fertig' });
   if (!name) {
     return;
   }
