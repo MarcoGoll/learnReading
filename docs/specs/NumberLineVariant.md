@@ -31,3 +31,7 @@ A level 7 variant with a number line: a task is shown above (e.g. 7 + 5), the ch
 - A wrong answer allows a second attempt; after that the dino hops to the correct number.
 - With at least 5 correct answers the variant is passed.
 - Unit tests cover `hopPath` for plus, minus (with crossing ten), and times.
+
+## Implementation Notes
+
+- In both ranges a tap selects the nearest number, shown in a bubble above the line; the "Fertig" button confirms it.

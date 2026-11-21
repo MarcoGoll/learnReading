@@ -160,75 +160,75 @@ Status values: `planned -> specified -> in progress -> done`
 ## Math World - Foundation
 
 ### Epic36: SubjectSelection
-- **Status:** specified
+- **Status:** done
 - **Description:** The home screen lets the child choose between the reading world and the math world. Each world has its own level map, and the child can switch between them at any time.
 
 ### Epic37: MathTaskEngine
-- **Status:** specified
+- **Status:** done
 - **Description:** The shared basis of all math levels: the game generates arithmetic tasks itself and checks the answers automatically. The child answers on a large number pad or by picking one of a few options, without time pressure.
 
 ### Epic38: MathJourneys
-- **Status:** specified
+- **Status:** done
 - **Description:** Math has its own dino journeys, separate from the reading journeys, so progress in one subject never blocks the other. Points, stars, shop, dino care, and the dino valley are shared with the reading world.
 
 ### Epic39: MathDinoSpecies
-- **Status:** specified
+- **Status:** done
 - **Description:** Three new species for the three math journeys (for example Stegosaurus, Ankylosaurus, and Parasaurolophus), each with its own growth stages, idle animations, and evolution scenes in the existing style.
 
 ## Math Levels
 
 ### Epic40: NumberLevel
-- **Status:** specified
+- **Status:** done
 - **Description:** Math level 1. The child recognizes numbers and quantities up to 10, for example by counting dots and tapping the matching number.
 
 ### Epic41: AdditionLevel
-- **Status:** specified
+- **Status:** done
 - **Description:** Math level 2. Addition up to 10, supported by pictures such as insects the dino eats.
 
 ### Epic42: SubtractionLevel
-- **Status:** specified
+- **Status:** done
 - **Description:** Math level 3. Subtraction up to 10, supported by pictures such as insects flying away.
 
 ### Epic43: AdditionSubtractionTo20Level
-- **Status:** specified
+- **Status:** done
 - **Description:** Math level 4. Mixed addition and subtraction up to 20, including crossing ten, with helpers such as a ten frame or number line.
 
 ### Epic44: MultiplicationLevel
-- **Status:** specified
+- **Status:** done
 - **Description:** Math level 5. Multiplication, starting with the core times tables, supported by pictures such as rows of eggs.
 
 ### Epic45: DivisionLevel
-- **Status:** specified
+- **Status:** done
 - **Description:** Math level 6. Division as the inverse of multiplication, supported by pictures such as food shared among dinos.
 
 ### Epic46: MathChallengeLevel
-- **Status:** specified
+- **Status:** done
 - **Description:** Math level 7 as a frame for several math variants, like level 5 in the reading world. Completing it makes the math dino fully grown.
 
 ## Math Level 7 Variants
 
 ### Epic47: MissingNumberVariant
-- **Status:** specified
+- **Status:** done
 - **Description:** Tasks with a gap instead of the result (3 + _ = 7); the child finds the missing number.
 
 ### Epic48: MathMemoryVariant
-- **Status:** specified
+- **Status:** done
 - **Description:** A memory game with task cards and result cards; the child finds the matching pairs.
 
 ### Epic49: NumberWallVariant
-- **Status:** specified
+- **Status:** done
 - **Description:** Number walls where each brick is the sum of the two bricks below it; the child fills in the missing bricks.
 
 ### Epic50: NumberLineVariant
-- **Status:** specified
+- **Status:** done
 - **Description:** The dino jumps along a number line; the child moves it to the number that solves the task.
 
 ## Math Extras
 
 ### Epic51: HarderMathContent
-- **Status:** specified
+- **Status:** done
 - **Description:** Larger number ranges and harder tasks for the second and third math journey, for example numbers up to 100 and the full times tables.
 
 ### Epic52: ReadTaskAloud
-- **Status:** specified
+- **Status:** done
 - **Description:** On request, a math task is spoken aloud by the browser, so the child can play the math world even while reading is still hard.

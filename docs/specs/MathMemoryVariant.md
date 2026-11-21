@@ -28,3 +28,7 @@ A memory game for level 7 with task cards and result cards (e.g. "3 + 4" and "7"
 - The variant is passed when all pairs are found within 12 moves.
 - Points and stars are awarded and shown in the round summary.
 - Unit tests cover the deck (unique results, pairs) and the passing rule.
+
+## Implementation Notes
+
+- The speaker button reads the last flipped card.

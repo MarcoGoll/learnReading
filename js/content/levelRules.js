@@ -1,4 +1,5 @@
-import { activeJourney } from '../state/journeyState.js';
+import { activeJourney, activeSubject } from '../state/journeyState.js';
+import { isMathLevelComplete } from '../logic/math/mathLevelGoals.js';
 import { activeProfile, reviewItems } from './profiles.js';
 import { wordById } from '../data/allWords.js';
 import { mergeUnique, shuffle } from '../logic/random.js';
@@ -69,12 +70,13 @@ export function goalCount(level, state, roundIds = []) {
 }
 
 /**
- * Checks whether a level of the active journey is complete.
- * @param {number} level - Level 1-5.
+ * Checks whether a level of the active journey is complete (math journeys use the math goals).
+ * @param {number} level - Level 1-5 (reading) or 1-7 (math).
  * @param {object} state - Game state.
  * @returns {boolean} True when the goal is reached.
  */
 export function isLevelComplete(level, state) {
+  if (activeSubject(state) === 'math') return isMathLevelComplete(level, state);
   return goalCount(level, state) >= goalTarget(level, state);
 }
 

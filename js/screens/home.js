@@ -3,7 +3,10 @@ import { renderDino } from '../components/dino.js';
 import { promptDialog, messageDialog } from '../components/dialog.js';
 import { createCareBars, moodText, decorateMood } from '../components/careBars.js';
 import { store } from '../state/store.js';
-import { activeJourney, activeJourneyDef, waitingEgg } from '../state/journeyState.js';
+import { activeJourney, activeJourneyDef, waitingEgg, activeSubject, switchSubject, startJourney } from '../state/journeyState.js';
+import { createSubjectTabs } from '../components/subjectTabs.js';
+import { mathLevelTitles } from '../content/mathProfiles.js';
+import { levelCountOf } from '../data/journeys.js';
 import { navigate } from '../router.js';
 import { isLevelUnlocked } from '../logic/levelProgress.js';
 import { cheapestLocked, buyableRewards } from '../logic/rewards.js';
@@ -18,8 +21,30 @@ import { progressHint } from '../logic/progressHints.js';
 const INTRO_TEXT = 'Tief im Dschungel liegt ein kleines Dino-Ei. Bald schlüpft daraus ein Dino, '
   + 'und du kannst ihm helfen, groß zu werden. Zuerst braucht dein Dino einen Namen.';
 
-/** Titles of the levels on the map. */
+/** Intro text when the math world is opened for the first time. */
+const MATH_INTRO_TEXT = 'Ein neues Ei! Dieser Dino liebt Zahlen. Wenn du rechnest, wächst er.';
+
+/** Titles of the reading levels on the map. */
 const LEVEL_TITLES = { 1: 'Laute', 2: 'Silben', 3: 'Wörter', 4: 'Wörter bauen', 5: 'Abenteuer' };
+
+/**
+ * Returns the map titles of the active journey.
+ * @param {object} state - Game state.
+ * @returns {object} Titles by level.
+ */
+function levelTitles(state) {
+  return activeSubject(state) === 'math' ? mathLevelTitles(state.activeJourney) : LEVEL_TITLES;
+}
+
+/**
+ * Returns the route of a level of the active journey.
+ * @param {object} state - Game state.
+ * @param {number} level - Level number.
+ * @returns {string} Route path.
+ */
+function levelPath(state, level) {
+  return activeSubject(state) === 'math' ? `/math/level/${level}` : `/level/${level}`;
+}
 
 /**
  * Creates the small goal progress of an open level on the map.
@@ -58,19 +83,20 @@ function levelIsland(state, level) {
   const isUnlocked = isLevelUnlocked(state, level);
   const isCompleted = journey.completedLevels.includes(level);
   const modifier = isCompleted ? 'completed' : isUnlocked ? 'open' : 'locked';
+  const title = levelTitles(state)[level];
   const island = el('button', {
     className: `level-map__island level-map__island--${modifier}`,
-    attrs: { type: 'button', 'aria-label': `Level ${level}: ${LEVEL_TITLES[level]}${isUnlocked ? '' : ' (gesperrt)'}` }
+    attrs: { type: 'button', 'aria-label': `Level ${level}: ${title}${isUnlocked ? '' : ' (gesperrt)'}` }
   }, [
     el('span', { className: 'level-map__number', text: String(level) }),
-    el('span', { className: 'level-map__name', text: LEVEL_TITLES[level] }),
+    el('span', { className: 'level-map__name', text: title }),
     isUnlocked ? starSlots(journey.stars[level] || 0) : icon('lock', 'level-map__lock'),
     isUnlocked && !isCompleted ? goalProgress(state, level) : null,
     isCompleted ? icon('check', 'level-map__check') : null
   ]);
   island.addEventListener('click', () => {
     playSound('click');
-    if (isUnlocked) navigate(`/level/${level}`);
+    if (isUnlocked) navigate(levelPath(state, level));
     else showLockedHint(state, level);
   });
   return island;
@@ -106,6 +132,7 @@ function nextStepHint(state) {
  * @returns {HTMLButtonElement|null} Island or null.
  */
 function practiceIsland(state) {
+  if (activeSubject(state) !== 'reading') return null;
   const count = practiceItemCount(state.history, practiceKeyFilter(state));
   if (count === 0) {
     return null;
@@ -154,7 +181,8 @@ function wardrobeButton(state) {
 function infoPanel(state) {
   const journey = activeJourney(state);
   const valleyButton = button({ className: 'big-button home__valley', iconName: 'park', label: 'Dino-Tal', onClick: () => navigate('/valley') });
-  if (waitingEgg(state)) {
+  const egg = waitingEgg(state, activeSubject(state));
+  if (egg && egg.id !== state.activeJourney) {
     valleyButton.append(el('span', { className: 'home__badge', text: 'Neues Ei!' }));
   }
   return el('div', { className: 'home__info' }, [
@@ -172,28 +200,47 @@ function infoPanel(state) {
 }
 
 /**
- * Asks for the name of the first dino on the first start.
+ * Asks for the name of the active dino: on the very first start, and when the math world is opened
+ * for the first time (its journey is started with the name).
  * @param {HTMLElement} container - Screen container (re-rendered afterwards).
  */
 async function askForName(container) {
-  const name = await promptDialog({ intro: INTRO_TEXT, question: 'Wie soll dein Dino heißen?', confirmLabel: 'Fertig' });
-  if (name) {
-    store.updateState((state) => { activeJourney(state).dinoName = name; });
+  const isMath = activeSubject(store.getState()) === 'math';
+  const name = await promptDialog({ intro: isMath ? MATH_INTRO_TEXT : INTRO_TEXT, question: 'Wie soll dein Dino heißen?', confirmLabel: 'Fertig' });
+  if (!name) {
+    if (isMath) store.updateState((state) => switchSubject(state, 'reading'));
     renderHome(container);
-    await messageDialog(greetingText(name), "Los geht's", `Die Reise von ${name} beginnt!`);
     return;
   }
+  store.updateState((state) => {
+    if (activeJourney(state).started) activeJourney(state).dinoName = name;
+    else startJourney(state, state.activeJourney, name);
+  });
   renderHome(container);
+  await messageDialog(greetingText(name, isMath), "Los geht's", `Die Reise von ${name} beginnt!`);
 }
 
 /**
  * Returns the personal greeting shown after the dino got its name.
  * @param {string} name - Dino name.
+ * @param {boolean} [isMath=false] - Whether the dino belongs to the math world.
  * @returns {string} Greeting text.
  */
-export function greetingText(name) {
+export function greetingText(name, isMath = false) {
+  const task = isMath ? 'Zähle, rechne Plus und Minus, Mal und Geteilt.' : 'Lies Buchstaben, Silben und Wörter.';
   return `Noch schläft ${name} in seinem Ei. Hilf ${name} dabei, groß und stark zu werden: `
-    + `Lies Buchstaben, Silben und Wörter. Mit jedem Level, das du schaffst, wächst ${name} ein Stück!`;
+    + `${task} Mit jedem Level, das du schaffst, wächst ${name} ein Stück!`;
+}
+
+/**
+ * Switches the world after a tab was chosen and re-renders the home screen.
+ * @param {HTMLElement} container - Screen container.
+ * @param {string} subject - Chosen subject.
+ */
+function chooseSubject(container, subject) {
+  playSound('click');
+  store.updateState((state) => switchSubject(state, subject));
+  renderHome(container);
 }
 
 /**
@@ -204,15 +251,17 @@ export function renderHome(container) {
   const state = store.getState();
   const journey = activeJourney(state);
   const dinoArea = el('div', { className: 'home__dino' });
-  const levels = [1, 2, 3, 4, 5].map((level) => levelIsland(state, level));
-  container.replaceChildren(el('section', { className: 'home' }, [
+  const levelNumbers = Array.from({ length: levelCountOf(state.activeJourney) }, (_, index) => index + 1);
+  const levels = levelNumbers.map((level) => levelIsland(state, level));
+  container.replaceChildren(el('section', { className: `home home--${activeSubject(state)}` }, [
+    createSubjectTabs(activeSubject(state), (subject) => chooseSubject(container, subject)),
     el('div', { className: 'home__hero' }, [dinoArea, infoPanel(state)]),
     el('nav', { className: 'level-map', attrs: { 'aria-label': 'Levels' } }, [...levels, practiceIsland(state)]),
     nextStepHint(state)
   ]));
   renderDino(dinoArea, activeJourneyDef(state).species, journey.dinoStage, journey.worn);
   decorateMood(dinoArea, journey.care);
-  if (!journey.dinoName) {
+  if (!journey.dinoName || !journey.started) {
     askForName(container);
   }
 }

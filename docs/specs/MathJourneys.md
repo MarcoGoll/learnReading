@@ -81,3 +81,8 @@ Journeys 2 and 3 are defined in HarderMathContent.
 
 - Replacing `LEVEL_COUNT` touches several modules; the existing reading tests must keep passing unchanged.
 - Star rewards that require "all stars of a journey" also apply to math journeys (21 stars).
+
+## Implementation Notes
+
+- `finishRound` returns `stageChanged`; the evolution scene only plays when the dino reached a new stage.
+- Goals carry `completesImmediately` (reading level 5, math level 7) for the goal banner text.

@@ -59,3 +59,8 @@ Profiles in `js/content/mathProfiles.js`:
 ## Open Risks / Assumptions
 
 - The jump from journey 1 to journey 2 (from 20 to 100) is large; the tens-and-units picture in levels 1-3 is meant to bridge it. Goal sizes may need tuning after real play.
+
+## Implementation Notes
+
+- Instead of separate generator kinds, the existing kinds take options: `crossing` ("none" / "only"), `twoDigit`, `excludeUpTo`, `missingNumbers`; number tasks support the types next, previous, nextTen, and half. Ranges above 20 never use 0 as an operand.
+- Large task lists are sampled evenly (stable between calls) to at most 400 tasks.

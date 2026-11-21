@@ -243,3 +243,37 @@
     filter: drop-shadow(0 0 6px #ffeb3b) brightness(1.15);
   }
 }
+
+/* Species accents of the math dinos */
+.dino--stegosaurus.dino--stage-4 .dino__plates,
+.dino--stegosaurus.dino--stage-5 .dino__plates {
+  transform-origin: 50% 100%;
+  animation: dino-plates 2.6s ease-in-out infinite;
+}
+
+.dino--ankylosaurus .dino__club {
+  transform-origin: 100% 50%;
+  animation: dino-club 2.2s ease-in-out infinite;
+}
+
+.dino--parasaurolophus .dino__crest {
+  animation: dino-crest 3s ease-in-out infinite;
+}
+
+@keyframes dino-plates {
+  50% {
+    transform: scaleY(1.08);
+  }
+}
+
+@keyframes dino-club {
+  50% {
+    transform: rotate(-12deg);
+  }
+}
+
+@keyframes dino-crest {
+  50% {
+    filter: brightness(1.25);
+  }
+}

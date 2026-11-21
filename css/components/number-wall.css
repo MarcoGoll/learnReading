@@ -1,0 +1,52 @@
+.number-wall {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.number-wall__row {
+  display: flex;
+  gap: 6px;
+}
+
+.number-wall__brick {
+  width: clamp(72px, 18vw, 104px);
+  min-height: 60px;
+  border: 3px solid #8d4a2f;
+  border-radius: 8px;
+  background: #ffccbc;
+  font-family: var(--font-reading);
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.number-wall__brick:disabled {
+  cursor: default;
+}
+
+.number-wall__brick--gap {
+  background: #fff;
+  border-style: dashed;
+  color: #b0bec5;
+  cursor: pointer;
+}
+
+.number-wall__brick--active {
+  border-style: solid;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 4px rgba(92, 107, 192, 0.35);
+}
+
+.number-wall__brick--solved {
+  background: #e8f5e9;
+  border-color: var(--color-correct);
+  color: var(--color-correct-dark);
+}
+
+.number-wall__brick--shown {
+  background: #ffebee;
+  border-color: var(--color-wrong);
+  color: var(--color-wrong-dark);
+}

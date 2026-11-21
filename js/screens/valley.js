@@ -3,8 +3,8 @@ import { createDino } from '../components/dino.js';
 import { promptDialog, messageDialog } from '../components/dialog.js';
 import { createCareBars } from '../components/careBars.js';
 import { confetti } from '../components/effects.js';
-import { JOURNEYS } from '../data/journeys.js';
-import { journeyStarTotal, MAX_JOURNEY_STARS } from '../logic/stars.js';
+import { journeysOfSubject } from '../data/journeys.js';
+import { journeyStarTotal, maxJourneyStars } from '../logic/stars.js';
 import { startJourney, switchJourney, isFamilyComplete } from '../state/journeyState.js';
 import { store } from '../state/store.js';
 import { navigate } from '../router.js';
@@ -16,8 +16,17 @@ import { progressHint } from '../logic/progressHints.js';
 const EGG_INTROS = {
   triceratops: 'Im Ei wartet ein kleiner Triceratops mit drei Hörnern. Mit ihm lernst du Buchstabenverbindungen wie St und Sp und Silben wie Ball und Tisch.',
   longneck: 'Im Ei wartet ein kleiner Langhals. Mit ihm liest du lange Wörter wie Schokolade und Baumhaus.',
-  pterosaur: 'Im Ei wartet ein kleiner Flugsaurier. Mit ihm liest du kurze Geschichten.'
+  pterosaur: 'Im Ei wartet ein kleiner Flugsaurier. Mit ihm liest du kurze Geschichten.',
+  stegosaurus: 'Im Ei wartet ein kleiner Stegosaurus mit Platten auf dem Rücken. Mit ihm zählst und rechnest du.',
+  ankylosaurus: 'Im Ei wartet ein kleiner Panzersaurier. Mit ihm rechnest du mit Zahlen bis 100.',
+  parasaurolophus: 'Im Ei wartet ein kleiner Kammsaurier. Mit ihm wirst du ein Rechen-Profi und lernst das ganze Einmaleins.'
 };
+
+/** Groups of the valley with their celebration texts. */
+const GROUPS = [
+  { subject: 'reading', title: 'Lese-Dinos', flag: 'familyCelebrated', celebrationTitle: 'Deine Dino-Familie ist komplett!', text: 'Alle vier Dinos sind groß und stark. Du bist ein echter Lese-Profi!' },
+  { subject: 'math', title: 'Rechen-Dinos', flag: 'mathFamilyCelebrated', celebrationTitle: 'Deine Rechen-Dino-Familie ist komplett!', text: 'Alle drei Rechen-Dinos sind groß und stark. Du bist ein echter Rechen-Profi!' }
+];
 
 /** Movement patterns of walking dinos (CSS modifiers of valley__walker). */
 const WALK_PATTERNS = ['walk', 'stroll', 'hop', 'graze'];
@@ -97,7 +106,7 @@ function valleySpot(definition, state) {
     walker(definition, journey),
     el('span', { className: 'valley__name', text: journey.dinoName || definition.speciesName }),
     el('span', { className: 'valley__info', text: progressText(definition.id, state) }),
-    el('span', { className: 'valley__stars' }, [icon('star', 'valley__star'), el('span', { text: `${journeyStarTotal(journey.stars)} von ${MAX_JOURNEY_STARS}` })]),
+    el('span', { className: 'valley__stars' }, [icon('star', 'valley__star'), el('span', { text: `${journeyStarTotal(journey.stars)} von ${maxJourneyStars(definition.levelCount)}` })]),
     createCareBars(journey.care),
     isActive ? el('span', { className: 'valley__active', text: 'Du spielst gerade' }) : null
   ]);
@@ -129,32 +138,47 @@ async function hatchEgg(definition) {
 }
 
 /**
- * Plays the family celebration once when all dinos are fully grown.
- * @param {HTMLElement} valley - Valley element.
+ * Plays the celebration of a group once when all its dinos are fully grown.
+ * @param {HTMLElement} valley - Valley element of the group.
+ * @param {object} group - Group definition.
+ * @returns {Promise<void>|null} Dialog promise, or null without celebration.
  */
-function celebrateFamily(valley) {
+function celebrateFamily(valley, group) {
   const state = store.getState();
-  if (!isFamilyComplete(state) || state.familyCelebrated) {
-    return;
+  if (!isFamilyComplete(state, group.subject) || state[group.flag]) {
+    return null;
   }
-  store.updateState((current) => { current.familyCelebrated = true; });
+  store.updateState((current) => { current[group.flag] = true; });
   valley.classList.add('valley--celebrating');
   confetti(150);
   playSound('levelComplete');
-  messageDialog('Alle vier Dinos sind groß und stark. Du bist ein echter Lese-Profi!', 'Juhu!', 'Deine Dino-Familie ist komplett!');
+  return messageDialog(group.text, 'Juhu!', group.celebrationTitle);
 }
 
 /**
- * Renders the dino valley with all dinos of the family.
+ * Creates the valley area of one group (reading or math dinos).
+ * @param {object} group - Group definition.
+ * @param {object} state - Game state.
+ * @returns {HTMLElement} Group section.
+ */
+function valleyGroup(group, state) {
+  const valley = el('div', { className: `valley valley--${group.subject}` }, journeysOfSubject(group.subject).map((definition) => valleySpot(definition, state)));
+  return el('section', { className: 'valley-screen__group' }, [el('h2', { className: 'valley-screen__group-title', text: group.title }), valley]);
+}
+
+/**
+ * Renders the dino valley with the reading dinos and the math dinos in two groups.
  * @param {HTMLElement} container - Screen container.
  */
-export function renderValley(container) {
+export async function renderValley(container) {
   const state = store.getState();
-  const valley = el('div', { className: 'valley' }, JOURNEYS.map((definition) => valleySpot(definition, state)));
+  const groups = GROUPS.map((group) => valleyGroup(group, state));
   container.replaceChildren(el('section', { className: 'valley-screen' }, [
     el('h1', { className: 'screen-title', text: 'Dino-Tal' }),
     el('p', { className: 'valley-screen__hint', text: 'Tippe auf einen Dino, um mit ihm zu spielen.' }),
-    valley
+    ...groups
   ]));
-  celebrateFamily(valley);
+  for (let i = 0; i < GROUPS.length; i += 1) {
+    await celebrateFamily(groups[i].querySelector('.valley'), GROUPS[i]);
+  }
 }

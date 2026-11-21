@@ -60,3 +60,8 @@ The home screen offers two worlds: **Lesen** (reading) and **Rechnen** (math). T
 
 - The home screen file is already 218 lines; the tabs live in their own component so the file stays below 400 lines.
 - Assumption: no separate world-specific background; a subtle colour accent per tab is enough.
+
+## Implementation Notes
+
+- If the naming dialog of the first math visit is cancelled, the game switches back to the reading world (the egg keeps waiting).
+- The "Neues Ei!" badge of the valley button only counts eggs of the current world.

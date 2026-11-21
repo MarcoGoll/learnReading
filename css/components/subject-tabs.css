@@ -1,0 +1,48 @@
+.subject-tabs {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.subject-tabs__tab {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 280px;
+  min-height: 64px;
+  padding: 10px 20px;
+  border: 3px solid transparent;
+  border-radius: var(--radius-medium);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+  font: inherit;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.subject-tabs__icon {
+  width: 32px;
+  height: 32px;
+}
+
+.subject-tabs__tab--active {
+  background: #fff;
+  color: var(--color-text);
+  transform: translateY(-2px);
+}
+
+.subject-tabs__tab--reading.subject-tabs__tab--active {
+  border-color: var(--color-primary);
+}
+
+.subject-tabs__tab--math.subject-tabs__tab--active {
+  border-color: var(--color-secondary);
+}
+
+.home--math .level-map {
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+}

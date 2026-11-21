@@ -2,7 +2,8 @@ import { levelGoal } from './levelGoals.js';
 import { buildableWords } from './wordLevel.js';
 import { level2Syllables, readableWords, level4Words } from '../content/levelRules.js';
 import { activeProfile } from '../content/profiles.js';
-import { LEVEL_COUNT } from '../state/defaultState.js';
+import { levelCountOf, subjectOf } from '../data/journeys.js';
+import { mathHintParts } from './math/mathLevelGoals.js';
 
 /**
  * Returns a view of the state in which the given journey is the active one, so the goal rules
@@ -115,12 +116,14 @@ function hintParts(view, level, goal) {
  */
 export function progressHint(journeyId, state) {
   const journey = state.journeys[journeyId];
-  if (journey.completedLevels.includes(LEVEL_COUNT)) {
-    return { level: LEVEL_COUNT, short: 'ausgewachsen', text: 'Alle Level geschafft!', isBlocked: false, isDone: true };
+  const levelCount = levelCountOf(journeyId);
+  if (journey.completedLevels.includes(levelCount)) {
+    return { level: levelCount, short: 'ausgewachsen', text: 'Alle Level geschafft!', isBlocked: false, isDone: true };
   }
   const view = stateFor(state, journeyId);
-  const level = Math.min(journey.currentLevel, LEVEL_COUNT);
-  const parts = hintParts(view, level, levelGoal(level, view));
+  const level = Math.min(journey.currentLevel, levelCount);
+  const goal = levelGoal(level, view);
+  const parts = subjectOf(journeyId) === 'math' ? { ...mathHintParts(level, goal), blocker: '' } : hintParts(view, level, goal);
   const text = parts.blocker || `Level ${level}: ${parts.short}.${parts.tip ? ` ${parts.tip}` : ''}`;
   return { level, short: `Level ${level}: ${parts.short}`, text, isBlocked: Boolean(parts.blocker), isDone: false };
 }

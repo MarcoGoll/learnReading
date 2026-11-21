@@ -8,7 +8,10 @@ const STAGE_TEXTS = {
   trex: { 1: '{name} ist geschlüpft!', 2: '{name} macht die ersten Schritte!', 3: '{name} hat das erste Insekt gefangen!', 4: '{name} brüllt zum ersten Mal!', 5: '{name} ist ausgewachsen!' },
   triceratops: { 1: '{name} ist geschlüpft!', 2: '{name} macht die ersten Schritte!', 3: '{name} schiebt mit den Hörnern einen Ast weg!', 4: '{name} räumt einen Stein aus dem Weg!', 5: '{name} ist ausgewachsen!' },
   longneck: { 1: '{name} ist geschlüpft!', 2: '{name} macht die ersten Schritte!', 3: '{name} frisst Blätter ganz oben vom Baum!', 4: '{name} watet durch einen See!', 5: '{name} ist ausgewachsen!' },
-  pterosaur: { 1: '{name} ist geschlüpft!', 2: '{name} schlägt mit den Flügeln!', 3: '{name} fliegt zum ersten Mal!', 4: '{name} fängt einen Fisch!', 5: '{name} ist ausgewachsen!' }
+  pterosaur: { 1: '{name} ist geschlüpft!', 2: '{name} schlägt mit den Flügeln!', 3: '{name} fliegt zum ersten Mal!', 4: '{name} fängt einen Fisch!', 5: '{name} ist ausgewachsen!' },
+  stegosaurus: { 1: '{name} ist geschlüpft!', 2: '{name} macht die ersten Schritte!', 3: '{name} zählt seine ersten Steine!', 4: '{name} stellt stolz seine Rückenplatten auf!', 5: '{name} ist ausgewachsen!' },
+  ankylosaurus: { 1: '{name} ist geschlüpft!', 2: '{name} macht die ersten Schritte!', 3: '{name} zählt seine ersten Steine!', 4: '{name} schwingt die Schwanzkeule!', 5: '{name} ist ausgewachsen!' },
+  parasaurolophus: { 1: '{name} ist geschlüpft!', 2: '{name} macht die ersten Schritte!', 3: '{name} zählt seine ersten Steine!', 4: '{name} trötet mit seinem Kamm!', 5: '{name} ist ausgewachsen!' }
 };
 
 /** Small SVG props: egg shell, dragonfly, branch, stone, leaves, waves, fish, roar text. */
@@ -21,6 +24,7 @@ const PROP_MARKUP = {
   leaves: '<svg viewBox="0 0 120 60" class="evolution-scene__treetop"><ellipse cx="60" cy="30" rx="58" ry="28" fill="#43a047"/><ellipse cx="30" cy="24" rx="20" ry="12" fill="#66bb6a"/><ellipse cx="88" cy="22" rx="18" ry="11" fill="#66bb6a"/></svg>',
   lake: '<svg viewBox="0 0 200 50" class="evolution-scene__lake"><ellipse cx="100" cy="30" rx="98" ry="20" fill="#4fc3f7"/><path d="M30 28 q10 -6 20 0 t20 0 M110 34 q10 -6 20 0 t20 0" stroke="#e1f5fe" stroke-width="3" fill="none"/></svg>',
   fish: '<svg viewBox="0 0 60 30" class="evolution-scene__flyer"><ellipse cx="26" cy="15" rx="20" ry="10" fill="#ff9800"/><path d="M44 15 L58 4 L58 26 Z" fill="#fb8c00"/><circle cx="16" cy="12" r="2.5" fill="#263238"/></svg>',
+  pebbles: '<svg viewBox="0 0 120 40" class="evolution-scene__pushed"><ellipse cx="18" cy="28" rx="12" ry="9" fill="#9e9e9e"/><ellipse cx="46" cy="30" rx="11" ry="8" fill="#bdbdbd"/><ellipse cx="72" cy="28" rx="12" ry="9" fill="#9e9e9e"/><ellipse cx="100" cy="30" rx="11" ry="8" fill="#bdbdbd"/></svg>',
   cloud: '<svg viewBox="0 0 120 50" class="evolution-scene__cloud"><ellipse cx="60" cy="32" rx="52" ry="16" fill="#fff"/><ellipse cx="44" cy="22" rx="22" ry="16" fill="#fff"/><ellipse cx="76" cy="20" rx="20" ry="14" fill="#fff"/></svg>'
 };
 
@@ -29,7 +33,10 @@ const SCENE_PROPS = {
   trex: { 1: ['shell'], 3: ['dragonfly'], 4: ['roar'] },
   triceratops: { 1: ['shell'], 3: ['branch'], 4: ['stone'] },
   longneck: { 1: ['shell'], 3: ['leaves'], 4: ['lake'] },
-  pterosaur: { 1: ['shell'], 3: ['cloud'], 4: ['fish'] }
+  pterosaur: { 1: ['shell'], 3: ['cloud'], 4: ['fish'] },
+  stegosaurus: { 1: ['shell'], 3: ['pebbles'], 4: ['leaves'] },
+  ankylosaurus: { 1: ['shell'], 3: ['pebbles'], 4: ['stone'] },
+  parasaurolophus: { 1: ['shell'], 3: ['pebbles'], 4: ['leaves'] }
 };
 
 /** Time after which a tap may end the scene early. */

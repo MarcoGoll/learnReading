@@ -21,6 +21,9 @@ import { registerCustomContent, practiceKeyFilter } from './content/customConten
 import { renderWardrobe } from './screens/wardrobe.js';
 import { renderValley } from './screens/valley.js';
 import { practiceItemCount } from './logic/practice.js';
+import { renderMathLevel } from './screens/mathLevel.js';
+import { renderMathChallengeMenu, renderMathChallengeVariant } from './screens/mathChallenge.js';
+import { activeSubject } from './state/journeyState.js';
 
 /** Level screens by level number. */
 const LEVEL_SCREENS = { 1: renderLevel1, 2: renderLevel2, 3: renderLevel3, 4: renderLevel4, 5: renderChallengeMenu };
@@ -32,6 +35,15 @@ const LEVEL_SCREENS = { 1: renderLevel1, 2: renderLevel2, 3: renderLevel3, 4: re
  */
 function levelGuard(params) {
   return isLevelUnlocked(store.getState(), Number(params[0])) ? null : '/';
+}
+
+/**
+ * Redirects to the home screen unless the active journey belongs to the given subject and the level is unlocked.
+ * @param {string} subject - Required subject.
+ * @returns {Function} Guard taking the route parameters.
+ */
+function subjectLevelGuard(subject) {
+  return (params) => (activeSubject(store.getState()) === subject ? levelGuard(params) : '/');
 }
 
 /**
@@ -47,8 +59,11 @@ function parentGuard() {
  */
 function registerRoutes() {
   addRoute(/^\/$/, renderHome);
-  addRoute(/^\/level\/([1-5])$/, (container, params) => LEVEL_SCREENS[params[0]](container), levelGuard);
-  addRoute(/^\/level\/(5)\/([a-zA-Z]+)$/, (container, params) => renderChallengeVariant(container, params[1]), levelGuard);
+  addRoute(/^\/level\/([1-5])$/, (container, params) => LEVEL_SCREENS[params[0]](container), subjectLevelGuard('reading'));
+  addRoute(/^\/level\/(5)\/([a-zA-Z]+)$/, (container, params) => renderChallengeVariant(container, params[1]), subjectLevelGuard('reading'));
+  addRoute(/^\/math\/level\/([1-6])$/, (container, params) => renderMathLevel(container, Number(params[0])), subjectLevelGuard('math'));
+  addRoute(/^\/math\/level\/(7)$/, renderMathChallengeMenu, subjectLevelGuard('math'));
+  addRoute(/^\/math\/level\/(7)\/([a-zA-Z]+)$/, (container, params) => renderMathChallengeVariant(container, params[1]), subjectLevelGuard('math'));
   addRoute(/^\/practice$/, renderPractice, () => (practiceItemCount(store.getState().history, practiceKeyFilter(store.getState())) > 0 ? null : '/'));
   addRoute(/^\/wardrobe$/, renderWardrobe);
   addRoute(/^\/valley$/, renderValley);
